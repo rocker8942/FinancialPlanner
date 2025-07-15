@@ -27,11 +27,20 @@ namespace FinancialPlanner.Backend.Controllers
             if (profile == null) return NotFound();
             return new FinancialProfileDto
             {
-                Assets = profile.Assets,
+                PropertyAssets = profile.PropertyAssets,
+                FinancialAssets = profile.FinancialAssets,
                 Salary = profile.Salary,
                 Expenses = profile.Expenses,
                 CurrentAge = profile.CurrentAge,
-                DeathAge = profile.DeathAge
+                RetireAge = profile.RetireAge,
+                DeathAge = profile.DeathAge,
+                FinancialAssetGrowthRate = profile.FinancialAssetGrowthRate,
+                PropertyGrowthRate = profile.PropertyGrowthRate,
+                InflationRate = profile.InflationRate,
+                PensionAmount = profile.PensionAmount,
+                PensionStartAge = profile.PensionStartAge,
+                PartnerPensionAmount = profile.PartnerPensionAmount,
+                PartnerPensionStartAge = profile.PartnerPensionStartAge
             };
         }
 
@@ -45,21 +54,39 @@ namespace FinancialPlanner.Backend.Controllers
                 profile = new FinancialProfile
                 {
                     UserId = userId,
-                    Assets = dto.Assets,
+                    PropertyAssets = dto.PropertyAssets,
+                    FinancialAssets = dto.FinancialAssets,
                     Salary = dto.Salary,
                     Expenses = dto.Expenses,
                     CurrentAge = dto.CurrentAge,
-                    DeathAge = dto.DeathAge
+                    RetireAge = dto.RetireAge,
+                    DeathAge = dto.DeathAge,
+                    FinancialAssetGrowthRate = dto.FinancialAssetGrowthRate,
+                    PropertyGrowthRate = dto.PropertyGrowthRate,
+                    InflationRate = dto.InflationRate,
+                    PensionAmount = dto.PensionAmount,
+                    PensionStartAge = dto.PensionStartAge,
+                    PartnerPensionAmount = dto.PartnerPensionAmount,
+                    PartnerPensionStartAge = dto.PartnerPensionStartAge
                 };
                 _context.FinancialProfiles.Add(profile);
             }
             else
             {
-                profile.Assets = dto.Assets;
+                profile.PropertyAssets = dto.PropertyAssets;
+                profile.FinancialAssets = dto.FinancialAssets;
                 profile.Salary = dto.Salary;
                 profile.Expenses = dto.Expenses;
                 profile.CurrentAge = dto.CurrentAge;
+                profile.RetireAge = dto.RetireAge;
                 profile.DeathAge = dto.DeathAge;
+                profile.FinancialAssetGrowthRate = dto.FinancialAssetGrowthRate;
+                profile.PropertyGrowthRate = dto.PropertyGrowthRate;
+                profile.InflationRate = dto.InflationRate;
+                profile.PensionAmount = dto.PensionAmount;
+                profile.PensionStartAge = dto.PensionStartAge;
+                profile.PartnerPensionAmount = dto.PartnerPensionAmount;
+                profile.PartnerPensionStartAge = dto.PartnerPensionStartAge;
             }
             await _context.SaveChangesAsync();
             return Ok();

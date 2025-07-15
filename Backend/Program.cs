@@ -42,6 +42,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add JwtService
 builder.Services.AddScoped<JwtService>();
 
+// Add FinancialCalculationService
+builder.Services.AddScoped<FinancialCalculationService>();
+
 // Configure JWT Authentication
 builder.Services.AddAuthentication(options =>
 {

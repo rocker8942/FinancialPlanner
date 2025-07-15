@@ -41,20 +41,6 @@
             Register
           </router-link>
         </nav>
-        <!-- Plan Selection -->
-        <div class="mt-8 px-4">
-          <span class="uppercase text-xs text-gray-500 mb-2 block">Plans</span>
-          <div class="flex flex-col gap-2">
-            <button class="flex items-center gap-2 px-3 py-2 rounded bg-gray-700 text-gray-100 hover:bg-teal-700">
-              <span class="material-icons text-base text-teal-300">edit</span>
-              Retire
-            </button>
-            <button class="flex items-center gap-2 px-3 py-2 rounded bg-gray-700 text-gray-100 hover:bg-teal-700">
-              <span class="material-icons text-base text-teal-300">add_circle</span>
-              New Plan
-            </button>
-          </div>
-        </div>
       </div>
       <!-- User Actions -->
       <div class="flex flex-col gap-4 px-6 pb-6 border-t border-gray-700">
@@ -71,7 +57,7 @@
 
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col items-center justify-start">
-      <main class="w-full max-w-5xl p-8">
+      <main class="w-full p-8">
         <router-view />
       </main>
     </div>

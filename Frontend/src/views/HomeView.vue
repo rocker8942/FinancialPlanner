@@ -4,12 +4,12 @@
       <h1>Net Wealth Plan</h1>
     </div>
     <div class="dashboard-main">
-      <div class="dashboard-left">
+      <div class="dashboard-center">
         <NetWealthChart :projection="projection" />
-        <AssetInputForm @update="fetchProjection" />
       </div>
       <div class="dashboard-right">
-        <SummaryCard :netWorth="finalWealth" :details="summaryDetails" />
+        <SummaryCard :netWorth="finalWealth" :details="summaryDetailsFiltered" />
+        <AssetInputForm @update="fetchProjection" />
       </div>
     </div>
   </div>
@@ -22,11 +22,78 @@ import AssetInputForm from '../components/AssetInputForm.vue';
 import SummaryCard from '../components/SummaryCard.vue';
 import { getFinancialPlan } from '../services/api';
 
-const projection = ref([]);
+interface ProjectionData {
+  age: number;
+  wealth: number;
+  propertyAssets: number;
+  financialAssets: number;
+  inflationAdjustedWealth: number;
+  inflationAdjustedPropertyAssets: number;
+  inflationAdjustedFinancialAssets: number;
+  pensionIncome: number;
+}
+
+const projection = ref<ProjectionData[]>([]);
 const finalWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].wealth : 0);
-const summaryDetails = computed(() => [
-  { label: 'Change in Net Worth', value: finalWealth.value - (projection.value[0]?.wealth ?? 0), type: (finalWealth.value - (projection.value[0]?.wealth ?? 0)) >= 0 ? 'positive' : 'negative' }
-]);
+const finalPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].propertyAssets : 0);
+const finalFinancialAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].financialAssets : 0);
+const finalInflationAdjustedWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedWealth : 0);
+const finalInflationAdjustedPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedPropertyAssets : 0);
+const finalInflationAdjustedFinancialAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedFinancialAssets : 0);
+
+const summaryDetails = computed(() => {
+  const initialWealth = projection.value[0]?.wealth ?? 0;
+  const initialProperty = projection.value[0]?.propertyAssets ?? 0;
+  const initialFinancial = projection.value[0]?.financialAssets ?? 0;
+  const initialInflationAdjustedWealth = projection.value[0]?.inflationAdjustedWealth ?? 0;
+  
+  return [
+    { 
+      label: 'Total Change in Net Worth (Nominal)', 
+      value: finalWealth.value - initialWealth, 
+      type: (finalWealth.value - initialWealth) >= 0 ? 'positive' : 'negative' 
+    },
+    { 
+      label: 'Final Net Worth (Today\'s Value)', 
+      value: finalInflationAdjustedWealth.value, 
+      type: 'neutral' 
+    },
+    { 
+      label: 'Final Property Assets (Nominal)', 
+      value: finalPropertyAssets.value, 
+      type: 'neutral' 
+    },
+    { 
+      label: 'Final Property Assets (Today\'s Value)', 
+      value: finalInflationAdjustedPropertyAssets.value, 
+      type: 'neutral' 
+    },
+    { 
+      label: 'Final Financial Assets (Nominal)', 
+      value: finalFinancialAssets.value, 
+      type: 'neutral' 
+    },
+    { 
+      label: 'Final Financial Assets (Today\'s Value)', 
+      value: finalInflationAdjustedFinancialAssets.value, 
+      type: 'neutral' 
+    },
+    { 
+      label: 'Property Asset Growth (Nominal)', 
+      value: finalPropertyAssets.value - initialProperty, 
+      type: (finalPropertyAssets.value - initialProperty) >= 0 ? 'positive' : 'negative' 
+    },
+    { 
+      label: 'Financial Asset Growth (Nominal)', 
+      value: finalFinancialAssets.value - initialFinancial, 
+      type: (finalFinancialAssets.value - initialFinancial) >= 0 ? 'positive' : 'negative' 
+    }
+  ];
+});
+
+const summaryDetailsFiltered = computed(() =>
+  summaryDetails.value.filter(item => !item.label.includes("Today's Value"))
+);
 
 async function fetchProjection() {
   try {
@@ -54,25 +121,51 @@ onMounted(fetchProjection);
 .dashboard {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
+  width: 100%;
+  height: 100vh;
+  padding: 1rem;
+  overflow: auto;
 }
 .dashboard-header {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 .dashboard-main {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
-.dashboard-left {
-  flex: 2;
+.dashboard-center {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  overflow: hidden;
 }
 .dashboard-right {
-  flex: 1;
+  flex: 0 0 320px;
+  min-width: 320px;
+  max-width: 320px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-main {
+    flex-direction: column;
+  }
+  
+  .dashboard-right {
+    flex: none;
+    width: 100%;
+  }
+  
+  .dashboard-center {
+    order: -1;
+  }
 }
 </style>
