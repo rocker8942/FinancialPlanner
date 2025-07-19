@@ -13,6 +13,7 @@ namespace FinancialPlanner.Backend.Models
         public decimal FinancialAssets { get; set; }
         
         public decimal Salary { get; set; }
+        public decimal PartnerSalary { get; set; }
         public decimal Expenses { get; set; }
         public int CurrentAge { get; set; }
         public int RetireAge { get; set; }
@@ -20,7 +21,7 @@ namespace FinancialPlanner.Backend.Models
         
         // Growth rates
         public decimal FinancialAssetGrowthRate { get; set; } // User input rate
-        public decimal PropertyGrowthRate { get; set; } = 0.03m; // Historic average (3% default)
+        public decimal PropertyGrowthRate { get; set; } = 0.04m; // Historic average (4% default)
         public decimal InflationRate { get; set; } = 0.03m; // Default 3% inflation rate
         
         // Pension fields
@@ -28,6 +29,9 @@ namespace FinancialPlanner.Backend.Models
         public int PensionStartAge { get; set; }
         public decimal PartnerPensionAmount { get; set; }
         public int PartnerPensionStartAge { get; set; }
+        // Add partner age fields
+        public int PartnerAge { get; set; }
+        public int PartnerRetireAge { get; set; }
         public User User { get; set; } = null!;
     }
 }

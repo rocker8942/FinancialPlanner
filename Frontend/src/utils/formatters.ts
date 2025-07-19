@@ -22,3 +22,15 @@ export function formatCurrency(value: number): string {
     maximumFractionDigits: 0
   });
 }
+
+/**
+ * Parses a formatted number string back into a number
+ * @param value - The formatted string to parse
+ * @returns Parsed number value
+ */
+export function parseFormattedNumber(value: string): number {
+  // Remove currency symbol, commas and other non-numeric characters except decimal point
+  const cleanValue = value.replace(/[^0-9.-]/g, '');
+  const parsedValue = parseFloat(cleanValue);
+  return isNaN(parsedValue) ? 0 : parsedValue;
+}

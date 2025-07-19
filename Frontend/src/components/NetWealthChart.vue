@@ -61,7 +61,7 @@ function renderChart() {
         'Property Assets': false,
         'Total Wealth': false,
         'Financial Assets': true,
-        'Pension Income': true
+        'Pension Income': false
       }
     },
     xAxis: { 

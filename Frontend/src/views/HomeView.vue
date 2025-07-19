@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <div class="dashboard-header">
-      <h1>Net Wealth Plan</h1>
+      <h1>Retirement Planner</h1>
     </div>
     <div class="dashboard-main">
       <div class="dashboard-center">
@@ -9,18 +9,19 @@
       </div>
       <div class="dashboard-right">
         <SummaryCard :netWorth="finalWealth" :details="summaryDetailsFiltered" />
-        <AssetInputForm @update="fetchProjection" />
+        <AssetInputForm @update="onProfileUpdate" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, computed } from 'vue';
 import NetWealthChart from '../components/NetWealthChart.vue';
 import AssetInputForm from '../components/AssetInputForm.vue';
 import SummaryCard from '../components/SummaryCard.vue';
-import { getFinancialPlan } from '../services/api';
+import { calculateFinancialPlan } from '../utils/financialPlan';
+import type { FinancialProfile } from '../utils/financialPlan';
 
 interface ProjectionData {
   age: number;
@@ -95,26 +96,14 @@ const summaryDetailsFiltered = computed(() =>
   summaryDetails.value.filter(item => !item.label.includes("Today's Value"))
 );
 
-async function fetchProjection() {
-  try {
-    console.log('Fetching financial plan...');
-    const result = await getFinancialPlan();
-    console.log('Financial plan result:', result);
-    projection.value = result || [];
-  } catch (error: any) {
-    console.error('Error fetching financial plan:', error);
-    
-    // Check if it's a 404 error (no financial profile)
-    if (error.response?.status === 404) {
-      console.log('No financial profile found. User needs to set up their profile first.');
-      // You might want to show a message to the user or redirect to profile setup
-    }
-    
+function onProfileUpdate(profile: FinancialProfile) {
+  if (profile) {
+    const plan = calculateFinancialPlan(profile);
+    projection.value = plan.projection;
+  } else {
     projection.value = [];
   }
 }
-
-onMounted(fetchProjection);
 </script>
 
 <style scoped>

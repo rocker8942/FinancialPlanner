@@ -40,7 +40,10 @@ namespace FinancialPlanner.Backend.Controllers
                 PensionAmount = profile.PensionAmount,
                 PensionStartAge = profile.PensionStartAge,
                 PartnerPensionAmount = profile.PartnerPensionAmount,
-                PartnerPensionStartAge = profile.PartnerPensionStartAge
+                PartnerPensionStartAge = profile.PartnerPensionStartAge,
+                // Add partner age fields
+                PartnerAge = profile.PartnerAge,
+                PartnerRetireAge = profile.PartnerRetireAge
             };
         }
 
@@ -67,7 +70,10 @@ namespace FinancialPlanner.Backend.Controllers
                     PensionAmount = dto.PensionAmount,
                     PensionStartAge = dto.PensionStartAge,
                     PartnerPensionAmount = dto.PartnerPensionAmount,
-                    PartnerPensionStartAge = dto.PartnerPensionStartAge
+                    PartnerPensionStartAge = dto.PartnerPensionStartAge,
+                    // Add partner age fields
+                    PartnerAge = dto.PartnerAge,
+                    PartnerRetireAge = dto.PartnerRetireAge
                 };
                 _context.FinancialProfiles.Add(profile);
             }
@@ -87,6 +93,9 @@ namespace FinancialPlanner.Backend.Controllers
                 profile.PensionStartAge = dto.PensionStartAge;
                 profile.PartnerPensionAmount = dto.PartnerPensionAmount;
                 profile.PartnerPensionStartAge = dto.PartnerPensionStartAge;
+                // Add partner age fields
+                profile.PartnerAge = dto.PartnerAge;
+                profile.PartnerRetireAge = dto.PartnerRetireAge;
             }
             await _context.SaveChangesAsync();
             return Ok();

@@ -1,0 +1,123 @@
+---
+applyTo: '**'
+---
+Coding standards, domain knowledge, and preferences that AI should follow.
+
+## domain knowledge
+
+- This app is financial planner web application.
+- Get an input of asset, salary, and expenses.
+- Calculate the financial plan based on the input.
+- Provide a summary of the financial plan.
+- Use the latest financial planning algorithms and best practices.
+- Ensure the financial plan is realistic and achievable.
+
+## coding standards
+
+- This app is built in windows environment.
+- Frontend should be built with Vue 3 and TypeScript.
+- Backend should be built with Asp.NET Core and C#.
+- Entity Framework code-first is being used
+- Use RESTful API design principles for communication between frontend and backend.
+- Use modern JavaScript and TypeScript features.
+- Follow SOLID principles in backend development.
+- Use async/await for asynchronous operations in both frontend and backend.
+- Use proper error handling and logging in both frontend and backend.
+- Use ESLint and Prettier for code formatting and linting in frontend.
+
+## agent code guide
+- Use context7 mcp
+
+---
+mode: agent
+---
+
+# Main Prompt
+
+## Feature
+
+- Main page wiht Chart: Chart that shows the net wealth from current age to death age.
+- the chart should be interactive, allowing users to hover over points to see details.
+- the chart should be generated based on user input data.
+- the chart should be visually appealing and easy to understand.
+- the chart should be updated dynamically as the user inputs new data.
+
+- Financial Plan: User can input their assets, salary, and expenses to generate a financial plan
+- user input is to be stored in browser local storage.
+
+- Login and Register: User can register and login to the application.
+- Login with email and password. 
+- Registration should include email, password, and confirmation password.
+- User Authentication: Implement secure user authentication using JWT tokens.
+
+- Settings: User can update their profile and settings.
+- Logout: User can log out of the application.
+
+- Database will be SQL server. 
+- Use EF Code first for database migrations and management.
+
+- Responsive Design: Ensure the application is responsive and works on various devices.
+
+- Backend should use Swagger
+
+- Front should use Tailwind CSS for styling.
+
+## Frontend
+
+- logic change should be test by unit test.
+
+## app build plan
+
+1. Project Setup
+Initialize a monorepo or two separate projects:
+Frontend: Vue 3 + TypeScript
+Backend: ASP.NET Core + C#
+Set up ESLint and Prettier for the frontend.
+Set up basic RESTful API structure in the backend.
+2. Authentication (Login & Register)
+Backend:
+Implement user registration and login endpoints.
+Use JWT for secure authentication.
+Store user credentials securely (hash passwords).
+Frontend:
+Create registration and login forms (email, password, confirm password).
+Store JWT token in browser (securely, e.g., HttpOnly cookie or localStorage).
+Implement logout functionality.
+3. User Profile & Settings
+Backend:
+Endpoints to get/update user profile and settings.
+Frontend:
+Profile/settings page for updating user info.
+Allow user to log out.
+4. Financial Plan Input
+Frontend:
+Form for users to input assets, salary, and expenses.
+Store input in browser local storage.
+Backend:
+Endpoints to receive and process financial data (optional, if you want to persist on server).
+5. Financial Plan Calculation
+Backend:
+Implement financial planning algorithms (project net wealth from current age to death age).
+Return summary and yearly data.
+Frontend:
+Fetch calculated plan from backend (or calculate locally if preferred).
+Display summary of the plan.
+6. Interactive Chart
+Frontend:
+Use a modern charting library (e.g., Chart.js, ECharts, or ApexCharts for Vue 3).
+Display net wealth over time.
+Make chart interactive (hover for details, update dynamically as user changes input).
+Ensure chart is visually appealing and easy to understand.
+7. Responsive Design
+Use CSS frameworks (e.g., Tailwind CSS, BootstrapVue) or custom CSS to ensure the app works on all devices.
+8. Error Handling & Logging
+Backend:
+Implement proper error handling and logging.
+Frontend:
+Show user-friendly error messages.
+9. Testing & Code Quality
+Write unit and integration tests for both frontend and backend.
+Use linters and formatters to maintain code quality.
+10. Deployment
+Prepare production builds for both frontend and backend.
+Deploy to cloud or hosting provider (e.g., Azure, AWS, Vercel).

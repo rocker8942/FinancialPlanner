@@ -43,6 +43,7 @@ export async function updateFinancialProfile(profile: {
   propertyAssets: number; 
   financialAssets: number; 
   salary: number; 
+  partnerSalary: number;
   expenses: number; 
   currentAge: number; 
   retireAge: number;
@@ -54,6 +55,8 @@ export async function updateFinancialProfile(profile: {
   pensionStartAge: number;
   partnerPensionAmount: number;
   partnerPensionStartAge: number;
+  partnerAge: number;
+  partnerRetireAge: number;
 }) {
   const { data } = await API.post('/financialprofile', profile);
   return data;

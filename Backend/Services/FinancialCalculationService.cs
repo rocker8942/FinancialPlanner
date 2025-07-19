@@ -31,6 +31,12 @@ namespace FinancialPlanner.Backend.Services
                         financialAssets += profile.Salary;
                     }
                     
+                    // Add partner salary to financial assets only if partner is not retired
+                    if (age <= profile.PartnerRetireAge)
+                    {
+                        financialAssets += profile.PartnerSalary;
+                    }
+                    
                     // Add pension income for user if at or after pension start age
                     if (age >= profile.PensionStartAge)
                     {

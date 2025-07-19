@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submit" class="asset-form">
+  <form class="asset-form">
     <!-- Person Profile Group -->
     <fieldset class="form-section">
       <legend class="form-section-title clickable" @click="toggleSection('profile')">
@@ -9,69 +9,89 @@
       <div v-show="sectionOpen.profile">
         <div class="form-group">
           <label for="currentAge">Current Age</label>
-          <input 
-            id="currentAge"
-            v-model="currentAgeFormatted"
-            @focus="onFocus('currentAge')"
-            @blur="onBlur('currentAge')"
-            type="text" 
-            placeholder="Current Age" 
-            required 
-          />
-          <span class="formatted-value">{{ currentAge }} years old</span>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('currentAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('currentAge', -1)">-</button>
+            <input 
+              id="currentAge"
+              v-model="currentAgeFormatted"
+              @focus="onFocus('currentAge')"
+              @blur="onBlur('currentAge')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Current Age" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('currentAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('currentAge', 1)">+</button>
+          </div>
         </div>
         <div class="form-group">
-          <label for="retireAge">Retirement Age</label>
-          <input 
-            id="retireAge"
-            v-model="retireAgeFormatted"
-            @focus="onFocus('retireAge')"
-            @blur="onBlur('retireAge')"
-            type="text" 
-            placeholder="Retirement Age" 
-            required 
-          />
-          <span class="formatted-value">{{ retireAge }} years old</span>
+          <label for="partnerAge">Partner's Age</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerAge', -1)">-</button>
+            <input 
+              id="partnerAge"
+              v-model="partnerAgeFormatted"
+              @focus="onFocus('partnerAge')"
+              @blur="onBlur('partnerAge')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Partner's Age" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerAge', 1)">+</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="retireAge">Desired Retirement Age</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('retireAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('retireAge', -1)">-</button>
+            <input 
+              id="retireAge"
+              v-model="retireAgeFormatted"
+              @focus="onFocus('retireAge')"
+              @blur="onBlur('retireAge')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Retirement Age" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('retireAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('retireAge', 1)">+</button>
+          </div>
           <small class="help-text">Age when salary income stops</small>
         </div>
         <div class="form-group">
-          <label for="deathAge">Retirement/Death Age</label>
-          <input 
-            id="deathAge"
-            v-model="deathAgeFormatted"
-            @focus="onFocus('deathAge')"
-            @blur="onBlur('deathAge')"
-            type="text" 
-            placeholder="Target Age" 
-            required 
-          />
-          <span class="formatted-value">{{ deathAge }} years old</span>
+          <label for="partnerRetireAge">Partner's Desired Retirement Age</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerRetireAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerRetireAge', -1)">-</button>
+            <input 
+              id="partnerRetireAge"
+              v-model="partnerRetireAgeFormatted"
+              @focus="onFocus('partnerRetireAge')"
+              @blur="onBlur('partnerRetireAge')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Partner's Retirement Age" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerRetireAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerRetireAge', 1)">+</button>
+          </div>
         </div>
         <div class="form-group">
-          <label for="pensionStartAge">Pension for You (Start Age)</label>
-          <input 
-            id="pensionStartAge"
-            v-model="pensionStartAgeFormatted"
-            @focus="onFocus('pensionStartAge')"
-            @blur="onBlur('pensionStartAge')"
-            type="text" 
-            placeholder="Pension Start Age" 
-            required 
-          />
-          <span class="formatted-value">{{ pensionStartAge }} years old</span>
-        </div>
-        <div class="form-group">
-          <label for="partnerPensionStartAge">Pension for Your Partner (Start Age)</label>
-          <input 
-            id="partnerPensionStartAge"
-            v-model="partnerPensionStartAgeFormatted"
-            @focus="onFocus('partnerPensionStartAge')"
-            @blur="onBlur('partnerPensionStartAge')"
-            type="text" 
-            placeholder="Partner Pension Start Age" 
-            required 
-          />
-          <span class="formatted-value">{{ partnerPensionStartAge }} years old</span>
+          <label for="deathAge">Age the plan ends</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('deathAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('deathAge', -1)">-</button>
+            <input 
+              id="deathAge"
+              v-model="deathAgeFormatted"
+              @focus="onFocus('deathAge')"
+              @blur="onBlur('deathAge')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Target Age" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('deathAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('deathAge', 1)">+</button>
+          </div>
         </div>
       </div>
     </fieldset>
@@ -85,72 +105,92 @@
       <div v-show="sectionOpen.assets">
         <div class="form-group">
           <label for="propertyAssets">Property Assets</label>
-          <input 
-            id="propertyAssets"
-            v-model="propertyAssetsFormatted"
-            @focus="onFocus('propertyAssets')"
-            @blur="onBlur('propertyAssets')"
-            type="text" 
-            placeholder="Property Assets ($)" 
-            required 
-          />
-          <span class="formatted-value">{{ formatCurrency(propertyAssets) }}</span>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyAssets', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyAssets', -1000)">-</button>
+            <input 
+              id="propertyAssets"
+              v-model="propertyAssetsFormatted"
+              @focus="onFocus('propertyAssets')"
+              @blur="onBlur('propertyAssets')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Property Assets ($)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyAssets', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyAssets', 1000)">+</button>
+          </div>
           <small class="help-text">Real estate, land, and other property investments</small>
         </div>
         <div class="form-group">
           <label for="financialAssets">Financial Assets</label>
-          <input 
-            id="financialAssets"
-            v-model="financialAssetsFormatted"
-            @focus="onFocus('financialAssets')"
-            @blur="onBlur('financialAssets')"
-            type="text" 
-            placeholder="Financial Assets ($)" 
-            required 
-          />
-          <span class="formatted-value">{{ formatCurrency(financialAssets) }}</span>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('financialAssets', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('financialAssets', -1000)">-</button>
+            <input 
+              id="financialAssets"
+              v-model="financialAssetsFormatted"
+              @focus="onFocus('financialAssets')"
+              @blur="onBlur('financialAssets')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Financial Assets ($)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('financialAssets', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('financialAssets', 1000)">+</button>
+          </div>
           <small class="help-text">Stocks, bonds, savings, and liquid investments</small>
         </div>
         <div class="form-group">
           <label for="financialAssetGrowthRate">Expected Financial Asset Growth Rate</label>
-          <input 
-            id="financialAssetGrowthRate"
-            v-model="financialAssetGrowthRateFormatted"
-            @focus="onFocus('financialAssetGrowthRate')"
-            @blur="onBlur('financialAssetGrowthRate')"
-            type="text" 
-            placeholder="Growth Rate (%)" 
-            required 
-          />
-          <span class="formatted-value">{{ (financialAssetGrowthRate * 100).toFixed(1) }}% annually</span>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('financialAssetGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('financialAssetGrowthRate', -0.5)">-</button>
+            <input 
+              id="financialAssetGrowthRate"
+              v-model="financialAssetGrowthRateFormatted"
+              @focus="onFocus('financialAssetGrowthRate')"
+              @blur="onBlur('financialAssetGrowthRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Growth Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('financialAssetGrowthRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('financialAssetGrowthRate', 0.5)">+</button>
+          </div>
           <small class="help-text">Expected annual return on your investments</small>
         </div>
         <div class="form-group">
           <label for="propertyGrowthRate">Property Growth Rate</label>
-          <input 
-            id="propertyGrowthRate"
-            v-model="propertyGrowthRateFormatted"
-            @focus="onFocus('propertyGrowthRate')"
-            @blur="onBlur('propertyGrowthRate')"
-            type="text" 
-            placeholder="Growth Rate (%)" 
-            required 
-          />
-          <span class="formatted-value">{{ (propertyGrowthRate * 100).toFixed(1) }}% annually</span>
-          <small class="help-text">Historic average property appreciation (default: 3%)</small>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyGrowthRate', -0.5)">-</button>
+            <input 
+              id="propertyGrowthRate"
+              v-model="propertyGrowthRateFormatted"
+              @focus="onFocus('propertyGrowthRate')"
+              @blur="onBlur('propertyGrowthRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Growth Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyGrowthRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyGrowthRate', 0.5)">+</button>
+          </div>
+          <small class="help-text">Historic average property appreciation (default: 4%)</small>
         </div>
         <div class="form-group">
           <label for="inflationRate">Inflation Rate</label>
-          <input 
-            id="inflationRate"
-            v-model="inflationRateFormatted"
-            @focus="onFocus('inflationRate')"
-            @blur="onBlur('inflationRate')"
-            type="text" 
-            placeholder="Inflation Rate (%)" 
-            required 
-          />
-          <span class="formatted-value">{{ (inflationRate * 100).toFixed(1) }}% annually</span>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('inflationRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('inflationRate', -0.5)">-</button>
+            <input 
+              id="inflationRate"
+              v-model="inflationRateFormatted"
+              @focus="onFocus('inflationRate')"
+              @blur="onBlur('inflationRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Inflation Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('inflationRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('inflationRate', 0.5)">+</button>
+          </div>
           <small class="help-text">Expected annual inflation rate (default: 3%)</small>
         </div>
       </div>
@@ -165,72 +205,119 @@
       <div v-show="sectionOpen.income">
         <div class="form-group">
           <label for="salary">Annual Salary</label>
-          <input 
-            id="salary"
-            v-model="salaryFormatted"
-            @focus="onFocus('salary')"
-            @blur="onBlur('salary')"
-            type="text" 
-            placeholder="Annual Salary ($)" 
-            required 
-          />
-          <span class="formatted-value">{{ formatCurrency(salary) }}</span>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('salary', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('salary', -1000)">-</button>
+            <input 
+              id="salary"
+              v-model="salaryFormatted"
+              @focus="onFocus('salary')"
+              @blur="onBlur('salary')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Annual Salary ($)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('salary', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('salary', 1000)">+</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="partnerSalary">Partner's Annual Salary</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerSalary', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerSalary', -1000)">-</button>
+            <input 
+              id="partnerSalary"
+              v-model="partnerSalaryFormatted"
+              @focus="onFocus('partnerSalary')"
+              @blur="onBlur('partnerSalary')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Partner's Annual Salary ($)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerSalary', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerSalary', 1000)">+</button>
+          </div>
         </div>
         <div class="form-group">
           <label for="expenses">Annual Expenses</label>
-          <input 
-            id="expenses"
-            v-model="expensesFormatted"
-            @focus="onFocus('expenses')"
-            @blur="onBlur('expenses')"
-            type="text" 
-            placeholder="Annual Expenses ($)" 
-            required 
-          />
-          <span class="formatted-value">{{ formatCurrency(expenses) }}</span>
-          <small class="help-text">Will be paid from financial assets only</small>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('expenses', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('expenses', -1000)" :disabled="zeroNetWorthAtDeath">-</button>
+            <input 
+              id="expenses"
+              v-model="expensesFormatted"
+              @focus="onFocus('expenses')"
+              @blur="onBlur('expenses')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Annual Expenses ($)" 
+              required 
+              :disabled="zeroNetWorthAtDeath"
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('expenses', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('expenses', 1000)" :disabled="zeroNetWorthAtDeath">+</button>
+          </div>
+          <small class="help-text">{{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}</small>
         </div>
         <div class="form-group">
           <label for="pensionAmount">Pension for You (Annual Amount)</label>
-          <input 
-            id="pensionAmount"
-            v-model="pensionAmountFormatted"
-            @focus="onFocus('pensionAmount')"
-            @blur="onBlur('pensionAmount')"
-            type="text" 
-            placeholder="Pension Amount ($)" 
-            required 
-          />
-          <span class="formatted-value">{{ formatCurrency(pensionAmount) }}</span>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('pensionAmount', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('pensionAmount', -1000)">-</button>
+            <input 
+              id="pensionAmount"
+              v-model="pensionAmountFormatted"
+              @focus="onFocus('pensionAmount')"
+              @blur="onBlur('pensionAmount')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Pension Amount ($)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('pensionAmount', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('pensionAmount', 1000)">+</button>
+          </div>
           <small class="help-text">Annual pension income for you</small>
         </div>
         <div class="form-group">
           <label for="partnerPensionAmount">Pension for Your Partner (Annual Amount)</label>
-          <input 
-            id="partnerPensionAmount"
-            v-model="partnerPensionAmountFormatted"
-            @focus="onFocus('partnerPensionAmount')"
-            @blur="onBlur('partnerPensionAmount')"
-            type="text" 
-            placeholder="Partner Pension Amount ($)" 
-            required 
-          />
-          <span class="formatted-value">{{ formatCurrency(partnerPensionAmount) }}</span>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerPensionAmount', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerPensionAmount', -1000)">-</button>
+            <input 
+              id="partnerPensionAmount"
+              v-model="partnerPensionAmountFormatted"
+              @focus="onFocus('partnerPensionAmount')"
+              @blur="onBlur('partnerPensionAmount')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Partner Pension Amount ($)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerPensionAmount', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerPensionAmount', 1000)">+</button>
+          </div>
           <small class="help-text">Annual pension income for your partner</small>
         </div>
       </div>
     </fieldset>
 
-    <button type="submit" class="submit-btn">Update Financial Plan</button>
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" v-model="zeroNetWorthAtDeath" />
+        Auto-calculate expenses to reach zero net worth at the end of the plan
+      </label>
+      <small v-if="zeroNetWorthAtDeath" class="help-text">When enabled, your annual expenses will be automatically calculated and adjusted based on your other inputs to ensure you reach exactly zero net worth at your target age. This maximizes your lifetime spending potential.</small>
+      <span v-if="zeroNetWorthAtDeath" class="expense-info">Auto-calculated annual expense: {{ formatCurrency(calculatedExpense) }}</span>
+    </div>
+
+    <!-- Button removed: calculation is now automatic on input change -->
   </form>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, watchEffect, computed } from 'vue';
 import { getFinancialProfile, updateFinancialProfile } from '../services/api';
-import { formatCurrency, formatNumber } from '../utils/formatters';
+import { calculateFinancialPlan, calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
+import type { FinancialProfile } from '../utils/financialPlan';
+import { formatCurrency, formatNumber, parseFormattedNumber } from '../utils/formatters';
 
 const emit = defineEmits(['update']);
+
+const isLoaded = ref(false);
 
 // Reactive values for the new asset structure
 const propertyAssets = ref(0);
@@ -246,9 +333,18 @@ const inflationRate = ref(0.03); // 3% default inflation rate
 
 // Add new reactive variables for pension fields
 const pensionAmount = ref(0);
-const pensionStartAge = ref(67);
+const pensionStartAge = ref(67); // Always 67, hardcoded
 const partnerPensionAmount = ref(0);
-const partnerPensionStartAge = ref(67);
+const partnerPensionStartAge = computed(() => partnerAge.value < 67 ? 67 : partnerAge.value);
+
+// Add new reactive variables for partner's age and retirement age
+const partnerAge = ref(30);
+const partnerRetireAge = ref(65);
+const partnerSalary = ref(0);
+
+// Checkbox for zero net worth at death
+const zeroNetWorthAtDeath = ref(false);
+const calculatedExpense = ref(0);
 
 // Formatted string representations for display
 const propertyAssetsFormatted = ref('0');
@@ -262,12 +358,25 @@ const financialAssetGrowthRateFormatted = ref('7');
 const propertyGrowthRateFormatted = ref('3');
 const inflationRateFormatted = ref('3');
 const pensionAmountFormatted = ref('0');
-const pensionStartAgeFormatted = ref('67');
 const partnerPensionAmountFormatted = ref('0');
 const partnerPensionStartAgeFormatted = ref('67');
+const partnerAgeFormatted = ref('30');
+const partnerRetireAgeFormatted = ref('65');
+const partnerSalaryFormatted = ref('0');
 
 // Track which fields are currently focused
 const focusedFields = ref(new Set<string>());
+
+// Continuous adjustment state
+const continuousAdjustmentState = ref<{
+  interval: NodeJS.Timeout | null;
+  fieldName: string | null;
+  adjustment: number;
+}>({
+  interval: null,
+  fieldName: null,
+  adjustment: 0
+});
 
 // Collapsible section state
 const sectionOpen = ref({
@@ -298,25 +407,25 @@ function parsePercentageValue(value: string): number {
 // Update formatted strings when numeric values change
 watch(propertyAssets, (newValue) => {
   if (!focusedFields.value.has('propertyAssets')) {
-    propertyAssetsFormatted.value = formatNumber(newValue);
+    propertyAssetsFormatted.value = formatCurrency(newValue);
   }
 });
 
 watch(financialAssets, (newValue) => {
   if (!focusedFields.value.has('financialAssets')) {
-    financialAssetsFormatted.value = formatNumber(newValue);
+    financialAssetsFormatted.value = formatCurrency(newValue);
   }
 });
 
 watch(salary, (newValue) => {
   if (!focusedFields.value.has('salary')) {
-    salaryFormatted.value = formatNumber(newValue);
+    salaryFormatted.value = formatCurrency(newValue);
   }
 });
 
 watch(expenses, (newValue) => {
   if (!focusedFields.value.has('expenses')) {
-    expensesFormatted.value = formatNumber(newValue);
+    expensesFormatted.value = formatCurrency(newValue);
   }
 });
 
@@ -353,6 +462,18 @@ watch(propertyGrowthRate, (newValue) => {
 watch(inflationRate, (newValue) => {
   if (!focusedFields.value.has('inflationRate')) {
     inflationRateFormatted.value = (newValue * 100).toFixed(1);
+  }
+});
+
+watch(partnerAge, (newValue) => {
+  if (!focusedFields.value.has('partnerAge')) {
+    partnerAgeFormatted.value = formatNumber(newValue);
+  }
+});
+
+watch(partnerRetireAge, (newValue) => {
+  if (!focusedFields.value.has('partnerRetireAge')) {
+    partnerRetireAgeFormatted.value = formatNumber(newValue);
   }
 });
 
@@ -393,14 +514,17 @@ function onFocus(fieldName: string) {
     case 'pensionAmount':
       pensionAmountFormatted.value = pensionAmount.value.toString();
       break;
-    case 'pensionStartAge':
-      pensionStartAgeFormatted.value = pensionStartAge.value.toString();
-      break;
     case 'partnerPensionAmount':
       partnerPensionAmountFormatted.value = partnerPensionAmount.value.toString();
       break;
-    case 'partnerPensionStartAge':
-      partnerPensionStartAgeFormatted.value = partnerPensionStartAge.value.toString();
+    case 'partnerAge':
+      partnerAgeFormatted.value = partnerAge.value.toString();
+      break;
+    case 'partnerRetireAge':
+      partnerRetireAgeFormatted.value = partnerRetireAge.value.toString();
+      break;
+    case 'partnerSalary':
+      partnerSalaryFormatted.value = partnerSalary.value.toString();
       break;
   }
 }
@@ -408,20 +532,24 @@ function onBlur(fieldName: string) {
   focusedFields.value.delete(fieldName);
   switch (fieldName) {
     case 'propertyAssets':
-      propertyAssets.value = parseNumericValue(propertyAssetsFormatted.value);
-      propertyAssetsFormatted.value = formatNumber(propertyAssets.value);
+      const parsedPropertyAssets = parseFormattedNumber(propertyAssetsFormatted.value)
+      propertyAssets.value = parsedPropertyAssets >= 0 ? parsedPropertyAssets : 0
+      propertyAssetsFormatted.value = formatCurrency(propertyAssets.value)
       break;
     case 'financialAssets':
-      financialAssets.value = parseNumericValue(financialAssetsFormatted.value);
-      financialAssetsFormatted.value = formatNumber(financialAssets.value);
+      const parsedFinancialAssets = parseFormattedNumber(financialAssetsFormatted.value)
+      financialAssets.value = parsedFinancialAssets >= 0 ? parsedFinancialAssets : 0
+      financialAssetsFormatted.value = formatCurrency(financialAssets.value)
       break;
     case 'salary':
-      salary.value = parseNumericValue(salaryFormatted.value);
-      salaryFormatted.value = formatNumber(salary.value);
+      const parsedSalary = parseFormattedNumber(salaryFormatted.value)
+      salary.value = parsedSalary >= 0 ? parsedSalary : 0
+      salaryFormatted.value = formatCurrency(salary.value)
       break;
     case 'expenses':
-      expenses.value = parseNumericValue(expensesFormatted.value);
-      expensesFormatted.value = formatNumber(expenses.value);
+      const parsedExpenses = parseFormattedNumber(expensesFormatted.value)
+      expenses.value = parsedExpenses >= 0 ? parsedExpenses : 0
+      expensesFormatted.value = formatCurrency(expenses.value)
       break;
     case 'currentAge':
       currentAge.value = parseNumericValue(currentAgeFormatted.value);
@@ -448,31 +576,193 @@ function onBlur(fieldName: string) {
       inflationRateFormatted.value = (inflationRate.value * 100).toFixed(1);
       break;
     case 'pensionAmount':
-      pensionAmount.value = parseNumericValue(pensionAmountFormatted.value);
-      pensionAmountFormatted.value = formatNumber(pensionAmount.value);
-      break;
-    case 'pensionStartAge':
-      pensionStartAge.value = parseNumericValue(pensionStartAgeFormatted.value);
-      pensionStartAgeFormatted.value = formatNumber(pensionStartAge.value);
+      const parsedPensionAmount = parseFormattedNumber(pensionAmountFormatted.value)
+      pensionAmount.value = parsedPensionAmount >= 0 ? parsedPensionAmount : 0
+      pensionAmountFormatted.value = formatCurrency(pensionAmount.value)
       break;
     case 'partnerPensionAmount':
-      partnerPensionAmount.value = parseNumericValue(partnerPensionAmountFormatted.value);
-      partnerPensionAmountFormatted.value = formatNumber(partnerPensionAmount.value);
+      const parsedPartnerPensionAmount = parseFormattedNumber(partnerPensionAmountFormatted.value)
+      partnerPensionAmount.value = parsedPartnerPensionAmount >= 0 ? parsedPartnerPensionAmount : 0
+      partnerPensionAmountFormatted.value = formatCurrency(partnerPensionAmount.value)
       break;
-    case 'partnerPensionStartAge':
-      partnerPensionStartAge.value = parseNumericValue(partnerPensionStartAgeFormatted.value);
-      partnerPensionStartAgeFormatted.value = formatNumber(partnerPensionStartAge.value);
+    case 'partnerAge':
+      partnerAge.value = parseNumericValue(partnerAgeFormatted.value);
+      partnerAgeFormatted.value = formatNumber(partnerAge.value);
+      break;
+    case 'partnerRetireAge':
+      partnerRetireAge.value = parseNumericValue(partnerRetireAgeFormatted.value);
+      partnerRetireAgeFormatted.value = formatNumber(partnerRetireAge.value);
+      break;
+    case 'partnerSalary':
+      const parsedPartnerSalary = parseFormattedNumber(partnerSalaryFormatted.value)
+      partnerSalary.value = parsedPartnerSalary >= 0 ? parsedPartnerSalary : 0
+      partnerSalaryFormatted.value = formatCurrency(partnerSalary.value)
       break;
   }
 }
 
-const LOCAL_KEY = 'financial-input';
+// When Enter is pressed, blur the input to accept value and trigger recalculation
+function onEnter(event: KeyboardEvent) {
+  const target = event.target as HTMLInputElement;
+  if (target) {
+    target.blur();
+  }
+}
 
-function saveToLocalStorage() {
-  const data = {
+// Adjust value with increment/decrement buttons
+function adjustValue(fieldName: string, adjustment: number) {
+  switch (fieldName) {
+    case 'currentAge':
+      currentAge.value = Math.max(0, currentAge.value + adjustment);
+      break;
+    case 'partnerAge':
+      partnerAge.value = Math.max(0, partnerAge.value + adjustment);
+      break;
+    case 'retireAge':
+      retireAge.value = Math.max(0, retireAge.value + adjustment);
+      break;
+    case 'partnerRetireAge':
+      partnerRetireAge.value = Math.max(0, partnerRetireAge.value + adjustment);
+      break;
+    case 'deathAge':
+      deathAge.value = Math.max(0, deathAge.value + adjustment);
+      break;
+    case 'propertyAssets':
+      propertyAssets.value = Math.max(0, propertyAssets.value + adjustment);
+      break;
+    case 'financialAssets':
+      financialAssets.value = Math.max(0, financialAssets.value + adjustment);
+      break;
+    case 'financialAssetGrowthRate':
+      financialAssetGrowthRate.value = Math.max(0, Math.min(1, financialAssetGrowthRate.value + adjustment / 100));
+      break;
+    case 'propertyGrowthRate':
+      propertyGrowthRate.value = Math.max(0, Math.min(1, propertyGrowthRate.value + adjustment / 100));
+      break;
+    case 'inflationRate':
+      inflationRate.value = Math.max(0, Math.min(1, inflationRate.value + adjustment / 100));
+      break;
+    case 'salary':
+      salary.value = Math.max(0, salary.value + adjustment);
+      break;
+    case 'partnerSalary':
+      partnerSalary.value = Math.max(0, partnerSalary.value + adjustment);
+      break;
+    case 'expenses':
+      if (!zeroNetWorthAtDeath.value) {
+        expenses.value = Math.max(0, expenses.value + adjustment);
+      }
+      break;
+    case 'pensionAmount':
+      pensionAmount.value = Math.max(0, pensionAmount.value + adjustment);
+      break;
+    case 'partnerPensionAmount':
+      partnerPensionAmount.value = Math.max(0, partnerPensionAmount.value + adjustment);
+      break;
+  }
+}
+
+// Continuous adjustment functions
+function startContinuousAdjustment(fieldName: string, adjustment: number) {
+  // Clear any existing interval
+  stopContinuousAdjustment();
+  
+  // Store the current adjustment state
+  continuousAdjustmentState.value.fieldName = fieldName;
+  continuousAdjustmentState.value.adjustment = adjustment;
+  
+  // Start with initial delay, then faster intervals
+  const initialDelay = 500; // 500ms before starting continuous
+  const fastInterval = 100; // 100ms between adjustments
+  
+  setTimeout(() => {
+    if (continuousAdjustmentState.value.fieldName === fieldName) {
+      continuousAdjustmentState.value.interval = setInterval(() => {
+        adjustValue(fieldName, adjustment);
+      }, fastInterval);
+    }
+  }, initialDelay);
+}
+
+function stopContinuousAdjustment() {
+  if (continuousAdjustmentState.value.interval) {
+    clearInterval(continuousAdjustmentState.value.interval);
+    continuousAdjustmentState.value.interval = null;
+  }
+  continuousAdjustmentState.value.fieldName = null;
+  continuousAdjustmentState.value.adjustment = 0;
+}
+
+// Watch for checkbox and recalculate
+watch(zeroNetWorthAtDeath, (checked) => {
+  if (checked) {
+    const profile: FinancialProfile = {
+      propertyAssets: propertyAssets.value,
+      financialAssets: financialAssets.value,
+      salary: salary.value,
+      partnerSalary: partnerSalary.value,
+      expenses: expenses.value,
+      currentAge: currentAge.value,
+      retireAge: retireAge.value,
+      deathAge: deathAge.value,
+      financialAssetGrowthRate: financialAssetGrowthRate.value,
+      propertyGrowthRate: propertyGrowthRate.value,
+      inflationRate: inflationRate.value,
+      pensionAmount: pensionAmount.value,
+      pensionStartAge: 67, // hardcoded
+      partnerPensionAmount: partnerPensionAmount.value,
+      partnerPensionStartAge: partnerPensionStartAge.value,
+      partnerAge: partnerAge.value,
+      partnerRetireAge: partnerRetireAge.value
+    };
+    calculatedExpense.value = calculateExpenseToZeroNetWorth(profile);
+    expenses.value = calculatedExpense.value;
+    expensesFormatted.value = formatCurrency(calculatedExpense.value);
+  }
+});
+
+// If user changes any relevant field and box is checked, recalculate
+watch([
+  propertyAssets, financialAssets, salary, partnerSalary, currentAge, retireAge, deathAge,
+  financialAssetGrowthRate, propertyGrowthRate, inflationRate,
+  pensionAmount, partnerPensionAmount, partnerPensionStartAge,
+  partnerAge, partnerRetireAge
+], () => {
+  if (zeroNetWorthAtDeath.value) {
+    const profile: FinancialProfile = {
+      propertyAssets: propertyAssets.value,
+      financialAssets: financialAssets.value,
+      salary: salary.value,
+      partnerSalary: partnerSalary.value,
+      expenses: expenses.value,
+      currentAge: currentAge.value,
+      retireAge: retireAge.value,
+      deathAge: deathAge.value,
+      financialAssetGrowthRate: financialAssetGrowthRate.value,
+      propertyGrowthRate: propertyGrowthRate.value,
+      inflationRate: inflationRate.value,
+      pensionAmount: pensionAmount.value,
+      pensionStartAge: 67, // hardcoded
+      partnerPensionAmount: partnerPensionAmount.value,
+      partnerPensionStartAge: partnerPensionStartAge.value,
+      partnerAge: partnerAge.value,
+      partnerRetireAge: partnerRetireAge.value
+    };
+    calculatedExpense.value = calculateExpenseToZeroNetWorth(profile);
+    expenses.value = calculatedExpense.value;
+    expensesFormatted.value = formatCurrency(calculatedExpense.value);
+  }
+});
+
+// Emit updated profile automatically on any input change
+watchEffect(() => {
+  if (!isLoaded.value) return;
+
+  const profile: FinancialProfile = {
     propertyAssets: propertyAssets.value,
     financialAssets: financialAssets.value,
     salary: salary.value,
+    partnerSalary: partnerSalary.value,
     expenses: expenses.value,
     currentAge: currentAge.value,
     retireAge: retireAge.value,
@@ -481,9 +771,42 @@ function saveToLocalStorage() {
     propertyGrowthRate: propertyGrowthRate.value,
     inflationRate: inflationRate.value,
     pensionAmount: pensionAmount.value,
-    pensionStartAge: pensionStartAge.value,
+    pensionStartAge: 67, // hardcoded
     partnerPensionAmount: partnerPensionAmount.value,
-    partnerPensionStartAge: partnerPensionStartAge.value
+    partnerPensionStartAge: partnerPensionStartAge.value,
+    partnerAge: partnerAge.value,
+    partnerRetireAge: partnerRetireAge.value
+  };
+
+  saveToLocalStorage(); // Save changes to local storage immediately
+  emit('update', profile);
+
+  // Auto-save to backend
+  // updateFinancialProfile(profile).catch((e) => {
+  //   console.error('Failed to save profile to backend:', e);
+  // });
+});
+
+const LOCAL_KEY = 'financial-input';
+
+function saveToLocalStorage() {
+  const data = {
+    propertyAssets: propertyAssets.value,
+    financialAssets: financialAssets.value,
+    salary: salary.value,
+    partnerSalary: partnerSalary.value,
+    expenses: expenses.value,
+    currentAge: currentAge.value,
+    retireAge: retireAge.value,
+    deathAge: deathAge.value,
+    financialAssetGrowthRate: financialAssetGrowthRate.value,
+    propertyGrowthRate: propertyGrowthRate.value,
+    inflationRate: inflationRate.value,
+    pensionAmount: pensionAmount.value,
+    pensionStartAge: 67, // hardcoded
+    partnerPensionAmount: partnerPensionAmount.value,
+    partnerAge: partnerAge.value,
+    partnerRetireAge: partnerRetireAge.value
   };
   localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
 }
@@ -496,6 +819,7 @@ function loadFromLocalStorage() {
       propertyAssets.value = parsed.propertyAssets ?? 0;
       financialAssets.value = parsed.financialAssets ?? 0;
       salary.value = parsed.salary ?? 0;
+      partnerSalary.value = parsed.partnerSalary ?? 0;
       expenses.value = parsed.expenses ?? 0;
       currentAge.value = parsed.currentAge ?? 30;
       retireAge.value = parsed.retireAge ?? 65;
@@ -504,9 +828,10 @@ function loadFromLocalStorage() {
       propertyGrowthRate.value = parsed.propertyGrowthRate ?? 0.03;
       inflationRate.value = parsed.inflationRate ?? 0.03;
       pensionAmount.value = parsed.pensionAmount ?? 0;
-      pensionStartAge.value = parsed.pensionStartAge ?? 67;
+      pensionStartAge.value = 67; // always 67
       partnerPensionAmount.value = parsed.partnerPensionAmount ?? 0;
-      partnerPensionStartAge.value = parsed.partnerPensionStartAge ?? 67;
+      partnerAge.value = parsed.partnerAge ?? 30;
+      partnerRetireAge.value = parsed.partnerRetireAge ?? 65;
       
       // Update formatted values
       updateFormattedValues();
@@ -516,47 +841,55 @@ function loadFromLocalStorage() {
 
 // Function to update all formatted values
 function updateFormattedValues() {
-  propertyAssetsFormatted.value = formatNumber(propertyAssets.value);
-  financialAssetsFormatted.value = formatNumber(financialAssets.value);
-  salaryFormatted.value = formatNumber(salary.value);
-  expensesFormatted.value = formatNumber(expenses.value);
+  propertyAssetsFormatted.value = formatCurrency(propertyAssets.value);
+  financialAssetsFormatted.value = formatCurrency(financialAssets.value);
+  salaryFormatted.value = formatCurrency(salary.value);
+  partnerSalaryFormatted.value = formatCurrency(partnerSalary.value);
+  expensesFormatted.value = formatCurrency(expenses.value);
   currentAgeFormatted.value = formatNumber(currentAge.value);
   retireAgeFormatted.value = formatNumber(retireAge.value);
   deathAgeFormatted.value = formatNumber(deathAge.value);
   financialAssetGrowthRateFormatted.value = (financialAssetGrowthRate.value * 100).toFixed(1);
   propertyGrowthRateFormatted.value = (propertyGrowthRate.value * 100).toFixed(1);
   inflationRateFormatted.value = (inflationRate.value * 100).toFixed(1);
-  pensionAmountFormatted.value = formatNumber(pensionAmount.value);
-  pensionStartAgeFormatted.value = formatNumber(pensionStartAge.value);
-  partnerPensionAmountFormatted.value = formatNumber(partnerPensionAmount.value);
-  partnerPensionStartAgeFormatted.value = formatNumber(partnerPensionStartAge.value);
+  pensionAmountFormatted.value = formatCurrency(pensionAmount.value);
+  partnerPensionAmountFormatted.value = formatCurrency(partnerPensionAmount.value);
+  partnerAgeFormatted.value = formatNumber(partnerAge.value);
+  partnerRetireAgeFormatted.value = formatNumber(partnerRetireAge.value);
 }
 
 async function load() {
-  loadFromLocalStorage();
-  try {
-    const profile = await getFinancialProfile();
-    if (profile) {
-      propertyAssets.value = profile.propertyAssets || 0;
-      financialAssets.value = profile.financialAssets || 0;
-      salary.value = profile.salary || 0;
-      expenses.value = profile.expenses || 0;
-      currentAge.value = profile.currentAge || 30;
-      retireAge.value = profile.retireAge || 65;
-      deathAge.value = profile.deathAge || 90;
-      financialAssetGrowthRate.value = profile.financialAssetGrowthRate || 0.07;
-      propertyGrowthRate.value = profile.propertyGrowthRate || 0.03;
-      inflationRate.value = profile.inflationRate || 0.03;
-      pensionAmount.value = profile.pensionAmount || 0;
-      pensionStartAge.value = profile.pensionStartAge || 67;
-      partnerPensionAmount.value = profile.partnerPensionAmount || 0;
-      partnerPensionStartAge.value = profile.partnerPensionStartAge || 67;
-      updateFormattedValues();
-      saveToLocalStorage();
+  const localData = localStorage.getItem(LOCAL_KEY);
+  if (localData) {
+    loadFromLocalStorage();
+  } else {
+    try {
+      const profile = await getFinancialProfile();
+      if (profile) {
+        propertyAssets.value = profile.propertyAssets || 0;
+        financialAssets.value = profile.financialAssets || 0;
+        salary.value = profile.salary || 0;
+        partnerSalary.value = profile.partnerSalary || 0;
+        expenses.value = profile.expenses || 0;
+        currentAge.value = profile.currentAge || 30;
+        retireAge.value = profile.retireAge || 65;
+        deathAge.value = profile.deathAge || 90;
+        financialAssetGrowthRate.value = profile.financialAssetGrowthRate || 0.07;
+        propertyGrowthRate.value = profile.propertyGrowthRate || 0.03;
+        inflationRate.value = profile.inflationRate || 0.03;
+        pensionAmount.value = profile.pensionAmount || 0;
+        pensionStartAge.value = 67; // always 67
+        partnerPensionAmount.value = profile.partnerPensionAmount || 0;
+        partnerAge.value = profile.partnerAge || 30;
+        partnerRetireAge.value = profile.partnerRetireAge || 65;
+        updateFormattedValues();
+        saveToLocalStorage();
+      }
+    } catch (error) {
+      console.log('No existing profile found, using defaults');
     }
-  } catch (error) {
-    console.log('No existing profile found, using defaults');
   }
+  isLoaded.value = true;
 }
 
 async function submit() {
@@ -564,6 +897,7 @@ async function submit() {
     propertyAssets: propertyAssets.value, 
     financialAssets: financialAssets.value,
     salary: salary.value, 
+    partnerSalary: partnerSalary.value,
     expenses: expenses.value, 
     currentAge: currentAge.value, 
     retireAge: retireAge.value,
@@ -572,15 +906,26 @@ async function submit() {
     propertyGrowthRate: propertyGrowthRate.value,
     inflationRate: inflationRate.value,
     pensionAmount: pensionAmount.value,
-    pensionStartAge: pensionStartAge.value,
+    pensionStartAge: 67, // always 67
     partnerPensionAmount: partnerPensionAmount.value,
-    partnerPensionStartAge: partnerPensionStartAge.value
+    partnerPensionStartAge: partnerPensionStartAge.value,
+    partnerAge: partnerAge.value,
+    partnerRetireAge: partnerRetireAge.value
   });
   saveToLocalStorage();
   emit('update');
 }
 
-onMounted(load);
+onMounted(() => {
+  // Expand 'person profile', close 'assets' and 'income' sections on load
+  sectionOpen.value = { profile: true, assets: false, income: false };
+  load();
+});
+
+onUnmounted(() => {
+  // Clean up any running intervals
+  stopContinuousAdjustment();
+});
 </script>
 
 <style scoped>
@@ -603,6 +948,24 @@ onMounted(load);
   font-size: 0.75rem;
 }
 
+.input-with-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.input-with-buttons input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #374151;
+  border-left: none;
+  border-right: none;
+  background: #1f2937;
+  color: #e0e3e8;
+  font-size: 0.85rem;
+  box-sizing: border-box;
+}
+
 .form-group input {
   width: 100%;
   padding: 0.5rem;
@@ -612,6 +975,52 @@ onMounted(load);
   color: #e0e3e8;
   font-size: 0.85rem;
   box-sizing: border-box;
+}
+
+.increment-btn {
+  width: 32px;
+  height: 38px;
+  background: #374151;
+  border: 1px solid #374151;
+  color: #e0e3e8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  user-select: none;
+}
+
+.increment-btn:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.increment-btn:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.increment-btn:hover {
+  background: #4b5563;
+}
+
+.increment-btn:active {
+  background: #6b7280;
+}
+
+.increment-btn:disabled {
+  background: #1f2937;
+  color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.input-with-buttons input:disabled {
+  background: #2d3748;
+  color: #e0e3e8;
+  cursor: not-allowed;
+  border-color: #4a5568;
 }
 
 .form-group input:focus {
@@ -690,5 +1099,26 @@ onMounted(load);
 }
 .chevron.open {
   transform: rotate(0deg);
+}
+.checkbox-group {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.checkbox-group label {
+  font-size: 0.9rem;
+  color: #e0e3e8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.checkbox-group input[type="checkbox"] {
+  margin-right: 0.5em;
+}
+.expense-info {
+  font-size: 0.8rem;
+  color: #6ee7b7;
+  margin-top: 0.2em;
 }
 </style>

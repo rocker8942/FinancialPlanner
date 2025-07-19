@@ -33,6 +33,10 @@ namespace FinancialPlanner.Backend.Data
                 .HasPrecision(18, 2);
                 
             modelBuilder.Entity<FinancialProfile>()
+                .Property(fp => fp.PartnerSalary)
+                .HasPrecision(18, 2);
+                
+            modelBuilder.Entity<FinancialProfile>()
                 .Property(fp => fp.Expenses)
                 .HasPrecision(18, 2);
                 
@@ -43,6 +47,18 @@ namespace FinancialPlanner.Backend.Data
             modelBuilder.Entity<FinancialProfile>()
                 .Property(fp => fp.PropertyGrowthRate)
                 .HasPrecision(18, 6); // More precision for growth rates
+                
+            modelBuilder.Entity<FinancialProfile>()
+                .Property(fp => fp.InflationRate)
+                .HasPrecision(18, 6); // More precision for rates
+                
+            modelBuilder.Entity<FinancialProfile>()
+                .Property(fp => fp.PensionAmount)
+                .HasPrecision(18, 2);
+                
+            modelBuilder.Entity<FinancialProfile>()
+                .Property(fp => fp.PartnerPensionAmount)
+                .HasPrecision(18, 2);
         }
     }
 }

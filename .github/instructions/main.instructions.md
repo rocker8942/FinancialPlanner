@@ -17,6 +17,7 @@ Coding standards, domain knowledge, and preferences that AI should follow.
 - This app is built in windows environment.
 - Frontend should be built with Vue 3 and TypeScript.
 - Backend should be built with Asp.NET Core and C#.
+- Entity Framework code-first is being used
 - Use RESTful API design principles for communication between frontend and backend.
 - Use modern JavaScript and TypeScript features.
 - Follow SOLID principles in backend development.
@@ -26,5 +27,3 @@ Coding standards, domain knowledge, and preferences that AI should follow.
 
 ## agent code guide
 - Use context7 mcp
-
-
