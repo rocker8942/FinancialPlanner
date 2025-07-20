@@ -122,42 +122,6 @@
           <small class="help-text">Real estate, land, and other property investments</small>
         </div>
         <div class="form-group">
-          <label for="financialAssets">Financial Assets</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('financialAssets', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('financialAssets', -1000)">-</button>
-            <input 
-              id="financialAssets"
-              v-model="financialAssetsFormatted"
-              @focus="onFocus('financialAssets')"
-              @blur="onBlur('financialAssets')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Financial Assets ($)" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('financialAssets', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('financialAssets', 1000)">+</button>
-          </div>
-          <small class="help-text">Stocks, bonds, savings, and liquid investments</small>
-        </div>
-        <div class="form-group">
-          <label for="financialAssetGrowthRate">Expected Financial Asset Growth Rate</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('financialAssetGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('financialAssetGrowthRate', -0.5)">-</button>
-            <input 
-              id="financialAssetGrowthRate"
-              v-model="financialAssetGrowthRateFormatted"
-              @focus="onFocus('financialAssetGrowthRate')"
-              @blur="onBlur('financialAssetGrowthRate')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Growth Rate (%)" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('financialAssetGrowthRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('financialAssetGrowthRate', 0.5)">+</button>
-          </div>
-          <small class="help-text">Expected annual return on your investments</small>
-        </div>
-        <div class="form-group">
           <label for="propertyGrowthRate">Property Growth Rate</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyGrowthRate', -0.5)">-</button>
@@ -174,6 +138,116 @@
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyGrowthRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyGrowthRate', 0.5)">+</button>
           </div>
           <small class="help-text">Historic average property appreciation (default: 4%)</small>
+        </div>
+        <div class="form-group">
+          <label for="savings">Savings</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savings', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savings', -1000)">-</button>
+            <input 
+              id="savings"
+              v-model="savingsFormatted"
+              @focus="onFocus('savings')"
+              @blur="onBlur('savings')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Savings ($)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savings', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savings', 1000)">+</button>
+          </div>
+          <small class="help-text">Stocks, bonds, savings, and liquid investments</small>
+        </div>
+        <div class="form-group">
+          <label for="savingsGrowthRate">Expected Savings Growth Rate</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savingsGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savingsGrowthRate', -0.5)">-</button>
+            <input 
+              id="savingsGrowthRate"
+              v-model="savingsGrowthRateFormatted"
+              @focus="onFocus('savingsGrowthRate')"
+              @blur="onBlur('savingsGrowthRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Growth Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savingsGrowthRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savingsGrowthRate', 0.5)">+</button>
+          </div>
+          <small class="help-text">Expected annual return on your investments</small>
+        </div>
+
+
+        <div class="form-group">
+          <label for="mortgageBalance">Mortgage Balance</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('mortgageBalance', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('mortgageBalance', -1000)">-</button>
+            <input 
+              id="mortgageBalance"
+              v-model="mortgageBalanceFormatted"
+              @focus="onFocus('mortgageBalance')"
+              @blur="onBlur('mortgageBalance')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Mortgage Balance ($)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('mortgageBalance', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('mortgageBalance', 1000)">+</button>
+          </div>
+          <small class="help-text">Outstanding mortgage debt on property</small>
+        </div>
+        <div class="form-group">
+          <label for="mortgageRate">Mortgage Interest Rate</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('mortgageRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('mortgageRate', -0.5)">-</button>
+            <input 
+              id="mortgageRate"
+              v-model="mortgageRateFormatted"
+              @focus="onFocus('mortgageRate')"
+              @blur="onBlur('mortgageRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Mortgage Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('mortgageRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('mortgageRate', 0.5)">+</button>
+          </div>
+          <small class="help-text">Annual mortgage interest rate (default: 6%)</small>
+        </div>
+        <div class="form-group">
+          <label for="superannuationBalance">Superannuation Balance</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationBalance', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationBalance', -1000)">-</button>
+            <input 
+              id="superannuationBalance"
+              v-model="superannuationBalanceFormatted"
+              @focus="onFocus('superannuationBalance')"
+              @blur="onBlur('superannuationBalance')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Superannuation Balance ($)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationBalance', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationBalance', 1000)">+</button>
+          </div>
+          <small class="help-text">Current superannuation fund balance</small>
+        </div>
+        <div class="form-group">
+          <label for="superannuationRate">Superannuation Return Rate</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationRate', -0.5)">-</button>
+            <input 
+              id="superannuationRate"
+              v-model="superannuationRateFormatted"
+              @focus="onFocus('superannuationRate')"
+              @blur="onBlur('superannuationRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Return Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationRate', 0.5)">+</button>
+          </div>
+          <small class="help-text">Expected annual return on superannuation (default: 7%)</small>
         </div>
         <div class="form-group">
           <label for="inflationRate">Inflation Rate</label>
@@ -311,7 +385,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, watchEffect, computed } from 'vue';
 import { getFinancialProfile, updateFinancialProfile } from '../services/api';
-import { calculateFinancialPlan, calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
+import { calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
 import { formatCurrency, formatNumber, parseFormattedNumber } from '../utils/formatters';
 
@@ -321,15 +395,19 @@ const isLoaded = ref(false);
 
 // Reactive values for the new asset structure
 const propertyAssets = ref(0);
-const financialAssets = ref(0);
+const savings = ref(0);
 const salary = ref(0);
 const expenses = ref(0);
 const currentAge = ref(30);
 const retireAge = ref(65);
 const deathAge = ref(90);
-const financialAssetGrowthRate = ref(0.07); // 7% default
+const savingsGrowthRate = ref(0.07); // 7% default
 const propertyGrowthRate = ref(0.03); // 3% default
 const inflationRate = ref(0.03); // 3% default inflation rate
+const mortgageBalance = ref(0);
+const mortgageRate = ref(0.06); // 6% default
+const superannuationBalance = ref(0);
+const superannuationRate = ref(0.07); // 7% default
 
 // Add new reactive variables for pension fields
 const pensionAmount = ref(0);
@@ -348,28 +426,31 @@ const calculatedExpense = ref(0);
 
 // Formatted string representations for display
 const propertyAssetsFormatted = ref('0');
-const financialAssetsFormatted = ref('0');
+const savingsFormatted = ref('0');
 const salaryFormatted = ref('0');
 const expensesFormatted = ref('0');
 const currentAgeFormatted = ref('30');
 const retireAgeFormatted = ref('65');
 const deathAgeFormatted = ref('90');
-const financialAssetGrowthRateFormatted = ref('7');
+const savingsGrowthRateFormatted = ref('7');
 const propertyGrowthRateFormatted = ref('3');
 const inflationRateFormatted = ref('3');
 const pensionAmountFormatted = ref('0');
 const partnerPensionAmountFormatted = ref('0');
-const partnerPensionStartAgeFormatted = ref('67');
 const partnerAgeFormatted = ref('30');
 const partnerRetireAgeFormatted = ref('65');
 const partnerSalaryFormatted = ref('0');
+const mortgageBalanceFormatted = ref('0');
+const mortgageRateFormatted = ref('6');
+const superannuationBalanceFormatted = ref('0');
+const superannuationRateFormatted = ref('7');
 
 // Track which fields are currently focused
 const focusedFields = ref(new Set<string>());
 
 // Continuous adjustment state
 const continuousAdjustmentState = ref<{
-  interval: NodeJS.Timeout | null;
+  interval: number | null;
   fieldName: string | null;
   adjustment: number;
 }>({
@@ -411,9 +492,9 @@ watch(propertyAssets, (newValue) => {
   }
 });
 
-watch(financialAssets, (newValue) => {
-  if (!focusedFields.value.has('financialAssets')) {
-    financialAssetsFormatted.value = formatCurrency(newValue);
+watch(savings, (newValue) => {
+  if (!focusedFields.value.has('savings')) {
+    savingsFormatted.value = formatCurrency(newValue);
   }
 });
 
@@ -447,9 +528,9 @@ watch(deathAge, (newValue) => {
   }
 });
 
-watch(financialAssetGrowthRate, (newValue) => {
-  if (!focusedFields.value.has('financialAssetGrowthRate')) {
-    financialAssetGrowthRateFormatted.value = (newValue * 100).toFixed(1);
+watch(savingsGrowthRate, (newValue) => {
+  if (!focusedFields.value.has('savingsGrowthRate')) {
+    savingsGrowthRateFormatted.value = (newValue * 100).toFixed(1);
   }
 });
 
@@ -477,6 +558,48 @@ watch(partnerRetireAge, (newValue) => {
   }
 });
 
+watch(mortgageBalance, (newValue) => {
+  if (!focusedFields.value.has('mortgageBalance')) {
+    mortgageBalanceFormatted.value = formatCurrency(newValue);
+  }
+});
+
+watch(mortgageRate, (newValue) => {
+  if (!focusedFields.value.has('mortgageRate')) {
+    mortgageRateFormatted.value = (newValue * 100).toFixed(1);
+  }
+});
+
+watch(superannuationBalance, (newValue) => {
+  if (!focusedFields.value.has('superannuationBalance')) {
+    superannuationBalanceFormatted.value = formatCurrency(newValue);
+  }
+});
+
+watch(superannuationRate, (newValue) => {
+  if (!focusedFields.value.has('superannuationRate')) {
+    superannuationRateFormatted.value = (newValue * 100).toFixed(1);
+  }
+});
+
+watch(pensionAmount, (newValue) => {
+  if (!focusedFields.value.has('pensionAmount')) {
+    pensionAmountFormatted.value = formatCurrency(newValue);
+  }
+});
+
+watch(partnerPensionAmount, (newValue) => {
+  if (!focusedFields.value.has('partnerPensionAmount')) {
+    partnerPensionAmountFormatted.value = formatCurrency(newValue);
+  }
+});
+
+watch(partnerSalary, (newValue) => {
+  if (!focusedFields.value.has('partnerSalary')) {
+    partnerSalaryFormatted.value = formatCurrency(newValue);
+  }
+});
+
 // Extend onFocus/onBlur to handle new pension fields
 function onFocus(fieldName: string) {
   focusedFields.value.add(fieldName);
@@ -484,8 +607,8 @@ function onFocus(fieldName: string) {
     case 'propertyAssets':
       propertyAssetsFormatted.value = propertyAssets.value.toString();
       break;
-    case 'financialAssets':
-      financialAssetsFormatted.value = financialAssets.value.toString();
+    case 'savings':
+      savingsFormatted.value = savings.value.toString();
       break;
     case 'salary':
       salaryFormatted.value = salary.value.toString();
@@ -502,8 +625,8 @@ function onFocus(fieldName: string) {
     case 'deathAge':
       deathAgeFormatted.value = deathAge.value.toString();
       break;
-    case 'financialAssetGrowthRate':
-      financialAssetGrowthRateFormatted.value = (financialAssetGrowthRate.value * 100).toString();
+    case 'savingsGrowthRate':
+      savingsGrowthRateFormatted.value = (savingsGrowthRate.value * 100).toString();
       break;
     case 'propertyGrowthRate':
       propertyGrowthRateFormatted.value = (propertyGrowthRate.value * 100).toString();
@@ -526,6 +649,18 @@ function onFocus(fieldName: string) {
     case 'partnerSalary':
       partnerSalaryFormatted.value = partnerSalary.value.toString();
       break;
+    case 'mortgageBalance':
+      mortgageBalanceFormatted.value = mortgageBalance.value.toString();
+      break;
+    case 'mortgageRate':
+      mortgageRateFormatted.value = (mortgageRate.value * 100).toString();
+      break;
+    case 'superannuationBalance':
+      superannuationBalanceFormatted.value = superannuationBalance.value.toString();
+      break;
+    case 'superannuationRate':
+      superannuationRateFormatted.value = (superannuationRate.value * 100).toString();
+      break;
   }
 }
 function onBlur(fieldName: string) {
@@ -536,10 +671,10 @@ function onBlur(fieldName: string) {
       propertyAssets.value = parsedPropertyAssets >= 0 ? parsedPropertyAssets : 0
       propertyAssetsFormatted.value = formatCurrency(propertyAssets.value)
       break;
-    case 'financialAssets':
-      const parsedFinancialAssets = parseFormattedNumber(financialAssetsFormatted.value)
-      financialAssets.value = parsedFinancialAssets >= 0 ? parsedFinancialAssets : 0
-      financialAssetsFormatted.value = formatCurrency(financialAssets.value)
+    case 'savings':
+      const parsedFinancialAssets = parseFormattedNumber(savingsFormatted.value)
+      savings.value = parsedFinancialAssets >= 0 ? parsedFinancialAssets : 0
+      savingsFormatted.value = formatCurrency(savings.value)
       break;
     case 'salary':
       const parsedSalary = parseFormattedNumber(salaryFormatted.value)
@@ -563,9 +698,9 @@ function onBlur(fieldName: string) {
       deathAge.value = parseNumericValue(deathAgeFormatted.value);
       deathAgeFormatted.value = formatNumber(deathAge.value);
       break;
-    case 'financialAssetGrowthRate':
-      financialAssetGrowthRate.value = parsePercentageValue(financialAssetGrowthRateFormatted.value);
-      financialAssetGrowthRateFormatted.value = (financialAssetGrowthRate.value * 100).toFixed(1);
+    case 'savingsGrowthRate':
+      savingsGrowthRate.value = parsePercentageValue(savingsGrowthRateFormatted.value);
+      savingsGrowthRateFormatted.value = (savingsGrowthRate.value * 100).toFixed(1);
       break;
     case 'propertyGrowthRate':
       propertyGrowthRate.value = parsePercentageValue(propertyGrowthRateFormatted.value);
@@ -597,6 +732,24 @@ function onBlur(fieldName: string) {
       const parsedPartnerSalary = parseFormattedNumber(partnerSalaryFormatted.value)
       partnerSalary.value = parsedPartnerSalary >= 0 ? parsedPartnerSalary : 0
       partnerSalaryFormatted.value = formatCurrency(partnerSalary.value)
+      break;
+    case 'mortgageBalance':
+      const parsedMortgageBalance = parseFormattedNumber(mortgageBalanceFormatted.value)
+      mortgageBalance.value = parsedMortgageBalance >= 0 ? parsedMortgageBalance : 0
+      mortgageBalanceFormatted.value = formatCurrency(mortgageBalance.value)
+      break;
+    case 'mortgageRate':
+      mortgageRate.value = parsePercentageValue(mortgageRateFormatted.value);
+      mortgageRateFormatted.value = (mortgageRate.value * 100).toFixed(1);
+      break;
+    case 'superannuationBalance':
+      const parsedSuperannuationBalance = parseFormattedNumber(superannuationBalanceFormatted.value)
+      superannuationBalance.value = parsedSuperannuationBalance >= 0 ? parsedSuperannuationBalance : 0
+      superannuationBalanceFormatted.value = formatCurrency(superannuationBalance.value)
+      break;
+    case 'superannuationRate':
+      superannuationRate.value = parsePercentageValue(superannuationRateFormatted.value);
+      superannuationRateFormatted.value = (superannuationRate.value * 100).toFixed(1);
       break;
   }
 }
@@ -630,11 +783,11 @@ function adjustValue(fieldName: string, adjustment: number) {
     case 'propertyAssets':
       propertyAssets.value = Math.max(0, propertyAssets.value + adjustment);
       break;
-    case 'financialAssets':
-      financialAssets.value = Math.max(0, financialAssets.value + adjustment);
+    case 'savings':
+      savings.value = Math.max(0, savings.value + adjustment);
       break;
-    case 'financialAssetGrowthRate':
-      financialAssetGrowthRate.value = Math.max(0, Math.min(1, financialAssetGrowthRate.value + adjustment / 100));
+    case 'savingsGrowthRate':
+      savingsGrowthRate.value = Math.max(0, Math.min(1, savingsGrowthRate.value + adjustment / 100));
       break;
     case 'propertyGrowthRate':
       propertyGrowthRate.value = Math.max(0, Math.min(1, propertyGrowthRate.value + adjustment / 100));
@@ -658,6 +811,18 @@ function adjustValue(fieldName: string, adjustment: number) {
       break;
     case 'partnerPensionAmount':
       partnerPensionAmount.value = Math.max(0, partnerPensionAmount.value + adjustment);
+      break;
+    case 'mortgageBalance':
+      mortgageBalance.value = Math.max(0, mortgageBalance.value + adjustment);
+      break;
+    case 'mortgageRate':
+      mortgageRate.value = Math.max(0, Math.min(1, mortgageRate.value + adjustment / 100));
+      break;
+    case 'superannuationBalance':
+      superannuationBalance.value = Math.max(0, superannuationBalance.value + adjustment);
+      break;
+    case 'superannuationRate':
+      superannuationRate.value = Math.max(0, Math.min(1, superannuationRate.value + adjustment / 100));
       break;
   }
 }
@@ -698,14 +863,18 @@ watch(zeroNetWorthAtDeath, (checked) => {
   if (checked) {
     const profile: FinancialProfile = {
       propertyAssets: propertyAssets.value,
-      financialAssets: financialAssets.value,
+      savings: savings.value,
+      mortgageBalance: mortgageBalance.value,
+      mortgageRate: mortgageRate.value,
+      superannuationBalance: superannuationBalance.value,
+      superannuationRate: superannuationRate.value,
       salary: salary.value,
       partnerSalary: partnerSalary.value,
       expenses: expenses.value,
       currentAge: currentAge.value,
       retireAge: retireAge.value,
       deathAge: deathAge.value,
-      financialAssetGrowthRate: financialAssetGrowthRate.value,
+      savingsGrowthRate: savingsGrowthRate.value,
       propertyGrowthRate: propertyGrowthRate.value,
       inflationRate: inflationRate.value,
       pensionAmount: pensionAmount.value,
@@ -723,22 +892,27 @@ watch(zeroNetWorthAtDeath, (checked) => {
 
 // If user changes any relevant field and box is checked, recalculate
 watch([
-  propertyAssets, financialAssets, salary, partnerSalary, currentAge, retireAge, deathAge,
-  financialAssetGrowthRate, propertyGrowthRate, inflationRate,
+  propertyAssets, savings, salary, partnerSalary, currentAge, retireAge, deathAge,
+  savingsGrowthRate, propertyGrowthRate, inflationRate,
   pensionAmount, partnerPensionAmount, partnerPensionStartAge,
-  partnerAge, partnerRetireAge
+  partnerAge, partnerRetireAge, mortgageBalance, mortgageRate,
+  superannuationBalance, superannuationRate
 ], () => {
   if (zeroNetWorthAtDeath.value) {
     const profile: FinancialProfile = {
       propertyAssets: propertyAssets.value,
-      financialAssets: financialAssets.value,
+      savings: savings.value,
+      mortgageBalance: mortgageBalance.value,
+      mortgageRate: mortgageRate.value,
+      superannuationBalance: superannuationBalance.value,
+      superannuationRate: superannuationRate.value,
       salary: salary.value,
       partnerSalary: partnerSalary.value,
       expenses: expenses.value,
       currentAge: currentAge.value,
       retireAge: retireAge.value,
       deathAge: deathAge.value,
-      financialAssetGrowthRate: financialAssetGrowthRate.value,
+      savingsGrowthRate: savingsGrowthRate.value,
       propertyGrowthRate: propertyGrowthRate.value,
       inflationRate: inflationRate.value,
       pensionAmount: pensionAmount.value,
@@ -760,14 +934,18 @@ watchEffect(() => {
 
   const profile: FinancialProfile = {
     propertyAssets: propertyAssets.value,
-    financialAssets: financialAssets.value,
+    savings: savings.value,
+    mortgageBalance: mortgageBalance.value,
+    mortgageRate: mortgageRate.value,
+    superannuationBalance: superannuationBalance.value,
+    superannuationRate: superannuationRate.value,
     salary: salary.value,
     partnerSalary: partnerSalary.value,
     expenses: expenses.value,
     currentAge: currentAge.value,
     retireAge: retireAge.value,
     deathAge: deathAge.value,
-    financialAssetGrowthRate: financialAssetGrowthRate.value,
+    savingsGrowthRate: savingsGrowthRate.value,
     propertyGrowthRate: propertyGrowthRate.value,
     inflationRate: inflationRate.value,
     pensionAmount: pensionAmount.value,
@@ -792,14 +970,18 @@ const LOCAL_KEY = 'financial-input';
 function saveToLocalStorage() {
   const data = {
     propertyAssets: propertyAssets.value,
-    financialAssets: financialAssets.value,
+    savings: savings.value,
+    mortgageBalance: mortgageBalance.value,
+    mortgageRate: mortgageRate.value,
+    superannuationBalance: superannuationBalance.value,
+    superannuationRate: superannuationRate.value,
     salary: salary.value,
     partnerSalary: partnerSalary.value,
     expenses: expenses.value,
     currentAge: currentAge.value,
     retireAge: retireAge.value,
     deathAge: deathAge.value,
-    financialAssetGrowthRate: financialAssetGrowthRate.value,
+    savingsGrowthRate: savingsGrowthRate.value,
     propertyGrowthRate: propertyGrowthRate.value,
     inflationRate: inflationRate.value,
     pensionAmount: pensionAmount.value,
@@ -817,14 +999,18 @@ function loadFromLocalStorage() {
     try {
       const parsed = JSON.parse(data);
       propertyAssets.value = parsed.propertyAssets ?? 0;
-      financialAssets.value = parsed.financialAssets ?? 0;
+      savings.value = parsed.savings ?? 0;
+      mortgageBalance.value = parsed.mortgageBalance ?? 0;
+      mortgageRate.value = parsed.mortgageRate ?? 0.06;
+      superannuationBalance.value = parsed.superannuationBalance ?? 0;
+      superannuationRate.value = parsed.superannuationRate ?? 0.07;
       salary.value = parsed.salary ?? 0;
       partnerSalary.value = parsed.partnerSalary ?? 0;
       expenses.value = parsed.expenses ?? 0;
       currentAge.value = parsed.currentAge ?? 30;
       retireAge.value = parsed.retireAge ?? 65;
       deathAge.value = parsed.deathAge ?? 90;
-      financialAssetGrowthRate.value = parsed.financialAssetGrowthRate ?? 0.07;
+      savingsGrowthRate.value = parsed.savingsGrowthRate ?? 0.07;
       propertyGrowthRate.value = parsed.propertyGrowthRate ?? 0.03;
       inflationRate.value = parsed.inflationRate ?? 0.03;
       pensionAmount.value = parsed.pensionAmount ?? 0;
@@ -842,14 +1028,18 @@ function loadFromLocalStorage() {
 // Function to update all formatted values
 function updateFormattedValues() {
   propertyAssetsFormatted.value = formatCurrency(propertyAssets.value);
-  financialAssetsFormatted.value = formatCurrency(financialAssets.value);
+  savingsFormatted.value = formatCurrency(savings.value);
+  mortgageBalanceFormatted.value = formatCurrency(mortgageBalance.value);
+  mortgageRateFormatted.value = (mortgageRate.value * 100).toFixed(1);
+  superannuationBalanceFormatted.value = formatCurrency(superannuationBalance.value);
+  superannuationRateFormatted.value = (superannuationRate.value * 100).toFixed(1);
   salaryFormatted.value = formatCurrency(salary.value);
   partnerSalaryFormatted.value = formatCurrency(partnerSalary.value);
   expensesFormatted.value = formatCurrency(expenses.value);
   currentAgeFormatted.value = formatNumber(currentAge.value);
   retireAgeFormatted.value = formatNumber(retireAge.value);
   deathAgeFormatted.value = formatNumber(deathAge.value);
-  financialAssetGrowthRateFormatted.value = (financialAssetGrowthRate.value * 100).toFixed(1);
+  savingsGrowthRateFormatted.value = (savingsGrowthRate.value * 100).toFixed(1);
   propertyGrowthRateFormatted.value = (propertyGrowthRate.value * 100).toFixed(1);
   inflationRateFormatted.value = (inflationRate.value * 100).toFixed(1);
   pensionAmountFormatted.value = formatCurrency(pensionAmount.value);
@@ -867,14 +1057,18 @@ async function load() {
       const profile = await getFinancialProfile();
       if (profile) {
         propertyAssets.value = profile.propertyAssets || 0;
-        financialAssets.value = profile.financialAssets || 0;
+        savings.value = profile.savings || 0;
+        mortgageBalance.value = profile.mortgageBalance || 0;
+        mortgageRate.value = profile.mortgageRate || 0.06;
+        superannuationBalance.value = profile.superannuationBalance || 0;
+        superannuationRate.value = profile.superannuationRate || 0.07;
         salary.value = profile.salary || 0;
         partnerSalary.value = profile.partnerSalary || 0;
         expenses.value = profile.expenses || 0;
         currentAge.value = profile.currentAge || 30;
         retireAge.value = profile.retireAge || 65;
         deathAge.value = profile.deathAge || 90;
-        financialAssetGrowthRate.value = profile.financialAssetGrowthRate || 0.07;
+        savingsGrowthRate.value = profile.savingsGrowthRate || 0.07;
         propertyGrowthRate.value = profile.propertyGrowthRate || 0.03;
         inflationRate.value = profile.inflationRate || 0.03;
         pensionAmount.value = profile.pensionAmount || 0;
@@ -892,29 +1086,6 @@ async function load() {
   isLoaded.value = true;
 }
 
-async function submit() {
-  await updateFinancialProfile({ 
-    propertyAssets: propertyAssets.value, 
-    financialAssets: financialAssets.value,
-    salary: salary.value, 
-    partnerSalary: partnerSalary.value,
-    expenses: expenses.value, 
-    currentAge: currentAge.value, 
-    retireAge: retireAge.value,
-    deathAge: deathAge.value,
-    financialAssetGrowthRate: financialAssetGrowthRate.value,
-    propertyGrowthRate: propertyGrowthRate.value,
-    inflationRate: inflationRate.value,
-    pensionAmount: pensionAmount.value,
-    pensionStartAge: 67, // always 67
-    partnerPensionAmount: partnerPensionAmount.value,
-    partnerPensionStartAge: partnerPensionStartAge.value,
-    partnerAge: partnerAge.value,
-    partnerRetireAge: partnerRetireAge.value
-  });
-  saveToLocalStorage();
-  emit('update');
-}
 
 onMounted(() => {
   // Expand 'person profile', close 'assets' and 'income' sections on load

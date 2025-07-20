@@ -51,7 +51,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **API Documentation**: Swagger/OpenAPI available at `/swagger`
 
 ### Key Business Logic
-- Financial planning calculations in `FinancialCalculationService.cs:13-101`
 - Separate growth rates for property (4% default) and financial assets (user-defined)
 - Inflation adjustment calculations for real purchasing power
 - Partner age and retirement considerations
@@ -59,14 +58,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Data Flow
 1. User inputs financial data via `AssetInputForm.vue`
-2. Data stored locally and sent to backend via `api.ts`
-3. `FinancialCalculationService` processes projections
+2. Data stored browser local storage
+3. `calculateFinancialPlan` processes projections
 4. Results displayed in `NetWealthChart.vue` using ECharts
 5. Year-by-year wealth projections with inflation adjustments
 
 ### Key Files to Understand
 - `Backend/Models/FinancialProfile.cs` - Core data model
-- `Backend/Services/FinancialCalculationService.cs` - Financial algorithms
+- `Frontend/src/utils/financialPlan.ts` - Financial algorithms
 - `Frontend/src/components/NetWealthChart.vue` - Chart visualization
 - `Frontend/src/store/auth.ts` - Authentication state
 - `Frontend/src/services/api.ts` - API layer

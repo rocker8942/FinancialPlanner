@@ -1,14 +1,18 @@
 // Types for financial plan calculation
 export interface FinancialProfile {
   propertyAssets: number;
-  financialAssets: number;
+  savings: number;
+  mortgageBalance: number;
+  mortgageRate: number;
+  superannuationBalance: number;
+  superannuationRate: number;
   salary: number;
   partnerSalary: number;
   expenses: number;
   currentAge: number;
   retireAge: number;
   deathAge: number;
-  financialAssetGrowthRate: number;
+  savingsGrowthRate: number;
   propertyGrowthRate: number;
   inflationRate: number;
   pensionAmount: number;
@@ -23,10 +27,11 @@ export interface YearlyWealth {
   age: number;
   wealth: number;
   propertyAssets: number;
-  financialAssets: number;
+  savings: number;
+  superannuationBalance: number;
   inflationAdjustedWealth: number;
   inflationAdjustedPropertyAssets: number;
-  inflationAdjustedFinancialAssets: number;
+  inflationAdjustedSavings: number;
   pensionIncome: number;
 }
 
@@ -46,81 +51,122 @@ function generateSummary(
   finalWealth: number,
   finalInflationAdjustedWealth: number,
   propertyAssets: number,
-  financialAssets: number
+  savings: number
 ): string {
   return `Retiring at age ${retireAge}, with projected net wealth of $${finalWealth.toLocaleString(undefined, {maximumFractionDigits: 0})} at age ${deathAge} ` +
     `($${finalInflationAdjustedWealth.toLocaleString(undefined, {maximumFractionDigits: 0})} in today's purchasing power). ` +
-    `Property assets: $${propertyAssets.toLocaleString(undefined, {maximumFractionDigits: 0})}, Financial assets: $${financialAssets.toLocaleString(undefined, {maximumFractionDigits: 0})}.`;
+    `Property assets: $${propertyAssets.toLocaleString(undefined, {maximumFractionDigits: 0})}, Savings: $${savings.toLocaleString(undefined, {maximumFractionDigits: 0})}.`;
 }
 
 export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlanResult {
   const projection: YearlyWealth[] = [];
   let propertyAssets = profile.propertyAssets;
-  let financialAssets = profile.financialAssets;
+  let savings = profile.savings;
+  let mortgageBalance = profile.mortgageBalance;
+  let superannuationBalance = profile.superannuationBalance;
 
   // Calculate the partner's pension start offset (the age in the user's timeline when partner turns 67)
-  const partnerPensionStartOffset = profile.partnerAge - profile.currentAge;
-  const partnerPensionStartUserAge = profile.currentAge + (67 - profile.partnerAge);
+  // const partnerPensionStartOffset = profile.partnerAge - profile.currentAge;
+  // const partnerPensionStartUserAge = profile.currentAge + (67 - profile.partnerAge);
 
   for (let age = profile.currentAge; age <= profile.deathAge; age++) {
     let pensionIncomeThisYear = 0;
     if (age > profile.currentAge) {
       // Apply growth rates
       propertyAssets = applyGrowth(propertyAssets, profile.propertyGrowthRate);
-      financialAssets = applyGrowth(financialAssets, profile.financialAssetGrowthRate);
+      // Only apply savings growth if net savings (savings - mortgage) is positive
+      if ((savings - mortgageBalance) > 0) {
+        savings += (savings - mortgageBalance) * profile.savingsGrowthRate;
+      }
+      superannuationBalance = applyGrowth(superannuationBalance, profile.superannuationRate);
+      
+      // Calculate total annual income
+      let totalIncome = 0;
 
-      // Add salary to financial assets only if not retired
+      // Add salary if not retired
       if (age <= profile.retireAge) {
-        financialAssets += profile.salary;
+        totalIncome += profile.salary;
+        // Add superannuation contributions (9.5% of salary)
+        superannuationBalance += profile.salary * 0.095;
       }
 
-      // Add partner salary to financial assets only if partner is not retired
+      // Add partner salary if partner is not retired
       // Convert partner's retirement age to main user's timeline
       const partnerRetireAgeInUserTimeline = profile.currentAge + (profile.partnerRetireAge - profile.partnerAge);
       if (age <= partnerRetireAgeInUserTimeline) {
-        financialAssets += profile.partnerSalary;
+        totalIncome += profile.partnerSalary;
+        // Add partner superannuation contributions (9.5% of salary)
+        superannuationBalance += profile.partnerSalary * 0.095;
       }
 
       // Add pension income for user if at or after pension start age
       if (age >= profile.pensionStartAge) {
-        financialAssets += profile.pensionAmount;
+        totalIncome += profile.pensionAmount;
         pensionIncomeThisYear += profile.pensionAmount;
       }
       // Add pension income for partner if partner has turned 67
       if ((age - profile.currentAge + profile.partnerAge) >= 67) {
-        financialAssets += profile.partnerPensionAmount;
+        totalIncome += profile.partnerPensionAmount;
         pensionIncomeThisYear += profile.partnerPensionAmount;
       }
 
-      // Subtract expenses from financial assets only
-      financialAssets -= profile.expenses;
-
-      // Ensure financial assets don't go negative
-      if (financialAssets < 0) {
-        financialAssets = 0;
+      // Use income to pay mortgage first, then add remainder to financial assets
+      if (mortgageBalance > 0 && totalIncome > 0) {
+        // Calculate interest on net mortgage (mortgage - savings, but not less than 0)
+        const netMortgage = Math.max(0, mortgageBalance - savings);
+        const mortgageInterest = netMortgage * profile.mortgageRate;
+        const mortgageInterestPaymentFromIncome = Math.min(totalIncome, mortgageInterest);
+        totalIncome -= mortgageInterestPaymentFromIncome;
       }
+
+      // Add remaining income to savings
+      savings += totalIncome;
+      
+      // Access superannuation at age 60+
+      // if (age >= 60 && superannuationBalance > 0) {
+      //   // Transfer superannuation to savings at retirement age
+      //   if (age === Math.max(profile.retireAge, profile.currentAge + (profile.partnerRetireAge - profile.partnerAge))) {
+      //     savings += superannuationBalance;
+      //     superannuationBalance = 0;
+      //   }
+      // }
+
+      // Subtract expenses from savings only
+      savings -= profile.expenses;
+
+      if (savings < 0) {
+       superannuationBalance += savings;
+      }
+
+      // Ensure savings don't go negative
+      // if (savings < 0) {
+      //   savings = 0;
+      // }
     }
 
-    const totalWealth = propertyAssets + financialAssets;
+    const netSavings = savings - mortgageBalance;
+    const totalWealth = propertyAssets + netSavings + superannuationBalance;
     const yearsFromNow = age - profile.currentAge;
     const inflationAdjustmentFactor = Math.pow(1 + profile.inflationRate, -yearsFromNow);
     const inflationAdjustedWealth = totalWealth * inflationAdjustmentFactor;
     const inflationAdjustedPropertyAssets = propertyAssets * inflationAdjustmentFactor;
-    const inflationAdjustedFinancialAssets = financialAssets * inflationAdjustmentFactor;
+    const inflationAdjustedNetSavings = netSavings * inflationAdjustmentFactor;
 
     projection.push({
       age,
       wealth: totalWealth,
-      propertyAssets,
-      financialAssets,
+      propertyAssets: propertyAssets,
+      savings: netSavings,
+      superannuationBalance,
       inflationAdjustedWealth,
-      inflationAdjustedPropertyAssets,
-      inflationAdjustedFinancialAssets,
+      inflationAdjustedPropertyAssets: inflationAdjustedPropertyAssets,
+      inflationAdjustedSavings: inflationAdjustedNetSavings,
       pensionIncome: pensionIncomeThisYear
     });
   }
 
-  const finalWealth = propertyAssets + financialAssets;
+  const finalNetSavings = savings - mortgageBalance;
+  const finalWealth = propertyAssets + finalNetSavings + superannuationBalance;
   const finalYearsFromNow = profile.deathAge - profile.currentAge;
   const finalInflationAdjustmentFactor = Math.pow(1 + profile.inflationRate, -finalYearsFromNow);
   const finalInflationAdjustedWealth = finalWealth * finalInflationAdjustmentFactor;
@@ -134,7 +180,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       finalWealth,
       finalInflationAdjustedWealth,
       propertyAssets,
-      financialAssets
+      finalNetSavings
     )
   };
 }
@@ -143,7 +189,8 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
 export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): number {
   const years = profileInput.deathAge - profileInput.currentAge;
   if (years <= 0) return profileInput.expenses;
-  const assets = profileInput.propertyAssets + profileInput.financialAssets;
+  const netSavings = profileInput.savings - profileInput.mortgageBalance;
+  const assets = profileInput.propertyAssets + netSavings + profileInput.superannuationBalance;
   const salaryIncome = profileInput.salary * Math.max(0, Math.min(profileInput.retireAge, profileInput.deathAge) - profileInput.currentAge);
   // Convert partner's retirement age to main user's timeline
   const partnerRetireAgeInUserTimeline = profileInput.currentAge + (profileInput.partnerRetireAge - profileInput.partnerAge);

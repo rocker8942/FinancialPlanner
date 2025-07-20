@@ -3,6 +3,7 @@ using FinancialPlanner.Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinancialPlanner.Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250719120534_AddMortgageBalance")]
+    partial class AddMortgageBalance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,9 +57,6 @@ namespace FinancialPlanner.Backend.Migrations
                     b.Property<decimal>("MortgageBalance")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("MortgageRate")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("PartnerAge")
                         .HasColumnType("int");
 
@@ -94,12 +94,6 @@ namespace FinancialPlanner.Backend.Migrations
 
                     b.Property<decimal>("Salary")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("SuperannuationBalance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("SuperannuationRate")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")

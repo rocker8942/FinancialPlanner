@@ -6,7 +6,7 @@ namespace FinancialPlanner.Backend.Services
     public class FinancialCalculationService
     {
         /// <summary>
-        /// Calculates financial projections based on separate property and financial assets
+        /// Calculates financial projections based on separate property and savings
         /// </summary>
         /// <param name="profile">The financial profile containing user data</param>
         /// <returns>Financial plan result with year-by-year projections</returns>
@@ -14,7 +14,9 @@ namespace FinancialPlanner.Backend.Services
         {
             var projection = new List<YearlyWealthDto>();
             decimal propertyAssets = profile.PropertyAssets;
-            decimal financialAssets = profile.FinancialAssets;
+            decimal savings = profile.Savings;
+            decimal mortgageBalance = profile.MortgageBalance;
+            decimal superannuationBalance = profile.SuperannuationBalance;
             
             for (int age = profile.CurrentAge; age <= profile.DeathAge; age++)
             {
@@ -23,44 +25,76 @@ namespace FinancialPlanner.Backend.Services
                 {
                     // Apply growth rates
                     propertyAssets = ApplyGrowth(propertyAssets, profile.PropertyGrowthRate);
-                    financialAssets = ApplyGrowth(financialAssets, profile.FinancialAssetGrowthRate);
+                    savings = ApplyGrowth(savings, profile.SavingsGrowthRate);
+                    superannuationBalance = ApplyGrowth(superannuationBalance, profile.SuperannuationRate);
                     
-                    // Add salary to financial assets only if not retired
+                    // Calculate total annual income
+                    decimal totalIncome = 0;
+                    
+                    // Add salary if not retired
                     if (age <= profile.RetireAge)
                     {
-                        financialAssets += profile.Salary;
+                        totalIncome += profile.Salary;
+                        // Add superannuation contributions (9.5% of salary)
+                        superannuationBalance += profile.Salary * 0.095m;
                     }
                     
-                    // Add partner salary to financial assets only if partner is not retired
+                    // Add partner salary if partner is not retired
                     if (age <= profile.PartnerRetireAge)
                     {
-                        financialAssets += profile.PartnerSalary;
+                        totalIncome += profile.PartnerSalary;
+                        // Add partner superannuation contributions (9.5% of salary)
+                        superannuationBalance += profile.PartnerSalary * 0.095m;
                     }
                     
                     // Add pension income for user if at or after pension start age
                     if (age >= profile.PensionStartAge)
                     {
-                        financialAssets += profile.PensionAmount;
+                        totalIncome += profile.PensionAmount;
                         pensionIncomeThisYear += profile.PensionAmount;
                     }
                     // Add pension income for partner if at or after partner pension start age
                     if (age >= profile.PartnerPensionStartAge)
                     {
-                        financialAssets += profile.PartnerPensionAmount;
+                        totalIncome += profile.PartnerPensionAmount;
                         pensionIncomeThisYear += profile.PartnerPensionAmount;
                     }
-
-                    // Subtract expenses from financial assets only
-                    financialAssets -= profile.Expenses;
                     
-                    // Ensure financial assets don't go negative
-                    if (financialAssets < 0)
+                    // Use income to pay mortgage first, then add remainder to financial assets
+                    if (mortgageBalance > 0 && totalIncome > 0)
                     {
-                        financialAssets = 0;
+                        decimal mortgagePayment = mortgageBalance * profile.MortgageRate;
+                        decimal mortgagePaymentFromIncome = Math.Min(totalIncome, mortgagePayment);
+                        mortgageBalance -= mortgagePaymentFromIncome;
+                        totalIncome -= mortgagePaymentFromIncome;
+                    }
+                    
+                    // Add remaining income to savings
+                    savings += totalIncome;
+                    
+                    // Access superannuation at age 60+
+                    if (age >= 60 && superannuationBalance > 0)
+                    {
+                        // Transfer superannuation to savings at retirement age
+                        if (age == Math.Max(profile.RetireAge, profile.PartnerRetireAge))
+                        {
+                            savings += superannuationBalance;
+                            superannuationBalance = 0;
+                        }
+                    }
+
+                    // Subtract expenses from savings only
+                    savings -= profile.Expenses;
+                    
+                    // Ensure savings don't go negative
+                    if (savings < 0)
+                    {
+                        savings = 0;
                     }
                 }
                 
-                decimal totalWealth = propertyAssets + financialAssets;
+                decimal netSavings = savings - mortgageBalance;
+                decimal totalWealth = propertyAssets + netSavings + superannuationBalance;
                 
                 // Calculate inflation-adjusted values (in today's purchasing power)
                 int yearsFromNow = age - profile.CurrentAge;
@@ -68,22 +102,24 @@ namespace FinancialPlanner.Backend.Services
                 
                 decimal inflationAdjustedWealth = totalWealth * inflationAdjustmentFactor;
                 decimal inflationAdjustedPropertyAssets = propertyAssets * inflationAdjustmentFactor;
-                decimal inflationAdjustedFinancialAssets = financialAssets * inflationAdjustmentFactor;
+                decimal inflationAdjustedNetSavings = netSavings * inflationAdjustmentFactor;
                 
                 projection.Add(new YearlyWealthDto 
                 { 
                     Age = age, 
                     Wealth = totalWealth,
                     PropertyAssets = propertyAssets,
-                    FinancialAssets = financialAssets,
+                    Savings = netSavings,
+                    SuperannuationBalance = superannuationBalance,
                     InflationAdjustedWealth = inflationAdjustedWealth,
                     InflationAdjustedPropertyAssets = inflationAdjustedPropertyAssets,
-                    InflationAdjustedFinancialAssets = inflationAdjustedFinancialAssets,
+                    InflationAdjustedSavings = inflationAdjustedNetSavings,
                     PensionIncome = pensionIncomeThisYear
                 });
             }
             
-            decimal finalWealth = propertyAssets + financialAssets;
+            decimal finalNetSavings = savings - mortgageBalance;
+            decimal finalWealth = propertyAssets + finalNetSavings + superannuationBalance;
             
             // Calculate inflation-adjusted final wealth
             int finalYearsFromNow = profile.DeathAge - profile.CurrentAge;
@@ -94,7 +130,7 @@ namespace FinancialPlanner.Backend.Services
             {
                 Projection = projection,
                 FinalWealth = finalWealth,
-                Summary = GenerateSummary(profile.RetireAge, profile.DeathAge, finalWealth, finalInflationAdjustedWealth, propertyAssets, financialAssets)
+                Summary = GenerateSummary(profile.RetireAge, profile.DeathAge, finalWealth, finalInflationAdjustedWealth, propertyAssets, finalNetSavings)
             };
             
             return result;
@@ -114,11 +150,11 @@ namespace FinancialPlanner.Backend.Services
         /// <summary>
         /// Generates a summary message for the financial plan
         /// </summary>
-        private static string GenerateSummary(int retireAge, int deathAge, decimal finalWealth, decimal finalInflationAdjustedWealth, decimal propertyAssets, decimal financialAssets)
+        private static string GenerateSummary(int retireAge, int deathAge, decimal finalWealth, decimal finalInflationAdjustedWealth, decimal propertyAssets, decimal savings)
         {
             return $"Retiring at age {retireAge}, with projected net wealth of {finalWealth:C} at age {deathAge} " +
                    $"({finalInflationAdjustedWealth:C} in today's purchasing power). " +
-                   $"Property assets: {propertyAssets:C}, Financial assets: {financialAssets:C}.";
+                   $"Property assets: {propertyAssets:C}, Savings: {savings:C}.";
         }
     }
 }

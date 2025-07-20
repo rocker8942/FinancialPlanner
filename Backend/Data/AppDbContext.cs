@@ -25,7 +25,7 @@ namespace FinancialPlanner.Backend.Data
                 .HasPrecision(18, 2);
                 
             modelBuilder.Entity<FinancialProfile>()
-                .Property(fp => fp.FinancialAssets)
+                .Property(fp => fp.Savings)
                 .HasPrecision(18, 2);
                 
             modelBuilder.Entity<FinancialProfile>()
@@ -41,7 +41,7 @@ namespace FinancialPlanner.Backend.Data
                 .HasPrecision(18, 2);
                 
             modelBuilder.Entity<FinancialProfile>()
-                .Property(fp => fp.FinancialAssetGrowthRate)
+                .Property(fp => fp.SavingsGrowthRate)
                 .HasPrecision(18, 6); // More precision for growth rates
                 
             modelBuilder.Entity<FinancialProfile>()

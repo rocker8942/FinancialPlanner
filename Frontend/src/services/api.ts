@@ -41,14 +41,18 @@ export async function getFinancialProfile() {
 
 export async function updateFinancialProfile(profile: { 
   propertyAssets: number; 
-  financialAssets: number; 
+  savings: number; 
+  mortgageBalance: number;
+  mortgageRate: number;
+  superannuationBalance: number;
+  superannuationRate: number;
   salary: number; 
   partnerSalary: number;
   expenses: number; 
   currentAge: number; 
   retireAge: number;
   deathAge: number;
-  financialAssetGrowthRate: number;
+  savingsGrowthRate: number;
   propertyGrowthRate: number;
   inflationRate: number;
   pensionAmount: number;

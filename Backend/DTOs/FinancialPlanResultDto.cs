@@ -14,10 +14,11 @@ namespace FinancialPlanner.Backend.DTOs
         public int Age { get; set; }
         public decimal Wealth { get; set; }
         public decimal PropertyAssets { get; set; }
-        public decimal FinancialAssets { get; set; }
+        public decimal Savings { get; set; }
+        public decimal SuperannuationBalance { get; set; }
         public decimal InflationAdjustedWealth { get; set; }
         public decimal InflationAdjustedPropertyAssets { get; set; }
-        public decimal InflationAdjustedFinancialAssets { get; set; }
+        public decimal InflationAdjustedSavings { get; set; }
         public decimal PensionIncome { get; set; }
     }
 }

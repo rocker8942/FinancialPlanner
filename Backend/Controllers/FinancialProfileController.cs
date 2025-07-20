@@ -28,13 +28,17 @@ namespace FinancialPlanner.Backend.Controllers
             return new FinancialProfileDto
             {
                 PropertyAssets = profile.PropertyAssets,
-                FinancialAssets = profile.FinancialAssets,
+                Savings = profile.Savings,
+                MortgageBalance = profile.MortgageBalance,
+                MortgageRate = profile.MortgageRate,
+                SuperannuationBalance = profile.SuperannuationBalance,
+                SuperannuationRate = profile.SuperannuationRate,
                 Salary = profile.Salary,
                 Expenses = profile.Expenses,
                 CurrentAge = profile.CurrentAge,
                 RetireAge = profile.RetireAge,
                 DeathAge = profile.DeathAge,
-                FinancialAssetGrowthRate = profile.FinancialAssetGrowthRate,
+                SavingsGrowthRate = profile.SavingsGrowthRate,
                 PropertyGrowthRate = profile.PropertyGrowthRate,
                 InflationRate = profile.InflationRate,
                 PensionAmount = profile.PensionAmount,
@@ -58,13 +62,17 @@ namespace FinancialPlanner.Backend.Controllers
                 {
                     UserId = userId,
                     PropertyAssets = dto.PropertyAssets,
-                    FinancialAssets = dto.FinancialAssets,
+                    Savings = dto.Savings,
+                    MortgageBalance = dto.MortgageBalance,
+                    MortgageRate = dto.MortgageRate,
+                    SuperannuationBalance = dto.SuperannuationBalance,
+                    SuperannuationRate = dto.SuperannuationRate,
                     Salary = dto.Salary,
                     Expenses = dto.Expenses,
                     CurrentAge = dto.CurrentAge,
                     RetireAge = dto.RetireAge,
                     DeathAge = dto.DeathAge,
-                    FinancialAssetGrowthRate = dto.FinancialAssetGrowthRate,
+                    SavingsGrowthRate = dto.SavingsGrowthRate,
                     PropertyGrowthRate = dto.PropertyGrowthRate,
                     InflationRate = dto.InflationRate,
                     PensionAmount = dto.PensionAmount,
@@ -80,13 +88,17 @@ namespace FinancialPlanner.Backend.Controllers
             else
             {
                 profile.PropertyAssets = dto.PropertyAssets;
-                profile.FinancialAssets = dto.FinancialAssets;
+                profile.Savings = dto.Savings;
+                profile.MortgageBalance = dto.MortgageBalance;
+                profile.MortgageRate = dto.MortgageRate;
+                profile.SuperannuationBalance = dto.SuperannuationBalance;
+                profile.SuperannuationRate = dto.SuperannuationRate;
                 profile.Salary = dto.Salary;
                 profile.Expenses = dto.Expenses;
                 profile.CurrentAge = dto.CurrentAge;
                 profile.RetireAge = dto.RetireAge;
                 profile.DeathAge = dto.DeathAge;
-                profile.FinancialAssetGrowthRate = dto.FinancialAssetGrowthRate;
+                profile.SavingsGrowthRate = dto.SavingsGrowthRate;
                 profile.PropertyGrowthRate = dto.PropertyGrowthRate;
                 profile.InflationRate = dto.InflationRate;
                 profile.PensionAmount = dto.PensionAmount;

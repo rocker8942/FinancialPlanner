@@ -8,9 +8,13 @@ namespace FinancialPlanner.Backend.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         
-        // Separate assets into property and financial
+        // Separate assets into property and savings
         public decimal PropertyAssets { get; set; }
-        public decimal FinancialAssets { get; set; }
+        public decimal Savings { get; set; }
+        public decimal MortgageBalance { get; set; }
+        public decimal MortgageRate { get; set; } = 0.06m; // Default 6% mortgage rate
+        public decimal SuperannuationBalance { get; set; }
+        public decimal SuperannuationRate { get; set; } = 0.07m; // Default 7% superannuation return rate
         
         public decimal Salary { get; set; }
         public decimal PartnerSalary { get; set; }
@@ -20,7 +24,7 @@ namespace FinancialPlanner.Backend.Models
         public int DeathAge { get; set; }
         
         // Growth rates
-        public decimal FinancialAssetGrowthRate { get; set; } // User input rate
+        public decimal SavingsGrowthRate { get; set; } // User input rate
         public decimal PropertyGrowthRate { get; set; } = 0.04m; // Historic average (4% default)
         public decimal InflationRate { get; set; } = 0.03m; // Default 3% inflation rate
         

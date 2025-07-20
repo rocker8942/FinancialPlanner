@@ -27,25 +27,26 @@ interface ProjectionData {
   age: number;
   wealth: number;
   propertyAssets: number;
-  financialAssets: number;
+  savings: number;
+  superannuationBalance: number;
   inflationAdjustedWealth: number;
   inflationAdjustedPropertyAssets: number;
-  inflationAdjustedFinancialAssets: number;
+  inflationAdjustedSavings: number;
   pensionIncome: number;
 }
 
 const projection = ref<ProjectionData[]>([]);
 const finalWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].wealth : 0);
 const finalPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].propertyAssets : 0);
-const finalFinancialAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].financialAssets : 0);
+const finalSavings = computed(() => projection.value.length ? projection.value[projection.value.length - 1].savings : 0);
 const finalInflationAdjustedWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedWealth : 0);
 const finalInflationAdjustedPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedPropertyAssets : 0);
-const finalInflationAdjustedFinancialAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedFinancialAssets : 0);
+const finalInflationAdjustedSavings = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedSavings : 0);
 
 const summaryDetails = computed(() => {
   const initialWealth = projection.value[0]?.wealth ?? 0;
   const initialProperty = projection.value[0]?.propertyAssets ?? 0;
-  const initialFinancial = projection.value[0]?.financialAssets ?? 0;
+  const initialSavings = projection.value[0]?.savings ?? 0;
   const initialInflationAdjustedWealth = projection.value[0]?.inflationAdjustedWealth ?? 0;
   
   return [
@@ -70,13 +71,13 @@ const summaryDetails = computed(() => {
       type: 'neutral' 
     },
     { 
-      label: 'Final Financial Assets (Nominal)', 
-      value: finalFinancialAssets.value, 
+      label: 'Final Savings (Nominal)', 
+      value: finalSavings.value, 
       type: 'neutral' 
     },
     { 
-      label: 'Final Financial Assets (Today\'s Value)', 
-      value: finalInflationAdjustedFinancialAssets.value, 
+      label: 'Final Savings (Today\'s Value)', 
+      value: finalInflationAdjustedSavings.value, 
       type: 'neutral' 
     },
     { 
@@ -85,9 +86,9 @@ const summaryDetails = computed(() => {
       type: (finalPropertyAssets.value - initialProperty) >= 0 ? 'positive' : 'negative' 
     },
     { 
-      label: 'Financial Asset Growth (Nominal)', 
-      value: finalFinancialAssets.value - initialFinancial, 
-      type: (finalFinancialAssets.value - initialFinancial) >= 0 ? 'positive' : 'negative' 
+      label: 'Savings Growth (Nominal)', 
+      value: finalSavings.value - initialSavings, 
+      type: (finalSavings.value - initialSavings) >= 0 ? 'positive' : 'negative' 
     }
   ];
 });

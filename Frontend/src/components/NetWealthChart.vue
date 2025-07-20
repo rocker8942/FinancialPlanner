@@ -14,7 +14,8 @@ const props = defineProps<{
     age: number; 
     wealth: number; 
     propertyAssets: number; 
-    financialAssets: number; 
+    savings: number; 
+    superannuationBalance: number;
     pensionIncome: number; // Updated to match backend response
   }> 
 }>();
@@ -22,18 +23,30 @@ const chart = ref<HTMLDivElement | null>(null);
 const chartContainer = ref<HTMLDivElement | null>(null);
 let chartInstance: echarts.ECharts | null = null;
 let resizeObserver: ResizeObserver | null = null;
+let currentLegendSelection: Record<string, boolean> = {
+  'Property Assets': false,
+  'Total Wealth': false,
+  'Financial Assets': true,
+  'Pension Income': false
+};
 
 function renderChart() {
   if (!chart.value) return;
   if (!chartInstance) {
     chartInstance = echarts.init(chart.value);
+    
+    // Listen for legend selection changes
+    chartInstance.on('legendselectchanged', (params: any) => {
+      currentLegendSelection = { ...params.selected };
+    });
   }
 
   // Prepare pension income data
-  const pensionIncome = props.projection.map(p => p.pensionIncome ?? 0);
-  const financialAssets = props.projection.map(p => p.financialAssets);
-  // Financial assets minus pension portion (for stacking)
-  const nonPensionFinancialAssets = props.projection.map((p, i) => financialAssets[i] - pensionIncome[i]);
+  const pensionIncome = props.projection.map(_p => _p.pensionIncome ?? 0);
+  // Combine savings and superannuation
+  const combinedSavings = props.projection.map(p => p.savings + p.superannuationBalance);
+  // Savings minus pension portion (for stacking)
+  const nonPensionSavings = props.projection.map((p, i) => combinedSavings[i] - pensionIncome[i]);
 
   chartInstance.setOption({
     tooltip: { 
@@ -43,11 +56,12 @@ function renderChart() {
         const age = dataPoint.axisValue;
         const projectionData = props.projection.find(p => p.age === parseInt(age));
         if (projectionData) {
+          const combinedSavings = projectionData.savings + projectionData.superannuationBalance;
           return `
             Age: ${age}<br/>
             Total Wealth: ${formatCurrency(projectionData.wealth)}<br/>
             Property Assets: ${formatCurrency(projectionData.propertyAssets)}<br/>
-            Financial Assets: ${formatCurrency(projectionData.financialAssets)}<br/>
+            Savings (incl. Super): ${formatCurrency(combinedSavings)}<br/>
             Pension Income: ${formatCurrency(projectionData.pensionIncome ?? 0)}
           `;
         }
@@ -57,12 +71,7 @@ function renderChart() {
     legend: {
       data: ['Property Assets', 'Financial Assets', 'Pension Income', 'Total Wealth'],
       top: 10,
-      selected: {
-        'Property Assets': false,
-        'Total Wealth': false,
-        'Financial Assets': true,
-        'Pension Income': false
-      }
+      selected: currentLegendSelection
     },
     xAxis: { 
       type: 'category', 
@@ -95,12 +104,12 @@ function renderChart() {
         stack: 'assets',
         color: '#fde68a',
         emphasis: { focus: 'series' },
-        // Only show when Financial Assets is selected
+        // Only show when Savings is selected
         // (handled by stacking and legend selection)
       },
       {
         name: 'Financial Assets',
-        data: nonPensionFinancialAssets,
+        data: nonPensionSavings,
         type: 'line',
         smooth: true,
         areaStyle: {},
