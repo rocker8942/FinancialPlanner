@@ -168,7 +168,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     }
 
     const netFinancialAsset = savings - mortgageBalance + superannuationBalance;
-    const totalWealth = propertyAssets + netFinancialAsset ;
+    const totalWealth = propertyAssets + netFinancialAsset;
     const yearsFromNow = age - profile.currentAge;
     const inflationAdjustmentFactor = Math.pow(1 + profile.inflationRate, -yearsFromNow);
     const inflationAdjustedWealth = totalWealth * inflationAdjustmentFactor;
@@ -191,7 +191,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
   }
 
   const finalNetSavings = savings - mortgageBalance + superannuationBalance;
-  const finalWealth = propertyAssets + finalNetSavings ;
+  const finalWealth = propertyAssets + finalNetSavings;
   const finalYearsFromNow = profile.deathAge - profile.currentAge;
   const finalInflationAdjustmentFactor = Math.pow(1 + profile.inflationRate, -finalYearsFromNow);
   const finalInflationAdjustedWealth = finalWealth * finalInflationAdjustmentFactor;
