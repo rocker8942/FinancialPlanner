@@ -45,11 +45,11 @@ describe('calculateFinancialPlan', () => {
       const firstYear = result.projection[0]
 
       expect(firstYear.age).toBe(profile.currentAge)
-      // Net worth includes property + net savings (savings - mortgage) + superannuation
-      const expectedNetWorth = profile.propertyAssets + (profile.savings - profile.mortgageBalance) + profile.superannuationBalance
+      // Net worth includes property + net savings (floored at 0) + superannuation
+      const expectedNetWorth = profile.propertyAssets + Math.max(0, profile.savings - profile.mortgageBalance) + profile.superannuationBalance
       expect(firstYear.wealth).toBe(expectedNetWorth)
       expect(firstYear.propertyAssets).toBe(profile.propertyAssets) // Full property value
-      expect(firstYear.savings).toBe(profile.savings - profile.mortgageBalance) // Net savings
+      expect(firstYear.savings).toBe(Math.max(0, profile.savings - profile.mortgageBalance)) // Net savings floored at 0
     })
 
     it('should end at death age', () => {
@@ -86,7 +86,7 @@ describe('calculateFinancialPlan', () => {
       const firstYear = result.projection[0]
 
       expect(firstYear.propertyAssets).toBe(profile.propertyAssets) // Full property value
-      expect(firstYear.savings).toBe(profile.savings - profile.mortgageBalance) // Net savings
+      expect(firstYear.savings).toBe(Math.max(0, profile.savings - profile.mortgageBalance)) // Net savings floored at 0
     })
   })
 
@@ -147,7 +147,7 @@ describe('calculateFinancialPlan', () => {
       // Savings after expenses: 268000 - 100000 = 168000
       // Net savings (after mortgage): 168000 - (200000 - 12000) = 168000 - 188000 = -20000
       
-      expect(secondYear.savings).toBeCloseTo(-26000, 0)
+      expect(secondYear.savings).toBeCloseTo(0, 0) // Net savings floored at 0
     })
   })
 
@@ -325,7 +325,7 @@ describe('calculateFinancialPlan', () => {
       const firstYear = result.projection[0]
 
       expect(firstYear.propertyAssets).toBe(800000) // Full property value
-      expect(firstYear.savings).toBe(-200000) // 100000 - 300000
+      expect(firstYear.savings).toBe(0) // Net savings floored at 0 when mortgage exceeds savings
     })
 
     it('should use income to pay down mortgage', () => {
@@ -352,7 +352,7 @@ describe('calculateFinancialPlan', () => {
       // Remaining income after mortgage: 30000 - 12000 = 18000 (goes to savings)
 
       expect(secondYear.propertyAssets).toBeCloseTo(515000, 0)
-      expect(secondYear.savings).toBeCloseTo(-76000, 0)
+      expect(secondYear.savings).toBeCloseTo(0, 0) // Net savings floored at 0
     })
 
     it('should handle zero mortgage balance', () => {
@@ -407,8 +407,8 @@ describe('calculateFinancialPlan', () => {
       const result = calculateFinancialPlan(profile)
       const firstYear = result.projection[0]
 
-      // Net worth = property + net savings (savings - mortgage) + superannuation
-      const expectedWealth = 500000 + (100000 - 200000) + 80000 // 380000
+      // Net worth = property + net savings (floored at 0) + superannuation
+      const expectedWealth = 500000 + Math.max(0, 100000 - 200000) + 80000 // 580000
       expect(firstYear.wealth).toBe(expectedWealth)
     })
 
@@ -433,11 +433,11 @@ describe('calculateFinancialPlan', () => {
       // No income, so mortgage balance stays at 200000
       // Net savings check: 100000 - 200000 = -100000 (negative, so no growth applied)
       // Savings: 100000 (no growth applied)
-      // Net savings: 100000 - 200000 = -100000
+      // Net savings: Math.max(0, 100000 - 200000) = 0
       // Super: 100000 * 1.08 = 108000
-      // Total wealth: 515000 + (-100000) + 108000 = 523000
+      // Total wealth: 515000 + 0 + 108000 = 623000
       
-      expect(secondYear.wealth).toBeCloseTo(523000, 0) // Expect close to 523000
+      expect(secondYear.wealth).toBeCloseTo(623000, 0) // Expect close to 623000
     })
 
     it('should add superannuation contributions from salary', () => {

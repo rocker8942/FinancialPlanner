@@ -55,6 +55,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Inflation adjustment calculations for real purchasing power
 - Partner age and retirement considerations
 - Pension income calculations starting at specified ages
+- Net financial asset = net-saving - morgate + superannuation. 
 
 ### Data Flow
 1. User inputs financial data via `AssetInputForm.vue`
