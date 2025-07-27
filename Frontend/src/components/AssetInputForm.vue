@@ -76,23 +76,6 @@
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerRetireAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerRetireAge', 1)">+</button>
           </div>
         </div>
-        <div class="form-group">
-          <label for="deathAge">Age the plan ends</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('deathAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('deathAge', -1)">-</button>
-            <input 
-              id="deathAge"
-              v-model="deathAgeFormatted"
-              @focus="onFocus('deathAge')"
-              @blur="onBlur('deathAge')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Target Age" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('deathAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('deathAge', 1)">+</button>
-          </div>
-        </div>
       </div>
     </fieldset>
 
@@ -122,24 +105,6 @@
           <small class="help-text">Real estate, land, and other property investments</small>
         </div>
         <div class="form-group">
-          <label for="propertyGrowthRate">Property Growth Rate</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyGrowthRate', -0.5)">-</button>
-            <input 
-              id="propertyGrowthRate"
-              v-model="propertyGrowthRateFormatted"
-              @focus="onFocus('propertyGrowthRate')"
-              @blur="onBlur('propertyGrowthRate')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Growth Rate (%)" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyGrowthRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyGrowthRate', 0.5)">+</button>
-          </div>
-          <small class="help-text">Historic average property appreciation (default: 4%)</small>
-        </div>
-        <div class="form-group">
           <label for="savings">Savings</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savings', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savings', -1000)">-</button>
@@ -156,24 +121,6 @@
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savings', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savings', 1000)">+</button>
           </div>
           <small class="help-text">Stocks, bonds, savings, and liquid investments</small>
-        </div>
-        <div class="form-group">
-          <label for="savingsGrowthRate">Expected Savings Growth Rate</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savingsGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savingsGrowthRate', -0.5)">-</button>
-            <input 
-              id="savingsGrowthRate"
-              v-model="savingsGrowthRateFormatted"
-              @focus="onFocus('savingsGrowthRate')"
-              @blur="onBlur('savingsGrowthRate')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Growth Rate (%)" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savingsGrowthRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savingsGrowthRate', 0.5)">+</button>
-          </div>
-          <small class="help-text">Expected annual return on your investments</small>
         </div>
 
 
@@ -196,24 +143,6 @@
           <small class="help-text">Outstanding mortgage debt on property</small>
         </div>
         <div class="form-group">
-          <label for="mortgageRate">Mortgage Interest Rate</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('mortgageRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('mortgageRate', -0.5)">-</button>
-            <input 
-              id="mortgageRate"
-              v-model="mortgageRateFormatted"
-              @focus="onFocus('mortgageRate')"
-              @blur="onBlur('mortgageRate')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Mortgage Rate (%)" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('mortgageRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('mortgageRate', 0.5)">+</button>
-          </div>
-          <small class="help-text">Annual mortgage interest rate (default: 6%)</small>
-        </div>
-        <div class="form-group">
           <label for="superannuationBalance">Superannuation Balance</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationBalance', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationBalance', -1000)">-</button>
@@ -230,42 +159,6 @@
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationBalance', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationBalance', 1000)">+</button>
           </div>
           <small class="help-text">Current superannuation fund balance</small>
-        </div>
-        <div class="form-group">
-          <label for="superannuationRate">Superannuation Return Rate</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationRate', -0.5)">-</button>
-            <input 
-              id="superannuationRate"
-              v-model="superannuationRateFormatted"
-              @focus="onFocus('superannuationRate')"
-              @blur="onBlur('superannuationRate')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Return Rate (%)" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationRate', 0.5)">+</button>
-          </div>
-          <small class="help-text">Expected annual return on superannuation (default: 7%)</small>
-        </div>
-        <div class="form-group">
-          <label for="inflationRate">Inflation Rate</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('inflationRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('inflationRate', -0.5)">-</button>
-            <input 
-              id="inflationRate"
-              v-model="inflationRateFormatted"
-              @focus="onFocus('inflationRate')"
-              @blur="onBlur('inflationRate')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Inflation Rate (%)" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('inflationRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('inflationRate', 0.5)">+</button>
-          </div>
-          <small class="help-text">Expected annual inflation rate (default: 3%)</small>
         </div>
       </div>
     </fieldset>
@@ -369,6 +262,123 @@
       </div>
     </fieldset>
 
+    <!-- Advanced Options Group -->
+    <fieldset class="form-section">
+      <legend class="form-section-title clickable" @click="toggleSection('advanced')">
+        <span class="chevron" :class="{ open: sectionOpen.advanced }">&#9660;</span>
+        Advanced Options
+      </legend>
+      <div v-show="sectionOpen.advanced">
+        <div class="form-group">
+          <label for="deathAge">Age the plan ends</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('deathAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('deathAge', -1)">-</button>
+            <input 
+              id="deathAge"
+              v-model="deathAgeFormatted"
+              @focus="onFocus('deathAge')"
+              @blur="onBlur('deathAge')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Target Age" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('deathAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('deathAge', 1)">+</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="propertyGrowthRate">Property Growth Rate</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyGrowthRate', -0.5)">-</button>
+            <input 
+              id="propertyGrowthRate"
+              v-model="propertyGrowthRateFormatted"
+              @focus="onFocus('propertyGrowthRate')"
+              @blur="onBlur('propertyGrowthRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Growth Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyGrowthRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyGrowthRate', 0.5)">+</button>
+          </div>
+          <small class="help-text">Historic average property appreciation (default: 4%)</small>
+        </div>
+        <div class="form-group">
+          <label for="savingsGrowthRate">Expected Savings Growth Rate</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savingsGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savingsGrowthRate', -0.5)">-</button>
+            <input 
+              id="savingsGrowthRate"
+              v-model="savingsGrowthRateFormatted"
+              @focus="onFocus('savingsGrowthRate')"
+              @blur="onBlur('savingsGrowthRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Growth Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savingsGrowthRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savingsGrowthRate', 0.5)">+</button>
+          </div>
+          <small class="help-text">Expected annual return on your investments</small>
+        </div>
+        <div class="form-group">
+          <label for="mortgageRate">Mortgage Interest Rate</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('mortgageRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('mortgageRate', -0.5)">-</button>
+            <input 
+              id="mortgageRate"
+              v-model="mortgageRateFormatted"
+              @focus="onFocus('mortgageRate')"
+              @blur="onBlur('mortgageRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Mortgage Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('mortgageRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('mortgageRate', 0.5)">+</button>
+          </div>
+          <small class="help-text">Annual mortgage interest rate (default: 6%)</small>
+        </div>
+        <div class="form-group">
+          <label for="superannuationRate">Superannuation Return Rate</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationRate', -0.5)">-</button>
+            <input 
+              id="superannuationRate"
+              v-model="superannuationRateFormatted"
+              @focus="onFocus('superannuationRate')"
+              @blur="onBlur('superannuationRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Return Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('superannuationRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('superannuationRate', 0.5)">+</button>
+          </div>
+          <small class="help-text">Expected annual return on superannuation (default: 7%)</small>
+        </div>
+        <div class="form-group">
+          <label for="inflationRate">Inflation Rate</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('inflationRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('inflationRate', -0.5)">-</button>
+            <input 
+              id="inflationRate"
+              v-model="inflationRateFormatted"
+              @focus="onFocus('inflationRate')"
+              @blur="onBlur('inflationRate')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Inflation Rate (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('inflationRate', 0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('inflationRate', 0.5)">+</button>
+          </div>
+          <small class="help-text">Expected annual inflation rate (default: 3%)</small>
+        </div>
+      </div>
+    </fieldset>
+
     <div class="form-group checkbox-group">
       <label>
         <input type="checkbox" v-model="zeroNetWorthAtDeath" />
@@ -463,10 +473,11 @@ const continuousAdjustmentState = ref<{
 const sectionOpen = ref({
   profile: true,
   assets: true,
-  income: true
+  income: true,
+  advanced: false
 });
 
-function toggleSection(section: 'profile' | 'assets' | 'income') {
+function toggleSection(section: 'profile' | 'assets' | 'income' | 'advanced') {
   sectionOpen.value[section] = !sectionOpen.value[section];
 }
 
@@ -1088,8 +1099,8 @@ async function load() {
 
 
 onMounted(() => {
-  // Expand 'person profile', close 'assets' and 'income' sections on load
-  sectionOpen.value = { profile: true, assets: false, income: false };
+  // Expand 'person profile', close other sections on load
+  sectionOpen.value = { profile: true, assets: false, income: false, advanced: false };
   load();
 });
 

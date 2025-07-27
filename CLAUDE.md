@@ -76,3 +76,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - SQL Server for database (connection string in `appsettings.json`)
 - ESLint and Prettier configured for frontend code quality
 - Use powershell command in terminal
+
+## Frontend UI
+- input boxes should be in groups of Personal Profile, Assets, Income and expenses, Advanced Options
+- Advanced Options includes 
+    . Age the plan ends
+    . Property Growth Rate
+    . Expected Savings Growth Rate
+    . Mortgage Interest Rate
+    . Superannuation Return Rate
+    . Inflation Rate
+
+    
+
