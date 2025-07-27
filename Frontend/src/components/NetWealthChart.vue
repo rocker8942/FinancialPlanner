@@ -59,7 +59,6 @@ let chartInstance: echarts.ECharts | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let currentLegendSelection: Record<string, boolean> = {
   'Property Assets': false,
-  'Total Wealth': false,
   'Financial Assets': true,
   'Pension Income': false
 };
@@ -92,9 +91,8 @@ function renderChart() {
         if (projectionData) {
           return `
             Age: ${age}<br/>
-            Total Wealth: ${formatCurrency(projectionData.wealth)}<br/>
             Property Assets: ${formatCurrency(projectionData.propertyAssets)}<br/>
-            Savings: ${formatCurrency(Math.max(0, projectionData.savings))}<br/>
+            Net Financial Asset: ${formatCurrency(Math.max(0, projectionData.savings))}<br/>
             Superannuation: ${formatCurrency(projectionData.superannuationBalance)}<br/>
             Pension Income: ${formatCurrency(projectionData.pensionIncome ?? 0)}
           `;
@@ -103,7 +101,7 @@ function renderChart() {
       }
     },
     legend: {
-      data: ['Property Assets', 'Financial Assets', 'Pension Income', 'Total Wealth'],
+      data: ['Property Assets', 'Financial Assets', 'Pension Income'],
       top: 10,
       selected: currentLegendSelection
     },
@@ -149,14 +147,6 @@ function renderChart() {
         areaStyle: {},
         stack: 'assets',
         color: '#06b6d4'
-      },
-      {
-        name: 'Total Wealth',
-        data: props.projection.map(p => p.wealth),
-        type: 'line',
-        smooth: true,
-        lineStyle: { width: 3 },
-        color: '#6ee7b7'
       }
     ]
   });

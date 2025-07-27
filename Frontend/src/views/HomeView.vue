@@ -8,7 +8,7 @@
         <NetWealthChart :projection="projection" />
       </div>
       <div class="dashboard-right">
-        <SummaryCard :netWorth="finalWealth" :details="summaryDetailsFiltered" />
+        <!-- <SummaryCard :netWorth="finalWealth" :details="summaryDetailsFiltered" /> -->
         <AssetInputForm @update="onProfileUpdate" />
       </div>
     </div>
@@ -19,7 +19,7 @@
 import { ref, computed } from 'vue';
 import NetWealthChart from '../components/NetWealthChart.vue';
 import AssetInputForm from '../components/AssetInputForm.vue';
-import SummaryCard from '../components/SummaryCard.vue';
+// import SummaryCard from '../components/SummaryCard.vue';
 import { calculateFinancialPlan } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
 

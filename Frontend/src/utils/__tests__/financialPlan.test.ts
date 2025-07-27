@@ -71,14 +71,14 @@ describe('calculateFinancialPlan', () => {
         mortgageBalance: 0, // No mortgage for simple calculation
         superannuationBalance: 0, // No superannuation for simple calculation
         propertyGrowthRate: 0.05,
-        savingsGrowthRate: 0.07
+        savingsGrowthRate: 0.025
       })
       const result = calculateFinancialPlan(profile)
 
       // Check second year (first year after growth)
       const secondYear = result.projection[1]
       expect(secondYear.propertyAssets).toBeCloseTo(100000 * 1.05, 0) // Net property value (no mortgage)
-      expect(secondYear.savings).toBeCloseTo(50000 * 1.07 + 80000 + 60000 - 60000 + (80000 + 60000) * 0.12, 0) // Includes 12% super contributions
+      expect(secondYear.savings).toBeCloseTo(50000 * 1.025 + 80000 + 60000 - 60000 + (80000 + 60000) * 0.12, 0) // Includes 12% super contributions
     })
 
     it('should not apply growth in the first year', () => {

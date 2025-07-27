@@ -42,7 +42,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="retireAge">Desired Retirement Age</label>
+          <label for="retireAge">Your Retirement Age</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('retireAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('retireAge', -1)">-</button>
             <input 
@@ -60,7 +60,7 @@
           <small class="help-text">Age when salary income stops</small>
         </div>
         <div class="form-group">
-          <label for="partnerRetireAge">Partner's Desired Retirement Age</label>
+          <label for="partnerRetireAge">Partner's Retirement Age</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerRetireAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerRetireAge', -1)">-</button>
             <input 
@@ -105,7 +105,7 @@
           <small class="help-text">Real estate, land, and other property investments</small>
         </div>
         <div class="form-group">
-          <label for="savings">Savings</label>
+          <label for="savings">Current Savings</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savings', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savings', -1000)">-</button>
             <input 
@@ -171,7 +171,7 @@
       </legend>
       <div v-show="sectionOpen.income">
         <div class="form-group">
-          <label for="salary">Annual Salary</label>
+          <label for="salary">Your Annual Salary</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('salary', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('salary', -1000)">-</button>
             <input 
@@ -205,7 +205,16 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="expenses">Annual Expenses</label>
+          <div class="label-with-toggle">
+            <label for="expenses">Annual Expenses</label>
+            <button type="button" 
+                    class="toggle-switch" 
+                    :class="{ active: zeroNetWorthAtDeath }"
+                    @click="zeroNetWorthAtDeath = !zeroNetWorthAtDeath"
+                    title="Auto-optimize expenses">
+              <span class="toggle-slider"></span>
+            </button>
+          </div>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('expenses', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('expenses', -1000)" :disabled="zeroNetWorthAtDeath">-</button>
             <input 
@@ -379,13 +388,9 @@
       </div>
     </fieldset>
 
-    <div class="form-group checkbox-group">
-      <label>
-        <input type="checkbox" v-model="zeroNetWorthAtDeath" />
-        Auto-calculate expenses to reach zero net worth at the end of the plan
-      </label>
-      <small v-if="zeroNetWorthAtDeath" class="help-text">When enabled, your annual expenses will be automatically calculated and adjusted based on your other inputs to ensure you reach exactly zero net worth at your target age. This maximizes your lifetime spending potential.</small>
-      <span v-if="zeroNetWorthAtDeath" class="expense-info">Auto-calculated annual expense: {{ formatCurrency(calculatedExpense) }}</span>
+    <div v-if="zeroNetWorthAtDeath" class="form-group">
+      <small class="help-text">When enabled, your annual expenses will be automatically calculated and adjusted based on your other inputs to ensure you reach exactly zero net worth at your target age. This maximizes your lifetime spending potential.</small>
+      <span class="expense-info">Auto-calculated annual expense: {{ formatCurrency(calculatedExpense) }}</span>
     </div>
 
     <!-- Button removed: calculation is now automatic on input change -->
@@ -411,7 +416,7 @@ const expenses = ref(0);
 const currentAge = ref(30);
 const retireAge = ref(65);
 const deathAge = ref(90);
-const savingsGrowthRate = ref(0.07); // 7% default
+const savingsGrowthRate = ref(0.025); // 2.5% default
 const propertyGrowthRate = ref(0.03); // 3% default
 const inflationRate = ref(0.03); // 3% default inflation rate
 const mortgageBalance = ref(0);
@@ -442,7 +447,7 @@ const expensesFormatted = ref('0');
 const currentAgeFormatted = ref('30');
 const retireAgeFormatted = ref('65');
 const deathAgeFormatted = ref('90');
-const savingsGrowthRateFormatted = ref('7');
+const savingsGrowthRateFormatted = ref('2.5');
 const propertyGrowthRateFormatted = ref('3');
 const inflationRateFormatted = ref('3');
 const pensionAmountFormatted = ref('0');
@@ -472,13 +477,20 @@ const continuousAdjustmentState = ref<{
 // Collapsible section state
 const sectionOpen = ref({
   profile: true,
-  assets: true,
-  income: true,
+  assets: false,
+  income: false,
   advanced: false
 });
 
 function toggleSection(section: 'profile' | 'assets' | 'income' | 'advanced') {
-  sectionOpen.value[section] = !sectionOpen.value[section];
+  // Close all sections first
+  sectionOpen.value.profile = false;
+  sectionOpen.value.assets = false;
+  sectionOpen.value.income = false;
+  sectionOpen.value.advanced = false;
+  
+  // Open the clicked section
+  sectionOpen.value[section] = true;
 }
 
 // Parse numeric value from formatted string
@@ -1021,7 +1033,7 @@ function loadFromLocalStorage() {
       currentAge.value = parsed.currentAge ?? 30;
       retireAge.value = parsed.retireAge ?? 65;
       deathAge.value = parsed.deathAge ?? 90;
-      savingsGrowthRate.value = parsed.savingsGrowthRate ?? 0.07;
+      savingsGrowthRate.value = parsed.savingsGrowthRate ?? 0.025;
       propertyGrowthRate.value = parsed.propertyGrowthRate ?? 0.03;
       inflationRate.value = parsed.inflationRate ?? 0.03;
       pensionAmount.value = parsed.pensionAmount ?? 0;
@@ -1079,7 +1091,7 @@ async function load() {
         currentAge.value = profile.currentAge || 30;
         retireAge.value = profile.retireAge || 65;
         deathAge.value = profile.deathAge || 90;
-        savingsGrowthRate.value = profile.savingsGrowthRate || 0.07;
+        savingsGrowthRate.value = profile.savingsGrowthRate || 0.025;
         propertyGrowthRate.value = profile.propertyGrowthRate || 0.03;
         inflationRate.value = profile.inflationRate || 0.03;
         pensionAmount.value = profile.pensionAmount || 0;
@@ -1302,5 +1314,59 @@ onUnmounted(() => {
   font-size: 0.8rem;
   color: #6ee7b7;
   margin-top: 0.2em;
+}
+
+.label-with-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.label-with-toggle label {
+  margin-bottom: 0;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 32px;
+  height: 16px;
+  background: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  outline: none;
+}
+
+.toggle-switch:hover {
+  background: #4b5563;
+}
+
+.toggle-switch.active {
+  background: #6ee7b7;
+  border-color: #6ee7b7;
+}
+
+.toggle-switch:focus {
+  box-shadow: 0 0 0 2px rgba(110, 231, 183, 0.3);
+}
+
+.toggle-slider {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #e0e3e8;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  transform: translateX(2px);
+}
+
+.toggle-switch.active .toggle-slider {
+  transform: translateX(18px);
+  background: #1f2937;
 }
 </style>

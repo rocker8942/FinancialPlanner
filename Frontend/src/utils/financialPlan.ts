@@ -40,6 +40,7 @@ export interface YearlyWealth {
 export interface FinancialPlanResult {
   projection: YearlyWealth[];
   finalWealth: number;
+  finalNetSavings: number;
   summary: string;
 }
 
@@ -199,6 +200,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
   return {
     projection,
     finalWealth,
+    finalNetSavings,
     summary: generateSummary(
       profile.retireAge,
       profile.deathAge,
@@ -215,7 +217,7 @@ export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): 
   const years = profileInput.deathAge - profileInput.currentAge;
   if (years <= 0) return profileInput.expenses;
   const netSavings = profileInput.savings - profileInput.mortgageBalance;
-  const assets = profileInput.propertyAssets + netSavings + profileInput.superannuationBalance;
+  const assets = netSavings + profileInput.superannuationBalance;
   const salaryIncome = profileInput.salary * Math.max(0, Math.min(profileInput.retireAge, profileInput.deathAge) - profileInput.currentAge);
   // Convert partner's retirement age to main user's timeline
   const partnerRetireAgeInUserTimeline = profileInput.currentAge + (profileInput.partnerRetireAge - profileInput.partnerAge);
@@ -233,8 +235,8 @@ export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): 
     let mid = (low + high) / 2;
     const profile = { ...profileInput, expenses: mid };
     const plan = calculateFinancialPlan(profile);
-    const minWealth = Math.min(...plan.projection.map(y => y.wealth));
-    let net = plan.finalWealth;
+    const minWealth = Math.min(...plan.projection.map(y => y.savings));
+    let net = plan.finalNetSavings;
     if (Math.abs(high - low) < tolerance) {
       break;
     }

@@ -87,5 +87,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
     . Superannuation Return Rate
     . Inflation Rate
 
-    
+## Prompt Guide
+- Use context7 mcp    
 
