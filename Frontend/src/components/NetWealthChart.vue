@@ -60,7 +60,7 @@ let resizeObserver: ResizeObserver | null = null;
 let currentLegendSelection: Record<string, boolean> = {
   'Property Assets': false,
   'Financial Assets': true,
-  'Pension Income': false
+  'Pension Income': true
 };
 
 function renderChart() {

@@ -36,6 +36,11 @@ namespace FinancialPlanner.Backend.Models
         // Add partner age fields
         public int PartnerAge { get; set; }
         public int PartnerRetireAge { get; set; }
+        
+        // Age pension calculation fields
+        public string RelationshipStatus { get; set; } = "single"; // "single" or "couple"
+        public bool IsHomeowner { get; set; } = true;
+        
         public User User { get; set; } = null!;
     }
 }

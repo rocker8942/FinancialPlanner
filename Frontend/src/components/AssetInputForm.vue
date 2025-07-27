@@ -8,6 +8,26 @@
       </legend>
       <div v-show="sectionOpen.profile">
         <div class="form-group">
+          <label>Relationship Status</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" value="single" v-model="relationshipStatus" />
+              <span>Single</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" value="couple" v-model="relationshipStatus" />
+              <span>Couple</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" v-model="isHomeowner" />
+            <span>I own my home</span>
+          </label>
+          <small class="help-text">Homeowner status affects age pension asset test thresholds</small>
+        </div>
+        <div class="form-group">
           <label for="currentAge">Current Age</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('currentAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('currentAge', -1)">-</button>
@@ -22,23 +42,6 @@
               required 
             />
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('currentAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('currentAge', 1)">+</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="partnerAge">Partner's Age</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerAge', -1)">-</button>
-            <input 
-              id="partnerAge"
-              v-model="partnerAgeFormatted"
-              @focus="onFocus('partnerAge')"
-              @blur="onBlur('partnerAge')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Partner's Age" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerAge', 1)">+</button>
           </div>
         </div>
         <div class="form-group">
@@ -59,6 +62,24 @@
           </div>
           <small class="help-text">Age when salary income stops</small>
         </div>
+        <div v-show="relationshipStatus === 'couple'" class="partner-section">
+        <div class="form-group">
+          <label for="partnerAge">Partner's Age</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerAge', -1)">-</button>
+            <input 
+              id="partnerAge"
+              v-model="partnerAgeFormatted"
+              @focus="onFocus('partnerAge')"
+              @blur="onBlur('partnerAge')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Partner's Age" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerAge', 1)">+</button>
+          </div>
+        </div>
         <div class="form-group">
           <label for="partnerRetireAge">Partner's Retirement Age</label>
           <div class="input-with-buttons">
@@ -76,6 +97,7 @@
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerRetireAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerRetireAge', 1)">+</button>
           </div>
         </div>
+        </div>
       </div>
     </fieldset>
 
@@ -87,7 +109,7 @@
       </legend>
       <div v-show="sectionOpen.assets">
         <div class="form-group">
-          <label for="propertyAssets">Property Assets</label>
+          <label for="propertyAssets">Investment Property</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyAssets', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyAssets', -1000)">-</button>
             <input 
@@ -97,7 +119,7 @@
               @blur="onBlur('propertyAssets')"
               @keydown.enter="onEnter($event)"
               type="text" 
-              placeholder="Property Assets ($)" 
+              placeholder="Investment Property ($)" 
               required 
             />
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyAssets', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyAssets', 1000)">+</button>
@@ -187,7 +209,7 @@
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('salary', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('salary', 1000)">+</button>
           </div>
         </div>
-        <div class="form-group">
+        <div v-show="relationshipStatus === 'couple'" class="form-group">
           <label for="partnerSalary">Partner's Annual Salary</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerSalary', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerSalary', -1000)">-</button>
@@ -232,42 +254,25 @@
           </div>
           <small class="help-text">{{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}</small>
         </div>
-        <div class="form-group">
-          <label for="pensionAmount">Pension for You (Annual Amount)</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('pensionAmount', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('pensionAmount', -1000)">-</button>
-            <input 
-              id="pensionAmount"
-              v-model="pensionAmountFormatted"
-              @focus="onFocus('pensionAmount')"
-              @blur="onBlur('pensionAmount')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Pension Amount ($)" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('pensionAmount', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('pensionAmount', 1000)">+</button>
+        <!-- Calculated Age Pension section hidden as requested -->
+        <!-- <div class="form-group">
+          <label>Calculated Age Pension</label>
+          <div class="pension-display">
+            <div class="pension-item">
+              <span class="pension-label">Your Pension (Annual):</span>
+              <span class="pension-value">{{ formatCurrency(calculatedUserPension) }}</span>
+            </div>
+            <div v-show="relationshipStatus === 'couple'" class="pension-item">
+              <span class="pension-label">Partner's Pension (Annual):</span>
+              <span class="pension-value">{{ formatCurrency(calculatedPartnerPension) }}</span>
+            </div>
+            <div class="pension-item total">
+              <span class="pension-label">Total Annual Pension:</span>
+              <span class="pension-value">{{ formatCurrency(calculatedUserPension + calculatedPartnerPension) }}</span>
+            </div>
           </div>
-          <small class="help-text">Annual pension income for you</small>
-        </div>
-        <div class="form-group">
-          <label for="partnerPensionAmount">Pension for Your Partner (Annual Amount)</label>
-          <div class="input-with-buttons">
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerPensionAmount', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerPensionAmount', -1000)">-</button>
-            <input 
-              id="partnerPensionAmount"
-              v-model="partnerPensionAmountFormatted"
-              @focus="onFocus('partnerPensionAmount')"
-              @blur="onBlur('partnerPensionAmount')"
-              @keydown.enter="onEnter($event)"
-              type="text" 
-              placeholder="Partner Pension Amount ($)" 
-              required 
-            />
-            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('partnerPensionAmount', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('partnerPensionAmount', 1000)">+</button>
-          </div>
-          <small class="help-text">Annual pension income for your partner</small>
-        </div>
+          <small class="help-text">Automatically calculated based on Australian age pension rules (2025 rates). Pension eligibility starts at age 67.</small>
+        </div> -->
       </div>
     </fieldset>
 
@@ -403,6 +408,7 @@ import { getFinancialProfile, updateFinancialProfile } from '../services/api';
 import { calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
 import { formatCurrency, formatNumber, parseFormattedNumber } from '../utils/formatters';
+import { getAgePensionAmounts } from '../services/agePensionService';
 
 const emit = defineEmits(['update']);
 
@@ -434,6 +440,49 @@ const partnerPensionStartAge = computed(() => partnerAge.value < 67 ? 67 : partn
 const partnerAge = ref(30);
 const partnerRetireAge = ref(65);
 const partnerSalary = ref(0);
+
+// Add new reactive variables for age pension calculation
+const relationshipStatus = ref<'single' | 'couple'>('single');
+const isHomeowner = ref(true);
+
+// Computed properties for calculated pension amounts
+const calculatedUserPension = computed(() => {
+  if (!isLoaded.value) return 0;
+  
+  const pensionAmounts = getAgePensionAmounts(
+    relationshipStatus.value,
+    isHomeowner.value,
+    propertyAssets.value,
+    savings.value,
+    superannuationBalance.value,
+    mortgageBalance.value,
+    salary.value,
+    partnerSalary.value,
+    currentAge.value,
+    partnerAge.value
+  );
+  
+  return pensionAmounts.userPension;
+});
+
+const calculatedPartnerPension = computed(() => {
+  if (!isLoaded.value) return 0;
+  
+  const pensionAmounts = getAgePensionAmounts(
+    relationshipStatus.value,
+    isHomeowner.value,
+    propertyAssets.value,
+    savings.value,
+    superannuationBalance.value,
+    mortgageBalance.value,
+    salary.value,
+    partnerSalary.value,
+    currentAge.value,
+    partnerAge.value
+  );
+  
+  return pensionAmounts.partnerPension;
+});
 
 // Checkbox for zero net worth at death
 const zeroNetWorthAtDeath = ref(false);
@@ -900,12 +949,14 @@ watch(zeroNetWorthAtDeath, (checked) => {
       savingsGrowthRate: savingsGrowthRate.value,
       propertyGrowthRate: propertyGrowthRate.value,
       inflationRate: inflationRate.value,
-      pensionAmount: pensionAmount.value,
+      pensionAmount: calculatedUserPension.value,
       pensionStartAge: 67, // hardcoded
-      partnerPensionAmount: partnerPensionAmount.value,
-      partnerPensionStartAge: partnerPensionStartAge.value,
+      partnerPensionAmount: calculatedPartnerPension.value,
+      partnerPensionStartAge: 67, // Always 67 for Australian age pension
       partnerAge: partnerAge.value,
-      partnerRetireAge: partnerRetireAge.value
+      partnerRetireAge: partnerRetireAge.value,
+      relationshipStatus: relationshipStatus.value,
+      isHomeowner: isHomeowner.value
     };
     calculatedExpense.value = calculateExpenseToZeroNetWorth(profile);
     expenses.value = calculatedExpense.value;
@@ -919,7 +970,7 @@ watch([
   savingsGrowthRate, propertyGrowthRate, inflationRate,
   pensionAmount, partnerPensionAmount, partnerPensionStartAge,
   partnerAge, partnerRetireAge, mortgageBalance, mortgageRate,
-  superannuationBalance, superannuationRate
+  superannuationBalance, superannuationRate, relationshipStatus, isHomeowner
 ], () => {
   if (zeroNetWorthAtDeath.value) {
     const profile: FinancialProfile = {
@@ -938,12 +989,14 @@ watch([
       savingsGrowthRate: savingsGrowthRate.value,
       propertyGrowthRate: propertyGrowthRate.value,
       inflationRate: inflationRate.value,
-      pensionAmount: pensionAmount.value,
+      pensionAmount: calculatedUserPension.value,
       pensionStartAge: 67, // hardcoded
-      partnerPensionAmount: partnerPensionAmount.value,
-      partnerPensionStartAge: partnerPensionStartAge.value,
+      partnerPensionAmount: calculatedPartnerPension.value,
+      partnerPensionStartAge: 67, // Always 67 for Australian age pension
       partnerAge: partnerAge.value,
-      partnerRetireAge: partnerRetireAge.value
+      partnerRetireAge: partnerRetireAge.value,
+      relationshipStatus: relationshipStatus.value,
+      isHomeowner: isHomeowner.value
     };
     calculatedExpense.value = calculateExpenseToZeroNetWorth(profile);
     expenses.value = calculatedExpense.value;
@@ -971,12 +1024,14 @@ watchEffect(() => {
     savingsGrowthRate: savingsGrowthRate.value,
     propertyGrowthRate: propertyGrowthRate.value,
     inflationRate: inflationRate.value,
-    pensionAmount: pensionAmount.value,
+    pensionAmount: calculatedUserPension.value,
     pensionStartAge: 67, // hardcoded
-    partnerPensionAmount: partnerPensionAmount.value,
-    partnerPensionStartAge: partnerPensionStartAge.value,
+    partnerPensionAmount: calculatedPartnerPension.value,
+    partnerPensionStartAge: 67, // Always 67 for Australian age pension
     partnerAge: partnerAge.value,
-    partnerRetireAge: partnerRetireAge.value
+    partnerRetireAge: partnerRetireAge.value,
+    relationshipStatus: relationshipStatus.value,
+    isHomeowner: isHomeowner.value
   };
 
   saveToLocalStorage(); // Save changes to local storage immediately
@@ -1011,7 +1066,9 @@ function saveToLocalStorage() {
     pensionStartAge: 67, // hardcoded
     partnerPensionAmount: partnerPensionAmount.value,
     partnerAge: partnerAge.value,
-    partnerRetireAge: partnerRetireAge.value
+    partnerRetireAge: partnerRetireAge.value,
+    relationshipStatus: relationshipStatus.value,
+    isHomeowner: isHomeowner.value
   };
   localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
 }
@@ -1041,6 +1098,8 @@ function loadFromLocalStorage() {
       partnerPensionAmount.value = parsed.partnerPensionAmount ?? 0;
       partnerAge.value = parsed.partnerAge ?? 30;
       partnerRetireAge.value = parsed.partnerRetireAge ?? 65;
+      relationshipStatus.value = parsed.relationshipStatus ?? 'single';
+      isHomeowner.value = parsed.isHomeowner ?? true;
       
       // Update formatted values
       updateFormattedValues();
@@ -1099,6 +1158,8 @@ async function load() {
         partnerPensionAmount.value = profile.partnerPensionAmount || 0;
         partnerAge.value = profile.partnerAge || 30;
         partnerRetireAge.value = profile.partnerRetireAge || 65;
+        relationshipStatus.value = profile.relationshipStatus || 'single';
+        isHomeowner.value = profile.isHomeowner ?? true;
         updateFormattedValues();
         saveToLocalStorage();
       }
@@ -1368,5 +1429,87 @@ onUnmounted(() => {
 .toggle-switch.active .toggle-slider {
   transform: translateX(18px);
   background: #1f2937;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #e0e3e8;
+  font-weight: normal;
+}
+
+.radio-label input[type="radio"] {
+  margin-right: 0.3rem;
+  accent-color: #6ee7b7;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #e0e3e8;
+  font-weight: normal;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-right: 0.3rem;
+  accent-color: #6ee7b7;
+}
+
+.partner-section {
+  border-left: 2px solid #374151;
+  padding-left: 1rem;
+  margin-left: 0.5rem;
+}
+
+.pension-display {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.pension-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.pension-item:last-child {
+  margin-bottom: 0;
+}
+
+.pension-item.total {
+  border-top: 1px solid #374151;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.pension-label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.pension-value {
+  font-size: 0.75rem;
+  color: #6ee7b7;
+  font-weight: 600;
+}
+
+.pension-item.total .pension-value {
+  color: #34d399;
+  font-size: 0.8rem;
 }
 </style>

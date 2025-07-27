@@ -1,3 +1,5 @@
+import { getAgePensionAmounts } from '../services/agePensionService';
+
 // Types for financial plan calculation
 export interface FinancialProfile {
   propertyAssets: number;
@@ -21,6 +23,9 @@ export interface FinancialProfile {
   partnerPensionStartAge: number;
   partnerAge: number; // Partner's current age
   partnerRetireAge: number; // Partner's desired retirement age
+  // Age pension calculation fields
+  relationshipStatus: 'single' | 'couple';
+  isHomeowner: boolean;
 }
 
 export interface YearlyWealth {
@@ -88,6 +93,25 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       superannuationBalance = applyGrowth(superannuationBalance, profile.superannuationRate);
     }
 
+    // Calculate current age pension entitlement based on current assets and income
+    const currentPartnerAge = profile.partnerAge + (age - profile.currentAge);
+    const currentUserSalary = age <= profile.retireAge ? profile.salary : 0;
+    const partnerRetireAgeInUserTimeline = profile.currentAge + (profile.partnerRetireAge - profile.partnerAge);
+    const currentPartnerSalary = age <= partnerRetireAgeInUserTimeline ? profile.partnerSalary : 0;
+    
+    const pensionAmounts = getAgePensionAmounts(
+      profile.relationshipStatus,
+      profile.isHomeowner,
+      propertyAssets,
+      savings,
+      superannuationBalance,
+      mortgageBalance,
+      currentUserSalary,
+      currentPartnerSalary,
+      age,
+      currentPartnerAge
+    );
+
     // Calculate total annual income (for all years including current)
     // Add salary if not retired
     if (age <= profile.retireAge) {
@@ -99,8 +123,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     }
 
     // Add partner salary if partner is not retired
-    // Convert partner's retirement age to main user's timeline
-    const partnerRetireAgeInUserTimeline = profile.currentAge + (profile.partnerRetireAge - profile.partnerAge);
+    // Convert partner's retirement age to main user's timeline (already calculated above)
     if (age <= partnerRetireAgeInUserTimeline) {
       totalIncome += profile.partnerSalary;
       // Add partner superannuation contributions (12% of salary) only if not current year
@@ -109,16 +132,9 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       }
     }
 
-    // Add pension income for user if at or after pension start age
-    if (age >= profile.pensionStartAge) {
-      totalIncome += profile.pensionAmount;
-      pensionIncomeThisYear += profile.pensionAmount;
-    }
-    // Add pension income for partner if partner has turned 67
-    if ((age - profile.currentAge + profile.partnerAge) >= 67) {
-      totalIncome += profile.partnerPensionAmount;
-      pensionIncomeThisYear += profile.partnerPensionAmount;
-    }
+    // Add dynamically calculated pension income
+    pensionIncomeThisYear = pensionAmounts.userPension + pensionAmounts.partnerPension;
+    totalIncome += pensionIncomeThisYear;
 
     // Store the original total income for reporting
     originalTotalIncome = totalIncome;
@@ -223,10 +239,31 @@ export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): 
   const partnerRetireAgeInUserTimeline = profileInput.currentAge + (profileInput.partnerRetireAge - profileInput.partnerAge);
   const partnerSalaryIncome = profileInput.partnerSalary * Math.max(0, Math.min(partnerRetireAgeInUserTimeline, profileInput.deathAge) - profileInput.currentAge);
   let pensionIncome = 0;
+  // Calculate approximate pension income over the lifetime
   for (let age = profileInput.currentAge; age < profileInput.deathAge; age++) {
-    if (age >= profileInput.pensionStartAge) pensionIncome += profileInput.pensionAmount;
-    // Partner's pension starts when partner turns 67
-    if (profileInput.partnerAge >= 67) pensionIncome += profileInput.partnerPensionAmount;
+    const currentPartnerAge = profileInput.partnerAge + (age - profileInput.currentAge);
+    const currentUserSalary = age <= profileInput.retireAge ? profileInput.salary : 0;
+    const currentPartnerSalary = age <= partnerRetireAgeInUserTimeline ? profileInput.partnerSalary : 0;
+    
+    // Use average asset values for approximation
+    const avgSavings = profileInput.savings;
+    const avgSuper = profileInput.superannuationBalance;
+    const avgMortgage = Math.max(0, profileInput.mortgageBalance * (1 - (age - profileInput.currentAge) / (profileInput.deathAge - profileInput.currentAge)));
+    
+    const pensionAmounts = getAgePensionAmounts(
+      profileInput.relationshipStatus,
+      profileInput.isHomeowner,
+      profileInput.propertyAssets,
+      avgSavings,
+      avgSuper,
+      avgMortgage,
+      currentUserSalary,
+      currentPartnerSalary,
+      age,
+      currentPartnerAge
+    );
+    
+    pensionIncome += pensionAmounts.userPension + pensionAmounts.partnerPension;
   }
   let low = 0, high = (assets + salaryIncome + partnerSalaryIncome + pensionIncome) / years * 5;
   const tolerance = 0.01;

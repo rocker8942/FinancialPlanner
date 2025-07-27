@@ -11,7 +11,9 @@
       "Bash(mkdir:*)",
       "Bash(npm run test:e2e:*)",
       "Bash(rm:*)",
-      "Bash(npm run test:run:*)"
+      "Bash(npm run test:run:*)",
+      "WebFetch(domain:www.servicesaustralia.gov.au)",
+      "Bash(dotnet build)"
     ],
     "deny": []
   }
