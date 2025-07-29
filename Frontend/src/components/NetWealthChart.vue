@@ -79,7 +79,7 @@ function renderChart() {
   // Use only savings (superannuation already included in savings from financialPlan.ts)
   const savingsData = props.projection.map(p => Math.max(0, p.savings));
   // Savings minus pension portion (for stacking, ensure non-negative)
-  const nonPensionSavings = props.projection.map((p, i) => Math.max(0, savingsData[i] - pensionIncome[i]));
+  const nonPensionSavings = props.projection.map((_, i) => Math.max(0, savingsData[i] - pensionIncome[i]));
 
   chartInstance.setOption({
     tooltip: { 

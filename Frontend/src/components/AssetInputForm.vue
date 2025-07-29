@@ -404,7 +404,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, watchEffect, computed } from 'vue';
-import { getFinancialProfile, updateFinancialProfile } from '../services/api';
+import { getFinancialProfile } from '../services/api';
 import { calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
 import { formatCurrency, formatNumber, parseFormattedNumber } from '../utils/formatters';

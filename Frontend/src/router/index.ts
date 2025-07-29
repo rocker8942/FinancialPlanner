@@ -25,7 +25,7 @@ const router = createRouter({
 
 const protectedRoutes = ['Profile', 'Plans', 'Progress', 'Settings'];
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   const auth = useAuthStore();
   if (protectedRoutes.includes(to.name as string) && !auth.isAuthenticated) {
     next({ name: 'Login' });

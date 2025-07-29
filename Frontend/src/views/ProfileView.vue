@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { getProfile, updateProfile, logoutUser } from '../services/api';
+import { getProfile, updateProfile as updateUserProfile, logoutUser } from '../services/api';
 
 const name = ref('');
 const router = useRouter();
@@ -23,7 +23,7 @@ async function fetchProfile() {
 }
 
 async function updateProfile() {
-  await updateProfile({ name: name.value });
+  await updateUserProfile({ name: name.value });
 }
 
 function logout() {

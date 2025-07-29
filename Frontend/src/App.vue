@@ -68,9 +68,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useAuthStore } from './store/auth';
 
-const auth = useAuthStore();
 const sidebarCollapsed = ref(true); // Start collapsed by default
 
 function toggleSidebar() {

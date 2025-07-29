@@ -161,8 +161,12 @@ function calculateIncomeTest(params: AgePensionParams): AgePensionResult['income
     : annualIncome + deemedIncome;
   
   const thresholds = INCOME_TEST_THRESHOLDS[relationshipStatus];
-  const freeArea = relationshipStatus === 'couple' ? thresholds.freeAreaCombined : thresholds.freeArea;
-  const cutOff = relationshipStatus === 'couple' ? thresholds.cutOffCombined : thresholds.cutOff;
+  const freeArea = relationshipStatus === 'couple' 
+    ? (thresholds as typeof INCOME_TEST_THRESHOLDS.couple).freeAreaCombined 
+    : (thresholds as typeof INCOME_TEST_THRESHOLDS.single).freeArea;
+  const cutOff = relationshipStatus === 'couple' 
+    ? (thresholds as typeof INCOME_TEST_THRESHOLDS.couple).cutOffCombined 
+    : (thresholds as typeof INCOME_TEST_THRESHOLDS.single).cutOff;
   
   if (totalIncome <= freeArea) {
     return {

@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import NetWealthChart from '../components/NetWealthChart.vue';
 import AssetInputForm from '../components/AssetInputForm.vue';
 // import SummaryCard from '../components/SummaryCard.vue';
@@ -33,69 +33,70 @@ interface ProjectionData {
   inflationAdjustedPropertyAssets: number;
   inflationAdjustedSavings: number;
   pensionIncome: number;
+  totalIncome: number;
+  expenses: number;
 }
 
 const projection = ref<ProjectionData[]>([]);
-const finalWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].wealth : 0);
-const finalPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].propertyAssets : 0);
-const finalSavings = computed(() => projection.value.length ? projection.value[projection.value.length - 1].savings : 0);
-const finalInflationAdjustedWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedWealth : 0);
-const finalInflationAdjustedPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedPropertyAssets : 0);
-const finalInflationAdjustedSavings = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedSavings : 0);
+// const finalWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].wealth : 0);
+// const finalPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].propertyAssets : 0);
+// const finalSavings = computed(() => projection.value.length ? projection.value[projection.value.length - 1].savings : 0);
+// const finalInflationAdjustedWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedWealth : 0);
+// const finalInflationAdjustedPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedPropertyAssets : 0);
+// const finalInflationAdjustedSavings = computed(() => projection.value.length ? projection.value[projection.value.length - 1].inflationAdjustedSavings : 0);
 
-const summaryDetails = computed(() => {
-  const initialWealth = projection.value[0]?.wealth ?? 0;
-  const initialProperty = projection.value[0]?.propertyAssets ?? 0;
-  const initialSavings = projection.value[0]?.savings ?? 0;
-  const initialInflationAdjustedWealth = projection.value[0]?.inflationAdjustedWealth ?? 0;
+// const summaryDetails = computed(() => {
+//   const initialWealth = projection.value[0]?.wealth ?? 0;
+//   const initialProperty = projection.value[0]?.propertyAssets ?? 0;
+//   const initialSavings = projection.value[0]?.savings ?? 0;
   
-  return [
-    { 
-      label: 'Total Change in Net Worth (Nominal)', 
-      value: finalWealth.value - initialWealth, 
-      type: (finalWealth.value - initialWealth) >= 0 ? 'positive' : 'negative' 
-    },
-    { 
-      label: 'Final Net Worth (Today\'s Value)', 
-      value: finalInflationAdjustedWealth.value, 
-      type: 'neutral' 
-    },
-    { 
-      label: 'Final Property Assets (Nominal)', 
-      value: finalPropertyAssets.value, 
-      type: 'neutral' 
-    },
-    { 
-      label: 'Final Property Assets (Today\'s Value)', 
-      value: finalInflationAdjustedPropertyAssets.value, 
-      type: 'neutral' 
-    },
-    { 
-      label: 'Final Savings (Nominal)', 
-      value: finalSavings.value, 
-      type: 'neutral' 
-    },
-    { 
-      label: 'Final Savings (Today\'s Value)', 
-      value: finalInflationAdjustedSavings.value, 
-      type: 'neutral' 
-    },
-    { 
-      label: 'Property Asset Growth (Nominal)', 
-      value: finalPropertyAssets.value - initialProperty, 
-      type: (finalPropertyAssets.value - initialProperty) >= 0 ? 'positive' : 'negative' 
-    },
-    { 
-      label: 'Savings Growth (Nominal)', 
-      value: finalSavings.value - initialSavings, 
-      type: (finalSavings.value - initialSavings) >= 0 ? 'positive' : 'negative' 
-    }
-  ];
-});
+//   return [
+//     { 
+//       label: 'Total Change in Net Worth (Nominal)', 
+//       value: finalWealth.value - initialWealth, 
+//       type: (finalWealth.value - initialWealth) >= 0 ? 'positive' : 'negative' 
+//     },
+//     { 
+//       label: 'Final Net Worth (Today\'s Value)', 
+//       value: finalInflationAdjustedWealth.value, 
+//       type: 'neutral' 
+//     },
+//     { 
+//       label: 'Final Property Assets (Nominal)', 
+//       value: finalPropertyAssets.value, 
+//       type: 'neutral' 
+//     },
+//     { 
+//       label: 'Final Property Assets (Today\'s Value)', 
+//       value: finalInflationAdjustedPropertyAssets.value, 
+//       type: 'neutral' 
+//     },
+//     { 
+//       label: 'Final Savings (Nominal)', 
+//       value: finalSavings.value, 
+//       type: 'neutral' 
+//     },
+//     { 
+//       label: 'Final Savings (Today\'s Value)', 
+//       value: finalInflationAdjustedSavings.value, 
+//       type: 'neutral' 
+//     },
+//     { 
+//       label: 'Property Asset Growth (Nominal)', 
+//       value: finalPropertyAssets.value - initialProperty, 
+//       type: (finalPropertyAssets.value - initialProperty) >= 0 ? 'positive' : 'negative' 
+//     },
+//     { 
+//       label: 'Savings Growth (Nominal)', 
+//       value: finalSavings.value - initialSavings, 
+//       type: (finalSavings.value - initialSavings) >= 0 ? 'positive' : 'negative' 
+//     }
+//   ];
+// });
 
-const summaryDetailsFiltered = computed(() =>
-  summaryDetails.value.filter(item => !item.label.includes("Today's Value"))
-);
+// const summaryDetailsFiltered = computed(() =>
+//   summaryDetails.value.filter(item => !item.label.includes("Today's Value"))
+// );
 
 function onProfileUpdate(profile: FinancialProfile) {
   if (profile) {
