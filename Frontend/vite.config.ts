@@ -16,5 +16,13 @@ export default defineConfig({
         secure: false
       }
     }
-  }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
+  base: './' // Use relative paths for assets
 })
