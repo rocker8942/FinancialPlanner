@@ -9,12 +9,19 @@
           <button @click="toggleSidebar" class="toggle-button material-icons" aria-label="Toggle sidebar">
             {{ sidebarCollapsed ? 'menu' : 'menu_open' }}
           </button>
-          <span v-show="!sidebarCollapsed" class="text-2xl font-bold text-teal-300 transition-opacity duration-300">FP</span>
+          <div v-show="!sidebarCollapsed" class="app-title-container">
+            <span class="text-2xl font-bold text-teal-300 transition-opacity duration-300">FP</span>
+            <span class="beta-badge-sidebar">β</span>
+          </div>
         </div>
         <!-- Navigation -->
         <nav class="flex flex-col gap-1 mt-4 px-2">
           <span v-show="!sidebarCollapsed" class="uppercase text-xs text-gray-500 px-4 mb-2 transition-opacity duration-300">Main</span>
-          <router-link to="/" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Dashboard' : ''">
+          <router-link to="/cover" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Home' : ''">
+            <span class="material-icons text-lg text-green-400">home</span>
+            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Home</span>
+          </router-link>
+          <router-link to="/home" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Retirement Planner' : ''">
             <span class="material-icons text-lg text-blue-400">trending_up</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Retirement Planner</span>
           </router-link>
@@ -106,6 +113,25 @@ function toggleSidebar() {
 .toggle-button:focus {
   outline: 2px solid #6ee7b7;
   outline-offset: 2px;
+}
+
+.app-title-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.3s;
+}
+
+.beta-badge-sidebar {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 </style>
 

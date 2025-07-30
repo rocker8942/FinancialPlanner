@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import CoverView from '../views/CoverView.vue';
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import ProfileView from '../views/ProfileView.vue';
@@ -9,7 +10,9 @@ import SettingsView from '../views/SettingsView.vue';
 import { useAuthStore } from '../store/auth';
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', name: 'Home', component: HomeView },
+  { path: '/', redirect: '/cover' },
+  { path: '/cover', name: 'Cover', component: CoverView },
+  { path: '/home', name: 'Home', component: HomeView },
   { path: '/login', name: 'Login', component: LoginView },
   { path: '/register', name: 'Register', component: RegisterView },
   { path: '/profile', name: 'Profile', component: ProfileView },
