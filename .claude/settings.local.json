@@ -13,7 +13,8 @@
       "Bash(rm:*)",
       "Bash(npm run test:run:*)",
       "WebFetch(domain:www.servicesaustralia.gov.au)",
-      "Bash(dotnet build)"
+      "Bash(dotnet build)",
+      "WebFetch(domain:www.superguide.com.au)"
     ],
     "deny": []
   }

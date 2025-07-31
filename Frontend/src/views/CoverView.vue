@@ -9,8 +9,8 @@
         </h1>
         <p class="hero-subtitle">Plan your financial future with confidence</p>
         <p class="hero-description">
-          A comprehensive retirement planning tool that helps you visualize your financial journey, 
-          track wealth growth, and make informed decisions about your future.
+          A comprehensive retirement planning tool with CPI-adjusted projections that helps you visualize your financial journey, 
+          track realistic wealth growth, and make informed decisions about your future with economic-aware modeling.
         </p>
         <button @click="startPlanning" class="start-button">
           Start Your Financial Plan
@@ -39,10 +39,10 @@
         </div>
         <div class="feature-card">
           <div class="feature-icon">
-            <span class="material-icons">pie_chart</span>
+            <span class="material-icons">timeline</span>
           </div>
-          <h3>Interactive Charts</h3>
-          <p>Visualize your financial plan with dynamic charts showing nominal and inflation-adjusted values.</p>
+          <h3>CPI-Adjusted Planning</h3>
+          <p>Expenses and pensions automatically increase with Consumer Price Index, providing realistic long-term projections that account for economic inflation over time.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
@@ -126,9 +126,9 @@
           </div>
           
           <div class="pension-detail-card">
-            <h3>Asset & Income Tests (2024)</h3>
+            <h3>Asset & Income Tests (2025)</h3>
             <ul>
-              <li><strong>Asset Thresholds:</strong> $301,750 (single homeowner), $543,750 (single non-homeowner), $451,500/$693,500 (couple)</li>
+              <li><strong>Asset Thresholds:</strong> $321,500 (single homeowner), $579,500 (single non-homeowner), $481,500/$739,500 (couple)</li>
               <li><strong>Assessable Assets:</strong> Financial assets, superannuation (after 67), investment properties. Excludes family home</li>
               <li><strong>Income Test:</strong> Employment income, investment returns, deemed income from financial assets</li>
               <li><strong>Reduction Rate:</strong> Pension reduces $0.50 for every $1 over income threshold</li>
@@ -148,7 +148,7 @@
         
         <div class="pension-note">
           <p>
-            <strong>Note:</strong> This calculator uses current 2024 Age Pension rules and thresholds. 
+            <strong>Note:</strong> This calculator uses current 2025 Age Pension rules and thresholds. 
             Government policies may change over time, which could affect future pension entitlements.
           </p>
         </div>
@@ -170,7 +170,7 @@
         <div class="methodology-card">
           <h3>Income & Tax Calculations</h3>
           <ul>
-            <li><strong>Australian Income Tax:</strong> Uses current 2024-25 tax brackets with progressive rates (0%, 16%, 30%, 37%, 45%)</li>
+            <li><strong>Australian Income Tax:</strong> Uses current 2025-26 tax brackets with progressive rates (0%, 16%, 30%, 37%, 45%)</li>
             <li><strong>Medicare Levy:</strong> 2% levy with low-income thresholds and phase-in calculations</li>
             <li><strong>Superannuation Tax:</strong> 15% contributions tax plus Division 293 additional tax for high earners</li>
             <li><strong>Net Income:</strong> Gross salary minus income tax and Medicare levy</li>
@@ -178,24 +178,24 @@
           </ul>
         </div>
         <div class="methodology-card">
-          <h3>
-            Inflation Adjustment
-            <span class="coming-soon-badge">Coming Soon</span>
-          </h3>
+          <h3>Consumer Price Index (CPI) Adjustments</h3>
           <ul>
-            <li><strong>Real Values:</strong> All projections adjusted for inflation</li>
-            <li><strong>Purchasing Power:</strong> Shows today's dollar equivalent</li>
-            <li><strong>Default Rate:</strong> 2.5% annual inflation (adjustable)</li>
+            <li><strong>CPI-Adjusted Expenses:</strong> Annual expenses automatically increase with Consumer Price Index for realistic long-term planning</li>
+            <li><strong>CPI-Adjusted Pensions:</strong> Age pension amounts grow with CPI over time, reflecting real-world increases</li>
+            <li><strong>Real vs Nominal Values:</strong> All projections show both current and inflation-adjusted values</li>
+            <li><strong>Purchasing Power:</strong> See exactly what your future wealth will be worth in today's dollars</li>
+            <li><strong>Customizable Rate:</strong> Default 3% CPI growth rate, fully adjustable based on your expectations</li>
           </ul>
         </div>
         <div class="methodology-card">
           <h3>Australian Age Pension</h3>
           <ul>
             <li><strong>Dynamic Calculation:</strong> Automatically applies current Australian Government asset and income tests</li>
-            <li><strong>Homeowner Status:</strong> Different asset test thresholds for homeowners ($301,750) vs non-homeowners ($543,750) for singles</li>
-            <li><strong>Couple Assessment:</strong> Combined asset test limits ($451,500/$693,500) and shared pension entitlements</li>
+            <li><strong>Homeowner Status:</strong> Different asset test thresholds for homeowners ($321,500) vs non-homeowners ($579,500) for singles</li>
+            <li><strong>Couple Assessment:</strong> Combined asset test limits ($481,500/$739,500) and shared pension entitlements</li>
             <li><strong>Age Requirements:</strong> Pension eligibility from age 67 (current retirement age in Australia)</li>
             <li><strong>Real-time Updates:</strong> Calculations update automatically as your projected assets and income change each year</li>
+            <li><strong>CPI Growth Integration:</strong> Pension amounts automatically increase with Consumer Price Index over time, reflecting realistic government pension adjustments</li>
           </ul>
         </div>
         <div class="methodology-card">
@@ -272,7 +272,7 @@
             <li>Asset growth rates, inflation, and market conditions are unpredictable</li>
             <li>Government policies (including age pension rules) may change over time</li>
             <li>Individual circumstances and life events can significantly impact outcomes</li>
-            <li>Tax calculations are based on current 2024-25 Australian tax law which may change</li>
+            <li>Tax calculations are based on current 2025-26 Australian tax law which may change</li>
           </ul>
           <p>
             <strong>Always consult with qualified financial advisors</strong> before making important 

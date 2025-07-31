@@ -37,13 +37,13 @@ export interface AgePensionResult {
 // 2025 Australian Age Pension rates and thresholds
 const PENSION_RATES = {
   single: {
-    fullPension: 30852, // Annual amount
-    maxPension: 30852
+    fullPension: 29874, // Annual amount
+    maxPension: 29874
   },
   couple: {
-    fullPensionCombined: 46494, // Annual amount for both partners
-    maxPensionCombined: 46494,
-    fullPensionEach: 23247 // Each partner gets this amount when both eligible
+    fullPensionCombined: 45037, // Annual amount for both partners
+    maxPensionCombined: 45037,
+    fullPensionEach: 22519 // Each partner gets this amount when both eligible
   }
 };
 
