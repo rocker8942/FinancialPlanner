@@ -1,4 +1,5 @@
 import { getAgePensionAmounts } from '../services/agePensionService';
+import { calculateNetIncome, getTaxBreakdown, calculateNetSuperContributions } from './taxCalculation';
 
 // Types for financial plan calculation
 export interface FinancialProfile {
@@ -38,8 +39,14 @@ export interface YearlyWealth {
   inflationAdjustedPropertyAssets: number;
   inflationAdjustedSavings: number;
   pensionIncome: number;
-  totalIncome: number;
+  totalIncome: number; // This will show gross income in the table
   expenses: number;
+  // Internal tax tracking fields (not displayed in table)
+  grossIncome?: number;
+  incomeTax?: number;
+  medicareLevy?: number;
+  netIncome?: number;
+  superContributionsTax?: number;
 }
 
 export interface FinancialPlanResult {
@@ -112,32 +119,69 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       currentPartnerAge
     );
 
-    // Calculate total annual income (for all years including current)
-    // Add salary if not retired
+    // Calculate employment income - user input is total package including super
+    let grossEmploymentIncome = 0; // This will be taxable income (after super carved out)
+    let totalSuperContributions = 0;
+    let totalPackageAmount = 0; // This will be displayed as "Total Income"
+    
+    // Add user salary if not retired (input is total employment package including super)
     if (age <= profile.retireAge) {
-      totalIncome += profile.salary;
-      // Add superannuation contributions (12% of salary) only if not current year
+      const userTotalPackage = profile.salary; // Total package amount
+      // Carve out super from total package: super = package / 1.12 * 0.12
+      const userSuperContributions = userTotalPackage * (12 / 112);
+      // Taxable income = total package - super contribution
+      const userTaxableIncome = userTotalPackage - userSuperContributions;
+      
+      grossEmploymentIncome += userTaxableIncome;
+      totalSuperContributions += userSuperContributions;
+      totalPackageAmount += userTotalPackage;
+      
+      // Add net super contributions to balance (after tax) only if not current year
       if (age > profile.currentAge) {
-        superannuationBalance += profile.salary * 0.12;
+        const netSuperContributions = calculateNetSuperContributions(
+          userSuperContributions, 
+          userTaxableIncome
+        );
+        superannuationBalance += netSuperContributions;
       }
     }
 
-    // Add partner salary if partner is not retired
-    // Convert partner's retirement age to main user's timeline (already calculated above)
+    // Add partner salary if not retired (input is total employment package including super)
     if (age <= partnerRetireAgeInUserTimeline) {
-      totalIncome += profile.partnerSalary;
-      // Add partner superannuation contributions (12% of salary) only if not current year
+      const partnerTotalPackage = profile.partnerSalary; // Total package amount
+      // Carve out super from total package: super = package / 1.12 * 0.12
+      const partnerSuperContributions = partnerTotalPackage * (12 / 112);
+      // Taxable income = total package - super contribution
+      const partnerTaxableIncome = partnerTotalPackage - partnerSuperContributions;
+      
+      grossEmploymentIncome += partnerTaxableIncome;
+      totalSuperContributions += partnerSuperContributions;
+      totalPackageAmount += partnerTotalPackage;
+      
+      // Add net partner super contributions to balance (after tax) only if not current year
       if (age > profile.currentAge) {
-        superannuationBalance += profile.partnerSalary * 0.12;
+        const netPartnerSuperContributions = calculateNetSuperContributions(
+          partnerSuperContributions, 
+          partnerTaxableIncome
+        );
+        superannuationBalance += netPartnerSuperContributions;
       }
     }
 
-    // Add dynamically calculated pension income
+    // Calculate net employment income after tax (for actual spending)
+    const netEmploymentIncome = grossEmploymentIncome > 0 ? calculateNetIncome(grossEmploymentIncome) : 0;
+    
+    // Add dynamically calculated pension income (generally tax-free due to low amounts)
     pensionIncomeThisYear = pensionAmounts.userPension + pensionAmounts.partnerPension;
-    totalIncome += pensionIncomeThisYear;
-
-    // Store the original total income for reporting
-    originalTotalIncome = totalIncome;
+    
+    // Total package income for display purposes (what shows in "Total Income" column)
+    const displayTotalIncome = totalPackageAmount + pensionIncomeThisYear;
+    
+    // Income available for expenses/savings (net employment income + pension)
+    totalIncome = netEmploymentIncome + pensionIncomeThisYear;
+    
+    // Store the total package income for reporting (this shows in table as "Total Income")
+    originalTotalIncome = displayTotalIncome;
 
     // Apply income and expenses only if not current year
     if (age > profile.currentAge) {
@@ -192,6 +236,15 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     const inflationAdjustedPropertyAssets = propertyAssets * inflationAdjustmentFactor;
     const inflationAdjustedNetSavings = netFinancialAsset * inflationAdjustmentFactor;
 
+    // Get tax breakdown for internal tracking (using taxable employment income)
+    const taxBreakdown = grossEmploymentIncome > 0 ? getTaxBreakdown(grossEmploymentIncome, totalSuperContributions) : {
+      grossIncome: 0,
+      incomeTax: 0,
+      medicareLevy: 0,
+      netIncome: 0,
+      superContributionsTax: 0
+    };
+
     projection.push({
       age,
       wealth: totalWealth,
@@ -202,8 +255,14 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       inflationAdjustedPropertyAssets: inflationAdjustedPropertyAssets,
       inflationAdjustedSavings: inflationAdjustedNetSavings,
       pensionIncome: pensionIncomeThisYear,
-      totalIncome: originalTotalIncome,
-      expenses: profile.expenses
+      totalIncome: originalTotalIncome, // Shows total package + pension in table
+      expenses: profile.expenses,
+      // Internal tax tracking (not displayed in table)
+      grossIncome: displayTotalIncome, // Total package + pension
+      incomeTax: taxBreakdown.incomeTax,
+      medicareLevy: taxBreakdown.medicareLevy,
+      netIncome: netEmploymentIncome + pensionIncomeThisYear,
+      superContributionsTax: taxBreakdown.superContributionsTax
     });
   }
 
