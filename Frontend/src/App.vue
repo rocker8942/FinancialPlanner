@@ -17,11 +17,11 @@
         <!-- Navigation -->
         <nav class="flex flex-col gap-1 mt-4 px-2">
           <span v-show="!sidebarCollapsed" class="uppercase text-xs text-gray-500 px-4 mb-2 transition-opacity duration-300">Main</span>
-          <router-link to="/cover" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Home' : ''">
+          <router-link to="/" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Home' : ''">
             <span class="material-icons text-lg text-green-400">home</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Home</span>
           </router-link>
-          <router-link to="/home" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Retirement Planner' : ''">
+          <router-link to="/retirementplanner" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Retirement Planner' : ''">
             <span class="material-icons text-lg text-blue-400">trending_up</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Retirement Planner</span>
           </router-link>

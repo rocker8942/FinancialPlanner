@@ -14,7 +14,8 @@
       "Bash(npm run test:run:*)",
       "WebFetch(domain:www.servicesaustralia.gov.au)",
       "Bash(dotnet build)",
-      "WebFetch(domain:www.superguide.com.au)"
+      "WebFetch(domain:www.superguide.com.au)",
+      "Bash(timeout 10 npm run dev)"
     ],
     "deny": []
   }

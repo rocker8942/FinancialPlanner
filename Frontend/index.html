@@ -90,6 +90,121 @@
       }
     }
     </script>
+    
+    <!-- Structured Data - Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Financial Planner",
+      "description": "Australian retirement planning and financial calculation tools",
+      "url": "https://financialplanner.app",
+      "logo": "https://financialplanner.app/logo.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "areaServed": "AU",
+        "availableLanguage": "en"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Australia"
+      }
+    }
+    </script>
+
+    <!-- Structured Data - FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is my financial data secure and private?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, absolutely. All your financial information is stored locally in your browser only. We don't transmit, store, or save any of your personal data on our servers. Your privacy is completely protected."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate are the Australian Age Pension calculations?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our Age Pension calculator uses current 2025 government thresholds and applies both asset and income tests automatically. However, government policies may change over time, so these are projections based on current rules."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use this planner if I'm not Australian?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This tool is specifically designed for Australian retirement planning, including Australian tax rates, superannuation rules, and Age Pension calculations. It may not be accurate for other countries' retirement systems."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the CPI inflation adjustment work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The calculator automatically increases your expenses and pension amounts each year based on the Consumer Price Index (default 3%). This shows you what your money will be worth in both today's purchasing power and future dollars."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What growth rates should I use for my investments?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Default rates are 4% for property and user-defined for financial assets. Historical Australian market returns suggest 7-8% for diversified portfolios, but past performance doesn't guarantee future results. Consult a financial advisor for personalized advice."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured Data - HowTo Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Plan Your Australian Retirement",
+      "description": "Step-by-step guide to planning your retirement using the Australian Retirement Planner",
+      "image": "https://financialplanner.app/howto-image.png",
+      "totalTime": "PT15M",
+      "estimatedCost": {
+        "@type": "MonetaryAmount",
+        "currency": "AUD",
+        "value": "0"
+      },
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Input Your Details",
+          "text": "Enter your personal profile, current assets, income, expenses, and financial goals.",
+          "image": "https://financialplanner.app/step1-image.png"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Calculate Projections",
+          "text": "Our algorithm calculates year-by-year wealth projections using your growth assumptions.",
+          "image": "https://financialplanner.app/step2-image.png"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Visualize Results",
+          "text": "View interactive charts showing your financial trajectory and key milestones.",
+          "image": "https://financialplanner.app/step3-image.png"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Adjust & Plan",
+          "text": "Modify assumptions and scenarios to optimize your retirement strategy.",
+          "image": "https://financialplanner.app/step4-image.png"
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="app"></div>

@@ -10,9 +10,8 @@ import SettingsView from '../views/SettingsView.vue';
 import { useAuthStore } from '../store/auth';
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: '/cover' },
-  { path: '/cover', name: 'Cover', component: CoverView },
-  { path: '/home', name: 'Home', component: HomeView },
+  { path: '/', name: 'Cover', component: CoverView },
+  { path: '/retirementplanner', name: 'Home', component: HomeView },
   { path: '/login', name: 'Login', component: LoginView },
   { path: '/register', name: 'Register', component: RegisterView },
   { path: '/profile', name: 'Profile', component: ProfileView },
