@@ -1,24 +1,95 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Material Icons CDN -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Australian Retirement Planner | Free Financial Planning Calculator with Age Pension Integration</title>
+    <meta name="title" content="Australian Retirement Planner | Free Financial Planning Calculator with Age Pension Integration" />
+    <meta name="description" content="Plan your Australian retirement with our free financial calculator. Includes automatic Age Pension calculations, CPI adjustments, superannuation projections, and tax integration. Private & secure - data stored locally." />
+    <meta name="keywords" content="Australian retirement planner, financial planning calculator, age pension calculator, superannuation calculator, retirement savings Australia, CPI inflation calculator, Australian tax calculator" />
+    <meta name="author" content="Financial Planner" />
+    <meta name="language" content="en-AU" />
+    <meta name="geo.region" content="AU" />
+    <meta name="geo.country" content="Australia" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://financialplanner.app/" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://financialplanner.app/" />
+    <meta property="og:title" content="Australian Retirement Planner | Free Financial Planning Calculator" />
+    <meta property="og:description" content="Plan your Australian retirement with our free calculator. Includes Age Pension, superannuation, and tax calculations. Private & secure." />
+    <meta property="og:image" content="https://financialplanner.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Financial Planner" />
+    <meta property="og:locale" content="en_AU" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://financialplanner.app/" />
+    <meta property="twitter:title" content="Australian Retirement Planner | Free Financial Planning Calculator" />
+    <meta property="twitter:description" content="Plan your Australian retirement with our free calculator. Includes Age Pension, superannuation, and tax calculations. Private & secure." />
+    <meta property="twitter:image" content="https://financialplanner.app/twitter-image.png" />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></noscript>
+    
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <meta name="theme-color" content="#14b8a6">
-    	<!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-22873684-1"></script>
+    <meta name="msapplication-TileColor" content="#14b8a6">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
-      gtag('config', 'UA-22873684-1');
+      gtag('config', 'G-XXXXXXXXXX', {
+        page_title: 'Australian Retirement Planner',
+        page_location: window.location.href,
+        custom_map: {'custom_parameter_1': 'australia_retirement_tool'}
+      });
     </script>
-    <title>Retirement Planner</title>
+    
+    <!-- Structured Data - WebApplication Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Australian Retirement Planner",
+      "description": "Free financial planning calculator for Australian retirement with Age Pension integration, superannuation projections, and CPI adjustments",
+      "url": "https://financialplanner.app",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "AUD"
+      },
+      "featureList": [
+        "Australian Age Pension Calculator",
+        "Superannuation Projections",
+        "CPI Inflation Adjustments",
+        "Australian Tax Integration",
+        "Private Local Storage",
+        "Interactive Charts"
+      ],
+      "screenshot": "https://financialplanner.app/screenshot.png",
+      "author": {
+        "@type": "Organization",
+        "name": "Financial Planner",
+        "url": "https://financialplanner.app"
+      }
+    }
+    </script>
   </head>
   <body>
     <div id="app"></div>

@@ -1,76 +1,84 @@
 <template>
   <div class="cover-page">
     <!-- Hero Section -->
-    <section class="hero-section">
+    <header class="hero-section">
       <div class="hero-content">
         <h1 class="hero-title">
-          Financial Planner
+          Australian Retirement Planner & Financial Calculator
           <span class="beta-badge">BETA</span>
         </h1>
-        <p class="hero-subtitle">Plan your financial future with confidence</p>
+        <p class="hero-subtitle">Plan your Australian retirement with confidence using our free calculator</p>
         <p class="hero-description">
-          A comprehensive retirement planning tool with CPI-adjusted projections that helps you visualize your financial journey, 
-          track realistic wealth growth, and make informed decisions about your future with economic-aware modeling.
+          A comprehensive Australian retirement planning tool with automatic Age Pension calculations, CPI-adjusted projections, 
+          superannuation tracking, and Australian tax integration that helps you visualize your financial journey 
+          and make informed decisions about your retirement future.
         </p>
-        <button @click="startPlanning" class="start-button">
-          Start Your Financial Plan
-          <span class="material-icons">arrow_forward</span>
+        <button @click="startPlanning" class="start-button" aria-label="Start planning your Australian retirement">
+          Start Your Free Retirement Plan
+          <span class="material-icons" aria-hidden="true">arrow_forward</span>
         </button>
+        <nav class="hero-nav" aria-label="Quick navigation">
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#age-pension" class="nav-link">Age Pension</a>
+          <a href="#methodology" class="nav-link">How It Works</a>
+          <a href="#faq" class="nav-link">FAQ</a>
+        </nav>
       </div>
-    </section>
+    </header>
 
     <!-- What This App Does -->
-    <section class="section">
-      <h2 class="section-title">What This App Does</h2>
+    <main>
+    <section class="section" id="features">
+      <h2 class="section-title">Australian Retirement Planning Features</h2>
       <div class="features-grid">
-        <div class="feature-card">
+        <article class="feature-card">
           <div class="feature-icon">
-            <span class="material-icons">trending_up</span>
+            <span class="material-icons" aria-hidden="true">trending_up</span>
           </div>
-          <h3>Wealth Projection</h3>
-          <p>Calculate your net worth growth over time, including property assets, savings, and superannuation.</p>
-        </div>
-        <div class="feature-card">
+          <h3>Australian Wealth Projection</h3>
+          <p>Calculate your net worth growth over time, including property assets, savings, and superannuation with Australian market conditions.</p>
+        </article>
+        <article class="feature-card">
           <div class="feature-icon">
-            <span class="material-icons">account_balance</span>
+            <span class="material-icons" aria-hidden="true">account_balance</span>
           </div>
-          <h3>Australian Age Pension</h3>
+          <h3>Australian Age Pension Calculator</h3>
           <p>Automatically calculates your Australian Age Pension entitlements using current government asset and income test thresholds, updated for your specific circumstances.</p>
-        </div>
-        <div class="feature-card">
+        </article>
+        <article class="feature-card">
           <div class="feature-icon">
-            <span class="material-icons">timeline</span>
+            <span class="material-icons" aria-hidden="true">timeline</span>
           </div>
-          <h3>CPI-Adjusted Planning</h3>
-          <p>Expenses and pensions automatically increase with Consumer Price Index, providing realistic long-term projections that account for economic inflation over time.</p>
-        </div>
-        <div class="feature-card">
+          <h3>CPI-Adjusted Australian Inflation Planning</h3>
+          <p>Expenses and pensions automatically increase with Australian Consumer Price Index, providing realistic long-term projections that account for economic inflation over time.</p>
+        </article>
+        <article class="feature-card">
           <div class="feature-icon">
-            <span class="material-icons">tune</span>
+            <span class="material-icons" aria-hidden="true">tune</span>
           </div>
-          <h3>Auto-Optimize Expenses</h3>
-          <p>Automatically calculate the optimal annual expense amount to maximize your retirement lifestyle while ensuring your wealth lasts until your target age.</p>
-        </div>
-        <div class="feature-card">
+          <h3>Auto-Optimize Retirement Expenses</h3>
+          <p>Automatically calculate the optimal annual expense amount to maximize your Australian retirement lifestyle while ensuring your wealth lasts until your target age.</p>
+        </article>
+        <article class="feature-card">
           <div class="feature-icon">
-            <span class="material-icons">calculate</span>
+            <span class="material-icons" aria-hidden="true">calculate</span>
           </div>
-          <h3>Australian Tax Integration</h3>
-          <p>Automatically calculates income tax, Medicare levy, and superannuation taxes using current 2024-25 Australian tax brackets and thresholds.</p>
-        </div>
-        <div class="feature-card">
+          <h3>Australian Tax & Superannuation Integration</h3>
+          <p>Automatically calculates income tax, Medicare levy, and superannuation taxes using current 2025-26 Australian tax brackets and thresholds.</p>
+        </article>
+        <article class="feature-card">
           <div class="feature-icon">
-            <span class="material-icons">security</span>
+            <span class="material-icons" aria-hidden="true">security</span>
           </div>
-          <h3>Private & Secure</h3>
-          <p>Your financial data is stored locally in your browser only. Nothing is saved on our servers - complete privacy guaranteed.</p>
-        </div>
+          <h3>Private & Secure Financial Data</h3>
+          <p>Your Australian financial data is stored locally in your browser only. Nothing is saved on our servers - complete privacy guaranteed for your retirement planning.</p>
+        </article>
       </div>
     </section>
 
     <!-- How It Works -->
-    <section class="section">
-      <h2 class="section-title">How It Works</h2>
+    <section class="section" id="how-it-works">
+      <h2 class="section-title">How Australian Retirement Planning Works</h2>
       <div class="steps-container">
         <div class="step">
           <div class="step-number">1</div>
@@ -104,8 +112,8 @@
     </section>
 
     <!-- Australian Age Pension Explanation -->
-    <section class="section pension-section">
-      <h2 class="section-title">Australian Age Pension Calculator</h2>
+    <section class="section pension-section" id="age-pension">
+      <h2 class="section-title">Australian Age Pension Calculator & Eligibility</h2>
       <div class="pension-explanation">
         <div class="pension-intro">
           <p>
@@ -156,8 +164,8 @@
     </section>
 
     <!-- Calculation Logic -->
-    <section class="section">
-      <h2 class="section-title">Our Calculation Methodology</h2>
+    <section class="section" id="methodology">
+      <h2 class="section-title">Australian Retirement Calculation Methodology</h2>
       <div class="methodology-grid">
         <div class="methodology-card">
           <h3>Asset Growth</h3>
@@ -282,17 +290,170 @@
       </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section class="section faq-section" id="faq">
+      <h2 class="section-title">Frequently Asked Questions - Australian Retirement Planning</h2>
+      <div class="faq-container">
+        <div class="faq-item">
+          <h3 class="faq-question">Is my financial data secure and private?</h3>
+          <div class="faq-answer">
+            <p>Yes, absolutely. All your financial information is stored locally in your browser only. We don't transmit, store, or save any of your personal data on our servers. Your privacy is completely protected.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">How accurate are the Australian Age Pension calculations?</h3>
+          <div class="faq-answer">
+            <p>Our Age Pension calculator uses current 2025 government thresholds and applies both asset and income tests automatically. However, government policies may change over time, so these are projections based on current rules.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Can I use this planner if I'm not Australian?</h3>
+          <div class="faq-answer">
+            <p>This tool is specifically designed for Australian retirement planning, including Australian tax rates, superannuation rules, and Age Pension calculations. It may not be accurate for other countries' retirement systems.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">How does the CPI inflation adjustment work?</h3>
+          <div class="faq-answer">
+            <p>The calculator automatically increases your expenses and pension amounts each year based on the Consumer Price Index (default 3%). This shows you what your money will be worth in both today's purchasing power and future dollars.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">What growth rates should I use for my investments?</h3>
+          <div class="faq-answer">
+            <p>Default rates are 4% for property and user-defined for financial assets. Historical Australian market returns suggest 7-8% for diversified portfolios, but past performance doesn't guarantee future results. Consult a financial advisor for personalized advice.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Final CTA -->
     <section class="final-cta-section">
       <div class="final-cta-content">
-        <h2>Ready to Plan Your Financial Future?</h2>
-        <p>Start building your personalized retirement projection today.</p>
-        <button @click="startPlanning" class="start-button large">
-          Get Started Now
-          <span class="material-icons">launch</span>
+        <h2>Ready to Plan Your Australian Retirement Future?</h2>
+        <p>Start building your personalized Australian retirement projection with Age Pension calculations today.</p>
+        <button @click="startPlanning" class="start-button large" aria-label="Get started with Australian retirement planning">
+          Get Started With Free Calculator
+          <span class="material-icons" aria-hidden="true">launch</span>
         </button>
       </div>
     </section>
+
+    <!-- Structured Data - Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Financial Planner",
+      "description": "Australian retirement planning and financial calculation tools",
+      "url": "https://financialplanner.app",
+      "logo": "https://financialplanner.app/logo.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "areaServed": "AU",
+        "availableLanguage": "en"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Australia"
+      }
+    }
+    </script>
+
+    <!-- Structured Data - FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is my financial data secure and private?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, absolutely. All your financial information is stored locally in your browser only. We don't transmit, store, or save any of your personal data on our servers. Your privacy is completely protected."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate are the Australian Age Pension calculations?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our Age Pension calculator uses current 2025 government thresholds and applies both asset and income tests automatically. However, government policies may change over time, so these are projections based on current rules."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use this planner if I'm not Australian?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This tool is specifically designed for Australian retirement planning, including Australian tax rates, superannuation rules, and Age Pension calculations. It may not be accurate for other countries' retirement systems."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the CPI inflation adjustment work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The calculator automatically increases your expenses and pension amounts each year based on the Consumer Price Index (default 3%). This shows you what your money will be worth in both today's purchasing power and future dollars."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What growth rates should I use for my investments?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Default rates are 4% for property and user-defined for financial assets. Historical Australian market returns suggest 7-8% for diversified portfolios, but past performance doesn't guarantee future results. Consult a financial advisor for personalized advice."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured Data - HowTo Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Plan Your Australian Retirement",
+      "description": "Step-by-step guide to planning your retirement using the Australian Retirement Planner",
+      "image": "https://financialplanner.app/howto-image.png",
+      "totalTime": "PT15M",
+      "estimatedCost": {
+        "@type": "MonetaryAmount",
+        "currency": "AUD",
+        "value": "0"
+      },
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Input Your Details",
+          "text": "Enter your personal profile, current assets, income, expenses, and financial goals.",
+          "image": "https://financialplanner.app/step1-image.png"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Calculate Projections",
+          "text": "Our algorithm calculates year-by-year wealth projections using your growth assumptions.",
+          "image": "https://financialplanner.app/step2-image.png"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Visualize Results",
+          "text": "View interactive charts showing your financial trajectory and key milestones.",
+          "image": "https://financialplanner.app/step3-image.png"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Adjust & Plan",
+          "text": "Modify assumptions and scenarios to optimize your retirement strategy.",
+          "image": "https://financialplanner.app/step4-image.png"
+        }
+      ]
+    }
+    </script>
+    </main>
   </div>
 </template>
 
@@ -403,6 +564,32 @@ function startPlanning() {
 .start-button.large {
   padding: 1.25rem 2.5rem;
   font-size: 1.25rem;
+}
+
+/* Hero Navigation */
+.hero-nav {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  color: #9ca3af;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.nav-link:hover {
+  color: #14b8a6;
+  background-color: rgba(20, 184, 166, 0.1);
+  border-color: rgba(20, 184, 166, 0.3);
+  transform: translateY(-1px);
 }
 
 /* Sections */
@@ -815,6 +1002,51 @@ function startPlanning() {
 .beta-notice strong {
   color: #fef3c7;
   font-size: 1.1rem;
+}
+
+/* FAQ Section */
+.faq-section {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  margin: 3rem 0;
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.faq-item {
+  background: #1f2937;
+  border-radius: 1rem;
+  padding: 2rem;
+  border-left: 4px solid #6366f1;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);
+}
+
+.faq-question {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #6366f1;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.faq-answer p {
+  color: #d1d5db;
+  line-height: 1.7;
+  margin: 0;
+  font-size: 1rem;
 }
 
 /* Final CTA */
