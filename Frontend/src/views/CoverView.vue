@@ -46,17 +46,17 @@
         </div>
         <div class="feature-card">
           <div class="feature-icon">
-            <span class="material-icons">people</span>
-          </div>
-          <h3>Partner Support</h3>
-          <p>Include your partner's financial details for comprehensive couple retirement planning.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
             <span class="material-icons">tune</span>
           </div>
           <h3>Auto-Optimize Expenses</h3>
           <p>Automatically calculate the optimal annual expense amount to maximize your retirement lifestyle while ensuring your wealth lasts until your target age.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <span class="material-icons">calculate</span>
+          </div>
+          <h3>Australian Tax Integration</h3>
+          <p>Automatically calculates income tax, Medicare levy, and superannuation taxes using current 2024-25 Australian tax brackets and thresholds.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
@@ -126,32 +126,22 @@
           </div>
           
           <div class="pension-detail-card">
-            <h3>Asset Test Thresholds (2024)</h3>
+            <h3>Asset & Income Tests (2024)</h3>
             <ul>
-              <li><strong>Single Homeowner:</strong> Up to $301,750 (full pension)</li>
-              <li><strong>Single Non-homeowner:</strong> Up to $543,750 (full pension)</li>
-              <li><strong>Couple Homeowner:</strong> Up to $451,500 (full pension)</li>
-              <li><strong>Couple Non-homeowner:</strong> Up to $693,500 (full pension)</li>
+              <li><strong>Asset Thresholds:</strong> $301,750 (single homeowner), $543,750 (single non-homeowner), $451,500/$693,500 (couple)</li>
+              <li><strong>Assessable Assets:</strong> Financial assets, superannuation (after 67), investment properties. Excludes family home</li>
+              <li><strong>Income Test:</strong> Employment income, investment returns, deemed income from financial assets</li>
+              <li><strong>Reduction Rate:</strong> Pension reduces $0.50 for every $1 over income threshold</li>
             </ul>
           </div>
           
           <div class="pension-detail-card">
-            <h3>What's Included</h3>
+            <h3>Automatic Integration</h3>
             <ul>
-              <li>Financial assets (savings, investments)</li>
-              <li>Superannuation (after age 67)</li>
-              <li>Investment properties and other assets</li>
-              <li><strong>Excluded:</strong> Family home (for homeowners)</li>
-            </ul>
-          </div>
-          
-          <div class="pension-detail-card">
-            <h3>Income Test</h3>
-            <ul>
-              <li>Includes employment income, investment returns</li>
-              <li>Deemed income from financial assets</li>
-              <li>Pension reduces $0.50 for every $1 over income threshold</li>
-              <li>Automatically calculated based on your projected income</li>
+              <li>Real-time calculations update as your projected assets change each year</li>
+              <li>Seamlessly integrates with your wealth projections and expense optimization</li>
+              <li>Accounts for different homeowner status and relationship scenarios</li>
+              <li>Provides year-by-year pension entitlement throughout your retirement</li>
             </ul>
           </div>
         </div>
@@ -178,11 +168,13 @@
           </ul>
         </div>
         <div class="methodology-card">
-          <h3>Income & Expenses</h3>
+          <h3>Income & Tax Calculations</h3>
           <ul>
-            <li><strong>Salary:</strong> Includes superannuation contributions (12%)</li>
-            <li><strong>Mortgage:</strong> Interest payments and principal reduction</li>
-            <li><strong>Net Financial Asset:</strong> Savings - Mortgage + Superannuation</li>
+            <li><strong>Australian Income Tax:</strong> Uses current 2024-25 tax brackets with progressive rates (0%, 16%, 30%, 37%, 45%)</li>
+            <li><strong>Medicare Levy:</strong> 2% levy with low-income thresholds and phase-in calculations</li>
+            <li><strong>Superannuation Tax:</strong> 15% contributions tax plus Division 293 additional tax for high earners</li>
+            <li><strong>Net Income:</strong> Gross salary minus income tax and Medicare levy</li>
+            <li><strong>Net Financial Asset:</strong> Net savings - Mortgage + After-tax superannuation</li>
           </ul>
         </div>
         <div class="methodology-card">
@@ -280,7 +272,7 @@
             <li>Asset growth rates, inflation, and market conditions are unpredictable</li>
             <li>Government policies (including age pension rules) may change over time</li>
             <li>Individual circumstances and life events can significantly impact outcomes</li>
-            <li>This tool does not account for all financial factors or tax implications</li>
+            <li>Tax calculations are based on current 2024-25 Australian tax law which may change</li>
           </ul>
           <p>
             <strong>Always consult with qualified financial advisors</strong> before making important 
