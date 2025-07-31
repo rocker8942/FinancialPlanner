@@ -1,0 +1,29 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#14b8a6"/>
+  
+  <!-- Piggy bank head/body -->
+  <circle cx="16" cy="17" r="10" fill="#ffffff"/>
+  
+  <!-- Snout (front-facing oval) -->
+  <ellipse cx="16" cy="21" rx="4" ry="3" fill="#ffffff"/>
+  
+  <!-- Nostrils (bigger) -->
+  <circle cx="14.5" cy="21" r="1.3" fill="#14b8a6"/>
+  <circle cx="17.5" cy="21" r="1.3" fill="#14b8a6"/>
+  
+  <!-- Eyes (smaller) -->
+  <circle cx="13" cy="14" r="0.8" fill="#14b8a6"/>
+  <circle cx="19" cy="14" r="0.8" fill="#14b8a6"/>
+  
+  <!-- Ears (round and bigger) -->
+  <ellipse cx="10" cy="9" rx="2.5" ry="3" fill="#ffffff"/>
+  <ellipse cx="22" cy="9" rx="2.5" ry="3" fill="#ffffff"/>
+  
+  <!-- Coin slot on top -->
+  <rect x="15" y="8" width="2" height="1.2" fill="#14b8a6" rx="0.6"/>
+  
+  <!-- Front legs -->
+  <rect x="12" y="26" width="2" height="3" fill="#ffffff" rx="1"/>
+  <rect x="18" y="26" width="2" height="3" fill="#ffffff" rx="1"/>
+</svg>
