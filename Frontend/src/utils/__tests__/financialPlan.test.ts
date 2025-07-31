@@ -17,7 +17,7 @@ describe('calculateFinancialPlan', () => {
     deathAge: 85,
     savingsGrowthRate: 0.05,
     propertyGrowthRate: 0.03,
-    inflationRate: 0.02,
+    cpiGrowthRate: 0.02,
     pensionAmount: 25000,
     pensionStartAge: 67,
     partnerPensionAmount: 20000,
@@ -80,7 +80,7 @@ describe('calculateFinancialPlan', () => {
       // Check second year (first year after growth)
       const secondYear = result.projection[1]
       expect(secondYear.propertyAssets).toBeCloseTo(100000 * 1.05, 0) // Net property value (no mortgage)
-      expect(secondYear.savings).toBeCloseTo(50000 * 1.025 + 80000 + 60000 - 60000 + (80000 + 60000) * 0.12, 0) // Includes 12% super contributions
+      expect(secondYear.savings).toBeCloseTo(50000 * 1.025 + 80000 + 60000 - 61200 + (80000 + 60000) * 0.12, 0) // Includes 12% super contributions, CPI-adjusted expenses
     })
 
     it('should not apply growth in the first year', () => {
@@ -148,11 +148,12 @@ describe('calculateFinancialPlan', () => {
       // Income after principal: 168000 - 168000 = 0
       // New mortgage balance: 200000 - 168000 = 32000
       // Savings after income: 100000 + 0 = 100000
-      // Savings after expenses: 100000 - 100000 = 0
-      // Super: 50000 + (120000 + 60000) * 0.12 = 71600
-      // Net financial assets = 0 - 32000 + 71600 = 39600
+      // Savings after expenses: max(0, 100000 - 102000) = 0 (CPI-adjusted expenses)
+      // Remaining expenses: 102000 - 100000 = 2000 taken from super
+      // Super: 50000 + (120000 + 60000) * 0.12 - 2000 = 69600
+      // Net financial assets = 0 - 32000 + 69600 = 37600
       
-      expect(secondYear.savings).toBeCloseTo(49100, 0) // Net financial assets with updated mortgage paydown logic
+      expect(secondYear.savings).toBeCloseTo(37600, 0) // Net financial assets with CPI-adjusted expenses
     })
   })
 
@@ -250,7 +251,7 @@ describe('calculateFinancialPlan', () => {
         savings: 200000,
         mortgageBalance: 0, // No mortgage to avoid negative net property
         superannuationBalance: 100000,
-        inflationRate: 0.03,
+        cpiGrowthRate: 0.03,
         expenses: 50000 // Lower expenses to maintain positive wealth
       })
       const result = calculateFinancialPlan(profile)
@@ -377,7 +378,7 @@ describe('calculateFinancialPlan', () => {
       // Net financial assets = 100000 - 182000 + 53600 = -28400
 
       expect(secondYear.propertyAssets).toBeCloseTo(515000, 0)
-      expect(secondYear.savings).toBeCloseTo(-18900, 0) // Net financial assets with updated mortgage paydown logic
+      expect(secondYear.savings).toBeCloseTo(-28400, 0) // Net financial assets with updated mortgage paydown logic
     })
 
     it('should handle zero mortgage balance', () => {
@@ -420,7 +421,7 @@ describe('calculateFinancialPlan', () => {
       // Net financial assets = 184500 - 0 + 60800 = 245300
 
       expect(secondYear.propertyAssets).toBeCloseTo(515000, 0)
-      expect(secondYear.savings).toBeCloseTo(248800, 0) // Net financial assets with updated mortgage paydown logic
+      expect(secondYear.savings).toBeCloseTo(245300, 0) // Net financial assets with updated mortgage paydown logic
     })
   })
 
@@ -547,7 +548,7 @@ describe('calculateExpenseToZeroNetWorth', () => {
     deathAge: 85,
     savingsGrowthRate: 0.05,
     propertyGrowthRate: 0.03,
-    inflationRate: 0.02,
+    cpiGrowthRate: 0.02,
     pensionAmount: 25000,
     pensionStartAge: 67,
     partnerPensionAmount: 20000,

@@ -17,7 +17,7 @@ export interface FinancialProfile {
   deathAge: number;
   savingsGrowthRate: number;
   propertyGrowthRate: number;
-  inflationRate: number;
+  cpiGrowthRate: number;
   pensionAmount: number;
   pensionStartAge: number;
   partnerPensionAmount: number;
@@ -89,6 +89,10 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     let totalIncome = 0;
     let originalTotalIncome = 0;
     
+    // Calculate CPI-adjusted expenses for this year
+    const yearsFromStart = age - profile.currentAge;
+    const cpiAdjustedExpenses = profile.expenses * Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
+    
     // Asset growth
     if (age > profile.currentAge) {
       // Apply growth rates
@@ -118,6 +122,10 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       age,
       currentPartnerAge
     );
+    
+    // Apply CPI adjustment to pension amounts (age pension typically increases with CPI)
+    const cpiAdjustedUserPension = pensionAmounts.userPension * Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
+    const cpiAdjustedPartnerPension = pensionAmounts.partnerPension * Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
 
     // Calculate employment income - user input is total package including super
     let grossEmploymentIncome = 0; // This will be taxable income (after super carved out)
@@ -172,7 +180,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     const netEmploymentIncome = grossEmploymentIncome > 0 ? calculateNetIncome(grossEmploymentIncome) : 0;
     
     // Add dynamically calculated pension income (generally tax-free due to low amounts)
-    pensionIncomeThisYear = pensionAmounts.userPension + pensionAmounts.partnerPension;
+    pensionIncomeThisYear = cpiAdjustedUserPension + cpiAdjustedPartnerPension;
     
     // Total package income for display purposes (what shows in "Total Income" column)
     const displayTotalIncome = totalPackageAmount + pensionIncomeThisYear;
@@ -213,9 +221,9 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       //   }
       // }
 
-      // Subtract expenses from savings first, then from super if needed
-      const remainingExpenses = Math.max(0, profile.expenses - savings);
-      savings = Math.max(0, savings - profile.expenses);
+      // Subtract CPI-adjusted expenses from savings first, then from super if needed
+      const remainingExpenses = Math.max(0, cpiAdjustedExpenses - savings);
+      savings = Math.max(0, savings - cpiAdjustedExpenses);
       
       // If there are remaining expenses and superannuation is available, deduct from super
       if (remainingExpenses > 0 && superannuationBalance > 0) {
@@ -231,7 +239,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     const netFinancialAsset = savings - mortgageBalance + superannuationBalance;
     const totalWealth = propertyAssets + netFinancialAsset;
     const yearsFromNow = age - profile.currentAge;
-    const inflationAdjustmentFactor = Math.pow(1 + profile.inflationRate, -yearsFromNow);
+    const inflationAdjustmentFactor = Math.pow(1 + profile.cpiGrowthRate, -yearsFromNow);
     const inflationAdjustedWealth = totalWealth * inflationAdjustmentFactor;
     const inflationAdjustedPropertyAssets = propertyAssets * inflationAdjustmentFactor;
     const inflationAdjustedNetSavings = netFinancialAsset * inflationAdjustmentFactor;
@@ -256,7 +264,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       inflationAdjustedSavings: inflationAdjustedNetSavings,
       pensionIncome: pensionIncomeThisYear,
       totalIncome: originalTotalIncome, // Shows total package + pension in table
-      expenses: profile.expenses,
+      expenses: cpiAdjustedExpenses,
       // Internal tax tracking (not displayed in table)
       grossIncome: displayTotalIncome, // Total package + pension
       incomeTax: taxBreakdown.incomeTax,
@@ -269,7 +277,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
   const finalNetSavings = savings - mortgageBalance + superannuationBalance;
   const finalWealth = propertyAssets + finalNetSavings;
   const finalYearsFromNow = profile.deathAge - profile.currentAge;
-  const finalInflationAdjustmentFactor = Math.pow(1 + profile.inflationRate, -finalYearsFromNow);
+  const finalInflationAdjustmentFactor = Math.pow(1 + profile.cpiGrowthRate, -finalYearsFromNow);
   const finalInflationAdjustedWealth = finalWealth * finalInflationAdjustmentFactor;
 
   return {
