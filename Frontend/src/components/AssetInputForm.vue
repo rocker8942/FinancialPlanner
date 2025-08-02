@@ -207,7 +207,7 @@
       </legend>
       <div v-show="sectionOpen.income">
         <div class="form-group">
-          <label for="salary">Your Annual Salary</label>
+          <label for="salary">Your Annual Salary (Include super/tax)</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('salary', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('salary', -1000)">-</button>
             <input 

@@ -65,10 +65,22 @@
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col items-center justify-start">
-      <main class="w-full p-8">
+    <div class="flex-1 flex flex-col">
+      <main class="flex-1 p-8">
         <router-view />
       </main>
+      
+      <!-- Footer -->
+      <footer class="bg-gray-800 border-t border-gray-700 py-4 px-8">
+        <div class="flex justify-center">
+          <p class="text-gray-400 text-sm">
+            Have questions or feedback? 
+            <a href="mailto:help@moneystock.net" class="text-teal-300 hover:text-teal-200 underline ml-1">
+              Contact us
+            </a>
+          </p>
+        </div>
+      </footer>
     </div>
   </div>
 </template>
