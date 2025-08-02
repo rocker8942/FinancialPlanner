@@ -8,7 +8,17 @@
     </div>
     <div class="dashboard-main">
       <div class="dashboard-center">
-        <NetWealthChart :projection="projection" />
+        <SummaryCards 
+          v-if="projection.length > 0"
+          :projection="projection" 
+          :current-age="currentProfile?.currentAge || 30"
+          :retirement-age="currentProfile?.retireAge || 65"
+        />
+        <NetWealthChart 
+          :projection="projection" 
+          :current-age="currentProfile?.currentAge"
+          :retirement-age="currentProfile?.retireAge"
+        />
       </div>
       <div class="dashboard-right">
         <!-- <SummaryCard :netWorth="finalWealth" :details="summaryDetailsFiltered" /> -->
@@ -22,6 +32,7 @@
 import { ref } from 'vue';
 import NetWealthChart from '../components/NetWealthChart.vue';
 import AssetInputForm from '../components/AssetInputForm.vue';
+import SummaryCards from '../components/SummaryCards.vue';
 // import SummaryCard from '../components/SummaryCard.vue';
 import { calculateFinancialPlan } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
@@ -41,6 +52,7 @@ interface ProjectionData {
 }
 
 const projection = ref<ProjectionData[]>([]);
+const currentProfile = ref<FinancialProfile | null>(null);
 // const finalWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].wealth : 0);
 // const finalPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].propertyAssets : 0);
 // const finalSavings = computed(() => projection.value.length ? projection.value[projection.value.length - 1].savings : 0);
@@ -102,6 +114,7 @@ const projection = ref<ProjectionData[]>([]);
 // );
 
 function onProfileUpdate(profile: FinancialProfile) {
+  currentProfile.value = profile;
   if (profile) {
     const plan = calculateFinancialPlan(profile);
     projection.value = plan.projection;
@@ -117,7 +130,7 @@ function onProfileUpdate(profile: FinancialProfile) {
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   padding: 1rem;
   overflow: auto;
 }
@@ -176,7 +189,7 @@ function onProfileUpdate(profile: FinancialProfile) {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
 }
 .dashboard-right {
   flex: 0 0 320px;
@@ -190,15 +203,64 @@ function onProfileUpdate(profile: FinancialProfile) {
 @media (max-width: 1024px) {
   .dashboard-main {
     flex-direction: column;
+    gap: 1rem;
   }
   
   .dashboard-right {
     flex: none;
     width: 100%;
+    min-width: auto;
+    max-width: none;
+    order: -1;
   }
   
   .dashboard-center {
-    order: -1;
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 0.5rem;
+    min-height: 100svh; /* Use small viewport height for mobile */
+  }
+  
+  .page-title {
+    font-size: 2rem;
+    gap: 0.5rem;
+  }
+  
+  .beta-badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  
+  .dashboard-main {
+    gap: 0.75rem;
+    flex: 1;
+    min-height: 0;
+  }
+  
+  .dashboard-center {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 0.25rem;
+  }
+  
+  .page-title {
+    font-size: 1.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .beta-badge {
+    align-self: flex-start;
   }
 }
 </style>

@@ -1,6 +1,39 @@
 <template>
   <div ref="chartContainer" class="w-full">
-    <div ref="chart" style="width: 100%; height: 600px;"></div>
+    <!-- Chart Controls -->
+    <div class="chart-controls">
+      <div class="chart-title">
+        <h3>Net Wealth Projection</h3>
+        <div class="chart-toggle-group">
+          <button 
+            class="chart-toggle" 
+            :class="{ active: !showInflationAdjusted }"
+            @click="showInflationAdjusted = false"
+          >
+            Nominal Values
+          </button>
+          <button 
+            class="chart-toggle" 
+            :class="{ active: showInflationAdjusted }"
+            @click="showInflationAdjusted = true"
+          >
+            Real Values (Today's Purchasing Power)
+          </button>
+        </div>
+      </div>
+      <div class="chart-info">
+        <div class="info-item">
+          <span class="info-label">View:</span>
+          <span class="info-value">{{ showInflationAdjusted ? 'Inflation-Adjusted' : 'Nominal' }} Values</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Currency:</span>
+          <span class="info-value">AUD</span>
+        </div>
+      </div>
+    </div>
+    
+    <div ref="chart" class="chart-container"></div>
     
     <!-- Data Table -->
     <div class="mt-6">
@@ -51,10 +84,16 @@ const props = defineProps<{
     pensionIncome: number; // Updated to match backend response
     totalIncome: number;
     expenses: number;
-  }> 
+    inflationAdjustedWealth?: number;
+    inflationAdjustedPropertyAssets?: number;
+    inflationAdjustedSavings?: number;
+  }>;
+  currentAge?: number;
+  retirementAge?: number;
 }>();
 const chart = ref<HTMLDivElement | null>(null);
 const chartContainer = ref<HTMLDivElement | null>(null);
+const showInflationAdjusted = ref(false);
 let chartInstance: echarts.ECharts | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let currentLegendSelection: Record<string, boolean> = {
@@ -74,12 +113,61 @@ function renderChart() {
     });
   }
 
+  // Prepare data based on inflation adjustment toggle
+  const useInflationAdjusted = showInflationAdjusted.value;
+  
+  // Get property assets data
+  const propertyData = props.projection.map(p => 
+    useInflationAdjusted && p.inflationAdjustedPropertyAssets !== undefined 
+      ? p.inflationAdjustedPropertyAssets 
+      : p.propertyAssets
+  );
+  
   // Prepare pension income data
   const pensionIncome = props.projection.map(_p => _p.pensionIncome ?? 0);
-  // Use only savings (superannuation already included in savings from financialPlan.ts)
-  const savingsData = props.projection.map(p => Math.max(0, p.savings));
+  
+  // Use savings data (inflation-adjusted if toggled)
+  const savingsData = props.projection.map(p => 
+    Math.max(0, useInflationAdjusted && p.inflationAdjustedSavings !== undefined 
+      ? p.inflationAdjustedSavings 
+      : p.savings
+    )
+  );
+  
   // Savings minus pension portion (for stacking, ensure non-negative)
   const nonPensionSavings = props.projection.map((_, i) => Math.max(0, savingsData[i] - pensionIncome[i]));
+
+  // Create milestone markers
+  const milestones = [];
+  if (props.retirementAge) {
+    milestones.push({
+      name: 'Retirement',
+      xAxis: props.retirementAge,
+      lineStyle: { color: '#fbbf24', width: 2, type: 'dashed' },
+      label: { 
+        show: true, 
+        position: 'insideEndTop',
+        formatter: `Retirement\nAge ${props.retirementAge}`,
+        color: '#fbbf24',
+        fontSize: 12,
+        fontWeight: 'bold'
+      }
+    });
+  }
+  
+  milestones.push({
+    name: 'Age Pension Eligibility',
+    xAxis: 67,
+    lineStyle: { color: '#34d399', width: 2, type: 'dashed' },
+    label: { 
+      show: true, 
+      position: 'insideEndTop',
+      formatter: 'Age Pension\nEligible (67)',
+      color: '#34d399',
+      fontSize: 12,
+      fontWeight: 'bold'
+    }
+  });
 
   chartInstance.setOption({
     tooltip: { 
@@ -89,10 +177,18 @@ function renderChart() {
         const age = dataPoint.axisValue;
         const projectionData = props.projection.find(p => p.age === parseInt(age));
         if (projectionData) {
+          const propertyValue = useInflationAdjusted && projectionData.inflationAdjustedPropertyAssets !== undefined 
+            ? projectionData.inflationAdjustedPropertyAssets 
+            : projectionData.propertyAssets;
+          const savingsValue = useInflationAdjusted && projectionData.inflationAdjustedSavings !== undefined 
+            ? projectionData.inflationAdjustedSavings 
+            : projectionData.savings;
+          const valueType = useInflationAdjusted ? ' (Real Value)' : ' (Nominal)';
+          
           return `
             Age: ${age}<br/>
-            Property Assets: ${formatCurrency(projectionData.propertyAssets)}<br/>
-            Net Financial Asset: ${formatCurrency(Math.max(0, projectionData.savings))}<br/>
+            Property Assets${valueType}: ${formatCurrency(propertyValue)}<br/>
+            Net Financial Asset${valueType}: ${formatCurrency(Math.max(0, savingsValue))}<br/>
             Superannuation: ${formatCurrency(projectionData.superannuationBalance)}<br/>
             Pension Income: ${formatCurrency(projectionData.pensionIncome ?? 0)}
           `;
@@ -120,12 +216,16 @@ function renderChart() {
     series: [
       {
         name: 'Property Assets',
-        data: props.projection.map(p => p.propertyAssets),
+        data: propertyData,
         type: 'line',
         smooth: true,
         areaStyle: {},
         stack: 'assets',
-        color: '#8b5cf6'
+        color: '#8b5cf6',
+        markLine: {
+          silent: true,
+          data: milestones
+        }
       },
       {
         name: 'Pension Income',
@@ -159,7 +259,12 @@ function renderChart() {
 
 function handleResize() {
   if (chartInstance) {
-    chartInstance.resize();
+    // Use a small delay to ensure the container has finished resizing
+    setTimeout(() => {
+      if (chartInstance) {
+        chartInstance.resize();
+      }
+    }, 100);
   }
 }
 
@@ -176,8 +281,12 @@ onMounted(() => {
     resizeObserver.observe(chartContainer.value);
   }
   
-  // Also listen for window resize
+  // Also listen for window resize and orientation change
   window.addEventListener('resize', handleResize);
+  window.addEventListener('orientationchange', () => {
+    // Delay resize on orientation change for mobile devices
+    setTimeout(handleResize, 300);
+  });
 });
 
 onUnmounted(() => {
@@ -188,12 +297,177 @@ onUnmounted(() => {
     resizeObserver.disconnect();
   }
   window.removeEventListener('resize', handleResize);
+  window.removeEventListener('orientationchange', handleResize);
 });
 
 watch(() => props.projection, renderChart, { deep: true });
+watch(showInflationAdjusted, renderChart);
 </script>
 
 <style scoped>
+/* Chart Controls Styles */
+.chart-controls {
+  background: #232733;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.chart-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.chart-title h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #6ee7b7;
+  margin: 0;
+}
+
+.chart-toggle-group {
+  display: flex;
+  background: #1f2937;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  overflow: hidden;
+}
+
+.chart-toggle {
+  padding: 0.4rem 0.875rem;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chart-toggle:hover {
+  background: #374151;
+  color: #e0e3e8;
+}
+
+.chart-toggle.active {
+  background: #6ee7b7;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.chart-toggle:not(:last-child) {
+  border-right: 1px solid #374151;
+}
+
+.chart-info {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.info-value {
+  font-size: 0.875rem;
+  color: #e0e3e8;
+  font-weight: 600;
+}
+
+/* Chart Container Responsive Heights */
+.chart-container {
+  width: 100%;
+  height: 600px;
+  min-height: 400px;
+}
+
+@media (max-width: 768px) {
+  .chart-controls {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .chart-title {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    gap: 0.75rem;
+  }
+  
+  .chart-title h3 {
+    font-size: 1rem;
+  }
+  
+  .chart-container {
+    height: 400px;
+    min-height: 300px;
+  }
+  
+  .chart-toggle-group {
+    width: 100%;
+  }
+  
+  .chart-toggle {
+    flex: 1;
+    text-align: center;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-controls {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .chart-title {
+    margin-bottom: 0.4rem;
+    gap: 0.5rem;
+  }
+  
+  .chart-title h3 {
+    font-size: 0.9rem;
+  }
+  
+  .chart-container {
+    height: 300px;
+    min-height: 250px;
+  }
+  
+  .chart-toggle {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  
+  .chart-toggle-group {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .chart-toggle:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px solid #374151;
+  }
+}
+
 .table-title {
   font-size: 1rem;
   font-weight: 700;
@@ -273,5 +547,41 @@ watch(() => props.projection, renderChart, { deep: true });
 
 .table-container::-webkit-scrollbar-thumb:hover {
   background: #4b5563;
+}
+
+/* Mobile table optimizations */
+@media (max-width: 768px) {
+  .table-container {
+    max-height: 16rem; /* Reduce height on mobile */
+  }
+  
+  .data-table {
+    font-size: 0.75rem;
+  }
+  
+  .table-cell-header,
+  .table-cell {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .table-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .table-container {
+    max-height: 12rem;
+  }
+  
+  .data-table {
+    font-size: 0.7rem;
+  }
+  
+  .table-cell-header,
+  .table-cell {
+    padding: 0.4rem 0.5rem;
+  }
 }
 </style>

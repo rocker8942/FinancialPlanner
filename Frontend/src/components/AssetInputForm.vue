@@ -1,10 +1,18 @@
 <template>
   <form class="asset-form">
+    <!-- Privacy Notice -->
+    <div class="privacy-notice">
+      <svg class="privacy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-9a2 2 0 00-2-2H6a2 2 0 00-2 2v9a2 2 0 002 2z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V7a2 2 0 114 0v4"></path>
+      </svg>
+      <span>Your data is stored locally on your device for privacy and security.</span>
+    </div>
     <!-- Person Profile Group -->
-    <fieldset class="form-section">
+    <fieldset class="form-section" :class="{ 'section-active': sectionOpen.profile }">
       <legend class="form-section-title clickable" @click="toggleSection('profile')">
         <span class="chevron" :class="{ open: sectionOpen.profile }">&#9660;</span>
-        Person Profile
+        Personal Profile
       </legend>
       <div v-show="sectionOpen.profile">
         <div class="form-group">
@@ -29,7 +37,7 @@
         </div>
         <div class="form-group">
           <label for="currentAge">Current Age</label>
-          <div class="input-with-buttons">
+          <div class="input-with-buttons" :class="{ 'input-valid': isFieldValid('currentAge'), 'input-invalid': !isFieldValid('currentAge') && isFieldTouched('currentAge') }">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('currentAge', -1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('currentAge', -1)">-</button>
             <input 
               id="currentAge"
@@ -42,7 +50,13 @@
               required 
             />
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('currentAge', 1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('currentAge', 1)">+</button>
+            <div v-if="isFieldValid('currentAge')" class="field-validation-icon valid">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
           </div>
+          <small v-if="!isFieldValid('currentAge') && isFieldTouched('currentAge')" class="validation-error">Please enter a valid age between 18 and 100</small>
         </div>
         <div class="form-group">
           <label for="retireAge">Your Retirement Age</label>
@@ -102,7 +116,7 @@
     </fieldset>
 
     <!-- Assets Group -->
-    <fieldset class="form-section">
+    <fieldset class="form-section" :class="{ 'section-active': sectionOpen.assets }">
       <legend class="form-section-title clickable" @click="toggleSection('assets')">
         <span class="chevron" :class="{ open: sectionOpen.assets }">&#9660;</span>
         Assets
@@ -186,7 +200,7 @@
     </fieldset>
 
     <!-- Income and Expenses Group -->
-    <fieldset class="form-section">
+    <fieldset class="form-section" :class="{ 'section-active': sectionOpen.income }">
       <legend class="form-section-title clickable" @click="toggleSection('income')">
         <span class="chevron" :class="{ open: sectionOpen.income }">&#9660;</span>
         Income and Expenses
@@ -277,7 +291,7 @@
     </fieldset>
 
     <!-- Advanced Options Group -->
-    <fieldset class="form-section">
+    <fieldset class="form-section" :class="{ 'section-active': sectionOpen.advanced }">
       <legend class="form-section-title clickable" @click="toggleSection('advanced')">
         <span class="chevron" :class="{ open: sectionOpen.advanced }">&#9660;</span>
         Advanced Options
@@ -564,6 +578,65 @@ function toggleSection(section: 'profile' | 'assets' | 'income' | 'advanced') {
   sectionOpen.value[section] = true;
 }
 
+
+// Field validation tracking
+const touchedFields = ref(new Set<string>());
+
+function isFieldTouched(fieldName: string): boolean {
+  return touchedFields.value.has(fieldName);
+}
+
+function getFieldValue(fieldName: string): any {
+  switch (fieldName) {
+    case 'currentAge': return currentAge.value;
+    case 'retireAge': return retireAge.value;
+    case 'relationshipStatus': return relationshipStatus.value;
+    case 'propertyAssets': return propertyAssets.value;
+    case 'savings': return savings.value;
+    case 'superannuationBalance': return superannuationBalance.value;
+    case 'salary': return salary.value;
+    case 'expenses': return expenses.value;
+    case 'deathAge': return deathAge.value;
+    case 'propertyGrowthRate': return propertyGrowthRate.value;
+    case 'savingsGrowthRate': return savingsGrowthRate.value;
+    case 'mortgageBalance': return mortgageBalance.value;
+    case 'mortgageRate': return mortgageRate.value;
+    case 'superannuationRate': return superannuationRate.value;
+    case 'cpiGrowthRate': return cpiGrowthRate.value;
+    default: return null;
+  }
+}
+
+function isFieldValid(fieldName: string): boolean {
+  const value = getFieldValue(fieldName);
+  
+  switch (fieldName) {
+    case 'currentAge':
+      return typeof value === 'number' && value >= 18 && value <= 100;
+    case 'retireAge':
+      return typeof value === 'number' && value >= currentAge.value && value <= 100;
+    case 'deathAge':
+      return typeof value === 'number' && value >= retireAge.value && value <= 120;
+    case 'propertyAssets':
+    case 'savings':
+    case 'superannuationBalance':
+    case 'salary':
+    case 'expenses':
+    case 'mortgageBalance':
+      return typeof value === 'number' && value >= 0;
+    case 'relationshipStatus':
+      return value === 'single' || value === 'couple';
+    case 'propertyGrowthRate':
+    case 'savingsGrowthRate':
+    case 'mortgageRate':
+    case 'superannuationRate':
+    case 'cpiGrowthRate':
+      return typeof value === 'number' && value >= 0 && value <= 1;
+    default:
+      return true;
+  }
+}
+
 // Parse numeric value from formatted string
 function parseNumericValue(value: string): number {
   // Remove commas, dollar signs, and other non-numeric characters except decimal point
@@ -768,6 +841,7 @@ function onFocus(fieldName: string) {
 }
 function onBlur(fieldName: string) {
   focusedFields.value.delete(fieldName);
+  touchedFields.value.add(fieldName);
   switch (fieldName) {
     case 'propertyAssets':
       const parsedPropertyAssets = parseFormattedNumber(propertyAssetsFormatted.value)
@@ -1240,6 +1314,27 @@ onUnmounted(() => {
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
+
+/* Privacy Notice */
+.privacy-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.privacy-icon {
+  width: 1rem;
+  height: 1rem;
+  color: #6ee7b7;
+}
+
 .form-group {
   margin-bottom: 1rem;
 }
@@ -1256,6 +1351,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 0;
+  position: relative;
 }
 
 .input-with-buttons input {
@@ -1268,6 +1364,35 @@ onUnmounted(() => {
   color: #e0e3e8;
   font-size: 0.85rem;
   box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.input-with-buttons.input-valid input {
+  border-color: #34d399;
+}
+
+.input-with-buttons.input-invalid input {
+  border-color: #ef4444;
+}
+
+.field-validation-icon {
+  position: absolute;
+  right: 2.5rem;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+}
+
+.field-validation-icon.valid {
+  color: #34d399;
+}
+
+.validation-error {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #ef4444;
+  line-height: 1.3;
 }
 
 .form-group input {
@@ -1376,6 +1501,12 @@ onUnmounted(() => {
   margin-bottom: 1.5rem;
   padding: 1rem 1rem 0.5rem 1rem;
   background: #20232e;
+  transition: all 0.2s ease;
+}
+
+.form-section.section-active {
+  border-color: #6ee7b7;
+  box-shadow: 0 0 0 1px rgba(110, 231, 183, 0.1);
 }
 
 .form-section-title {
@@ -1390,6 +1521,7 @@ onUnmounted(() => {
   cursor: pointer;
   user-select: none;
 }
+
 .form-section-title.clickable:hover {
   background: #232733;
 }
@@ -1560,5 +1692,62 @@ onUnmounted(() => {
 .pension-item.total .pension-value {
   color: #34d399;
   font-size: 0.8rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .asset-form {
+    padding: 0.75rem;
+  }
+  
+  .form-section {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-section-title {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .increment-btn {
+    width: 40px;
+    height: 44px;
+    font-size: 1rem;
+  }
+  
+  .input-with-buttons input {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .form-group label {
+    font-size: 0.8rem;
+  }
+  
+  .help-text {
+    font-size: 0.7rem;
+  }
+  
+  .privacy-notice {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-section-title {
+    font-size: 0.85rem;
+  }
+  
+  .increment-btn {
+    width: 36px;
+    height: 40px;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 </style>
