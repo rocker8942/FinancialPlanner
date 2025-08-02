@@ -120,7 +120,7 @@ const annualPension = computed(() => {
 <style scoped>
 .summary-cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -218,7 +218,25 @@ const annualPension = computed(() => {
   margin: 0;
 }
 
-@media (max-width: 768px) {
+/* Tablet and small laptop - 3 columns */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .summary-cards-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+}
+
+/* Large mobile - 2 columns */
+@media (max-width: 768px) and (min-width: 481px) {
+  .summary-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Small mobile - 1 column */
+@media (max-width: 480px) {
   .summary-cards-container {
     grid-template-columns: 1fr;
     gap: 0.5rem;
