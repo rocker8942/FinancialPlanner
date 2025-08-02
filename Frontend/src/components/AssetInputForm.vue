@@ -425,7 +425,7 @@ import { ref, onMounted, onUnmounted, watch, watchEffect, computed } from 'vue';
 import { getFinancialProfile } from '../services/api';
 import { calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
-import { formatCurrency, formatNumber, parseFormattedNumber } from '../utils/formatters';
+import { formatCurrency, formatNumber, parseFormattedNumber, formatPercentage } from '../utils/formatters';
 import { getAgePensionAmounts } from '../services/agePensionService';
 
 const emit = defineEmits(['update']);
@@ -535,10 +535,12 @@ const focusedFields = ref(new Set<string>());
 // Continuous adjustment state
 const continuousAdjustmentState = ref<{
   interval: number | null;
+  timeout: number | null;
   fieldName: string | null;
   adjustment: number;
 }>({
   interval: null,
+  timeout: null,
   fieldName: null,
   adjustment: 0
 });
@@ -622,25 +624,25 @@ watch(deathAge, (newValue) => {
 
 watch(savingsGrowthRate, (newValue) => {
   if (!focusedFields.value.has('savingsGrowthRate')) {
-    savingsGrowthRateFormatted.value = (newValue * 100).toFixed(1);
+    savingsGrowthRateFormatted.value = formatPercentage(newValue);
   }
 });
 
 watch(propertyGrowthRate, (newValue) => {
   if (!focusedFields.value.has('propertyGrowthRate')) {
-    propertyGrowthRateFormatted.value = (newValue * 100).toFixed(1);
+    propertyGrowthRateFormatted.value = formatPercentage(newValue);
   }
 });
 
 watch(propertyRentalYield, (newValue) => {
   if (!focusedFields.value.has('propertyRentalYield')) {
-    propertyRentalYieldFormatted.value = (newValue * 100).toFixed(1);
+    propertyRentalYieldFormatted.value = formatPercentage(newValue);
   }
 });
 
 watch(cpiGrowthRate, (newValue) => {
   if (!focusedFields.value.has('cpiGrowthRate')) {
-    cpiGrowthRateFormatted.value = (newValue * 100).toFixed(1);
+    cpiGrowthRateFormatted.value = formatPercentage(newValue);
   }
 });
 
@@ -664,7 +666,7 @@ watch(mortgageBalance, (newValue) => {
 
 watch(mortgageRate, (newValue) => {
   if (!focusedFields.value.has('mortgageRate')) {
-    mortgageRateFormatted.value = (newValue * 100).toFixed(1);
+    mortgageRateFormatted.value = formatPercentage(newValue);
   }
 });
 
@@ -676,7 +678,7 @@ watch(superannuationBalance, (newValue) => {
 
 watch(superannuationRate, (newValue) => {
   if (!focusedFields.value.has('superannuationRate')) {
-    superannuationRateFormatted.value = (newValue * 100).toFixed(1);
+    superannuationRateFormatted.value = formatPercentage(newValue);
   }
 });
 
@@ -724,16 +726,16 @@ function onFocus(fieldName: string) {
       deathAgeFormatted.value = deathAge.value.toString();
       break;
     case 'savingsGrowthRate':
-      savingsGrowthRateFormatted.value = (savingsGrowthRate.value * 100).toString();
+      savingsGrowthRateFormatted.value = formatPercentage(savingsGrowthRate.value);
       break;
     case 'propertyGrowthRate':
-      propertyGrowthRateFormatted.value = (propertyGrowthRate.value * 100).toString();
+      propertyGrowthRateFormatted.value = formatPercentage(propertyGrowthRate.value);
       break;
     case 'propertyRentalYield':
-      propertyRentalYieldFormatted.value = (propertyRentalYield.value * 100).toString();
+      propertyRentalYieldFormatted.value = formatPercentage(propertyRentalYield.value);
       break;
     case 'cpiGrowthRate':
-      cpiGrowthRateFormatted.value = (cpiGrowthRate.value * 100).toString();
+      cpiGrowthRateFormatted.value = formatPercentage(cpiGrowthRate.value);
       break;
     case 'pensionAmount':
       pensionAmountFormatted.value = pensionAmount.value.toString();
@@ -754,13 +756,13 @@ function onFocus(fieldName: string) {
       mortgageBalanceFormatted.value = mortgageBalance.value.toString();
       break;
     case 'mortgageRate':
-      mortgageRateFormatted.value = (mortgageRate.value * 100).toString();
+      mortgageRateFormatted.value = formatPercentage(mortgageRate.value);
       break;
     case 'superannuationBalance':
       superannuationBalanceFormatted.value = superannuationBalance.value.toString();
       break;
     case 'superannuationRate':
-      superannuationRateFormatted.value = (superannuationRate.value * 100).toString();
+      superannuationRateFormatted.value = formatPercentage(superannuationRate.value);
       break;
   }
 }
@@ -801,19 +803,19 @@ function onBlur(fieldName: string) {
       break;
     case 'savingsGrowthRate':
       savingsGrowthRate.value = parsePercentageValue(savingsGrowthRateFormatted.value);
-      savingsGrowthRateFormatted.value = (savingsGrowthRate.value * 100).toFixed(1);
+      savingsGrowthRateFormatted.value = formatPercentage(savingsGrowthRate.value);
       break;
     case 'propertyGrowthRate':
       propertyGrowthRate.value = parsePercentageValue(propertyGrowthRateFormatted.value);
-      propertyGrowthRateFormatted.value = (propertyGrowthRate.value * 100).toFixed(1);
+      propertyGrowthRateFormatted.value = formatPercentage(propertyGrowthRate.value);
       break;
     case 'propertyRentalYield':
       propertyRentalYield.value = parsePercentageValue(propertyRentalYieldFormatted.value);
-      propertyRentalYieldFormatted.value = (propertyRentalYield.value * 100).toFixed(1);
+      propertyRentalYieldFormatted.value = formatPercentage(propertyRentalYield.value);
       break;
     case 'cpiGrowthRate':
       cpiGrowthRate.value = parsePercentageValue(cpiGrowthRateFormatted.value);
-      cpiGrowthRateFormatted.value = (cpiGrowthRate.value * 100).toFixed(1);
+      cpiGrowthRateFormatted.value = formatPercentage(cpiGrowthRate.value);
       break;
     case 'pensionAmount':
       const parsedPensionAmount = parseFormattedNumber(pensionAmountFormatted.value)
@@ -845,7 +847,7 @@ function onBlur(fieldName: string) {
       break;
     case 'mortgageRate':
       mortgageRate.value = parsePercentageValue(mortgageRateFormatted.value);
-      mortgageRateFormatted.value = (mortgageRate.value * 100).toFixed(1);
+      mortgageRateFormatted.value = formatPercentage(mortgageRate.value);
       break;
     case 'superannuationBalance':
       const parsedSuperannuationBalance = parseFormattedNumber(superannuationBalanceFormatted.value)
@@ -854,7 +856,7 @@ function onBlur(fieldName: string) {
       break;
     case 'superannuationRate':
       superannuationRate.value = parsePercentageValue(superannuationRateFormatted.value);
-      superannuationRateFormatted.value = (superannuationRate.value * 100).toFixed(1);
+      superannuationRateFormatted.value = formatPercentage(superannuationRate.value);
       break;
   }
 }
@@ -937,7 +939,7 @@ function adjustValue(fieldName: string, adjustment: number) {
 
 // Continuous adjustment functions
 function startContinuousAdjustment(fieldName: string, adjustment: number) {
-  // Clear any existing interval
+  // Clear any existing interval and timeout
   stopContinuousAdjustment();
   
   // Store the current adjustment state
@@ -948,7 +950,7 @@ function startContinuousAdjustment(fieldName: string, adjustment: number) {
   const initialDelay = 500; // 500ms before starting continuous
   const fastInterval = 100; // 100ms between adjustments
   
-  setTimeout(() => {
+  continuousAdjustmentState.value.timeout = setTimeout(() => {
     if (continuousAdjustmentState.value.fieldName === fieldName) {
       continuousAdjustmentState.value.interval = setInterval(() => {
         adjustValue(fieldName, adjustment);
@@ -961,6 +963,10 @@ function stopContinuousAdjustment() {
   if (continuousAdjustmentState.value.interval) {
     clearInterval(continuousAdjustmentState.value.interval);
     continuousAdjustmentState.value.interval = null;
+  }
+  if (continuousAdjustmentState.value.timeout) {
+    clearTimeout(continuousAdjustmentState.value.timeout);
+    continuousAdjustmentState.value.timeout = null;
   }
   continuousAdjustmentState.value.fieldName = null;
   continuousAdjustmentState.value.adjustment = 0;
@@ -1153,19 +1159,19 @@ function updateFormattedValues() {
   propertyAssetsFormatted.value = formatCurrency(propertyAssets.value);
   savingsFormatted.value = formatCurrency(savings.value);
   mortgageBalanceFormatted.value = formatCurrency(mortgageBalance.value);
-  mortgageRateFormatted.value = (mortgageRate.value * 100).toFixed(1);
+  mortgageRateFormatted.value = formatPercentage(mortgageRate.value);
   superannuationBalanceFormatted.value = formatCurrency(superannuationBalance.value);
-  superannuationRateFormatted.value = (superannuationRate.value * 100).toFixed(1);
+  superannuationRateFormatted.value = formatPercentage(superannuationRate.value);
   salaryFormatted.value = formatCurrency(salary.value);
   partnerSalaryFormatted.value = formatCurrency(partnerSalary.value);
   expensesFormatted.value = formatCurrency(expenses.value);
   currentAgeFormatted.value = formatNumber(currentAge.value);
   retireAgeFormatted.value = formatNumber(retireAge.value);
   deathAgeFormatted.value = formatNumber(deathAge.value);
-  savingsGrowthRateFormatted.value = (savingsGrowthRate.value * 100).toFixed(1);
-  propertyGrowthRateFormatted.value = (propertyGrowthRate.value * 100).toFixed(1);
-  propertyRentalYieldFormatted.value = (propertyRentalYield.value * 100).toFixed(1);
-  cpiGrowthRateFormatted.value = (cpiGrowthRate.value * 100).toFixed(1);
+  savingsGrowthRateFormatted.value = formatPercentage(savingsGrowthRate.value);
+  propertyGrowthRateFormatted.value = formatPercentage(propertyGrowthRate.value);
+  propertyRentalYieldFormatted.value = formatPercentage(propertyRentalYield.value);
+  cpiGrowthRateFormatted.value = formatPercentage(cpiGrowthRate.value);
   pensionAmountFormatted.value = formatCurrency(pensionAmount.value);
   partnerPensionAmountFormatted.value = formatCurrency(partnerPensionAmount.value);
   partnerAgeFormatted.value = formatNumber(partnerAge.value);

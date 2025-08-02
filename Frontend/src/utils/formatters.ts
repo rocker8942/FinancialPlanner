@@ -34,3 +34,18 @@ export function parseFormattedNumber(value: string): number {
   const parsedValue = parseFloat(cleanValue);
   return isNaN(parsedValue) ? 0 : parsedValue;
 }
+
+/**
+ * Formats a decimal value as a percentage string, eliminating floating point precision issues
+ * @param value - The decimal value to format (e.g., 0.03 for 3%)
+ * @returns Formatted percentage string without trailing zeros
+ */
+export function formatPercentage(value: number): string {
+  if (value == null || isNaN(value)) return '0';
+  
+  // Convert to percentage and round to 2 decimal places to eliminate precision errors
+  const percentage = Math.round((value * 100) * 100) / 100;
+  
+  // Format with up to 2 decimal places, removing trailing zeros
+  return percentage.toString();
+}

@@ -162,8 +162,8 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       }
     }
 
-    // Add partner salary if not retired (input is total employment package including super)
-    if (age <= partnerRetireAgeInUserTimeline) {
+    // Add partner salary if couple and not retired (input is total employment package including super)
+    if (profile.relationshipStatus === 'couple' && age <= partnerRetireAgeInUserTimeline) {
       const partnerTotalPackage = profile.partnerSalary; // Total package amount
       // Carve out super from total package: super = package / 1.12 * 0.12
       const partnerSuperContributions = partnerTotalPackage * (12 / 112);
