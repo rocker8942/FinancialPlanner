@@ -17,6 +17,7 @@ describe('calculateFinancialPlan', () => {
     deathAge: 85,
     savingsGrowthRate: 0.05,
     propertyGrowthRate: 0.03,
+    propertyRentalYield: 0.033,
     cpiGrowthRate: 0.02,
     pensionAmount: 25000,
     pensionStartAge: 67,
@@ -73,7 +74,7 @@ describe('calculateFinancialPlan', () => {
         mortgageBalance: 0, // No mortgage for simple calculation
         superannuationBalance: 0, // No superannuation for simple calculation
         propertyGrowthRate: 0.05,
-        savingsGrowthRate: 0.025
+        savingsGrowthRate: 0.025,
       })
       const result = calculateFinancialPlan(profile)
 
@@ -135,7 +136,7 @@ describe('calculateFinancialPlan', () => {
     it('should subtract expenses from financial assets', () => {
       const profile = createMockProfile({
         expenses: 100000,
-        salary: 120000
+        salary: 120000,
       })
       const result = calculateFinancialPlan(profile)
 
@@ -359,7 +360,7 @@ describe('calculateFinancialPlan', () => {
         propertyGrowthRate: 0.03,
         salary: 20000, // Income to pay mortgage
         partnerSalary: 10000,
-        expenses: 0
+        expenses: 0,
       })
       const result = calculateFinancialPlan(profile)
       const secondYear = result.projection[1]
@@ -401,7 +402,7 @@ describe('calculateFinancialPlan', () => {
         propertyGrowthRate: 0.03,
         salary: 50000, // High income relative to mortgage
         partnerSalary: 40000,
-        expenses: 0
+        expenses: 0,
       })
       const result = calculateFinancialPlan(profile)
       const secondYear = result.projection[1]
@@ -452,7 +453,7 @@ describe('calculateFinancialPlan', () => {
         savingsGrowthRate: 0.05,
         salary: 0,
         partnerSalary: 0,
-        expenses: 0
+        expenses: 0,
       })
       const result = calculateFinancialPlan(profile)
       const secondYear = result.projection[1]
@@ -519,6 +520,77 @@ describe('calculateFinancialPlan', () => {
     })
   })
 
+  describe('Rental income calculations', () => {
+    it('should include rental income from investment properties', () => {
+      const profile = createMockProfile({
+        propertyAssets: 1000000,
+        propertyRentalYield: 0.05, // 5% rental yield
+        savings: 0,
+        mortgageBalance: 0,
+        superannuationBalance: 0,
+        salary: 0,
+        partnerSalary: 0,
+        expenses: 0,
+        propertyGrowthRate: 0.04 // 4% property growth
+      })
+      const result = calculateFinancialPlan(profile)
+
+      const firstYear = result.projection[0]
+      const secondYear = result.projection[1]
+
+      // First year: rental income on original property value
+      expect(firstYear.totalIncome).toBe(1000000 * 0.05) // $50,000 rental income
+
+      // Second year: rental income on grown property value
+      const grownPropertyValue = 1000000 * 1.04 // $1,040,000
+      expect(secondYear.propertyAssets).toBeCloseTo(grownPropertyValue, 0)
+      expect(secondYear.totalIncome).toBeCloseTo(grownPropertyValue * 0.05, 0) // $52,000 rental income
+    })
+
+    it('should handle zero rental yield correctly', () => {
+      const profile = createMockProfile({
+        propertyAssets: 500000,
+        propertyRentalYield: 0, // No rental income
+        salary: 50000,
+        partnerSalary: 30000,
+        expenses: 0
+      })
+      const result = calculateFinancialPlan(profile)
+
+      const firstYear = result.projection[0]
+      // Total income should only include employment income (after tax), no rental
+      expect(firstYear.totalIncome).toBeGreaterThan(0)
+      expect(firstYear.totalIncome).toBeLessThanOrEqual(80000) // Less than or equal to gross employment income due to tax
+    })
+
+    it('should apply rental income to savings calculations', () => {
+      const profile = createMockProfile({
+        propertyAssets: 500000,
+        propertyRentalYield: 0.04, // 4% rental yield = $20,000/year initially
+        savings: 100000,
+        mortgageBalance: 0,
+        superannuationBalance: 0,
+        salary: 0,
+        partnerSalary: 0,
+        expenses: 10000, // Low expenses
+        savingsGrowthRate: 0.05,
+        propertyGrowthRate: 0.03
+      })
+      const result = calculateFinancialPlan(profile)
+
+      const secondYear = result.projection[1]
+      
+      // Expected calculation for second year:
+      // Property grows: 500000 * 1.03 = 515000
+      // Savings grow: 100000 * 1.05 = 105000
+      // Rental income: 515000 * 0.04 = 20600
+      // CPI adjusted expenses: 10000 * 1.02 = 10200
+      // Net savings: 105000 + 20600 - 10200 = 115400
+      
+      expect(secondYear.savings).toBeCloseTo(115400, 0)
+    })
+  })
+
   describe('Summary generation', () => {
     it('should generate meaningful summary', () => {
       const profile = createMockProfile()
@@ -548,6 +620,7 @@ describe('calculateExpenseToZeroNetWorth', () => {
     deathAge: 85,
     savingsGrowthRate: 0.05,
     propertyGrowthRate: 0.03,
+    propertyRentalYield: 0.033,
     cpiGrowthRate: 0.02,
     pensionAmount: 25000,
     pensionStartAge: 67,

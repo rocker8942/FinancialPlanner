@@ -319,6 +319,24 @@
           <small class="help-text">Historic average property appreciation (default: 4%)</small>
         </div>
         <div class="form-group">
+          <label for="propertyRentalYield">Property Rental Yield</label>
+          <div class="input-with-buttons">
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyRentalYield', -0.1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyRentalYield', -0.1)">-</button>
+            <input 
+              id="propertyRentalYield"
+              v-model="propertyRentalYieldFormatted"
+              @focus="onFocus('propertyRentalYield')"
+              @blur="onBlur('propertyRentalYield')"
+              @keydown.enter="onEnter($event)"
+              type="text" 
+              placeholder="Rental Yield (%)" 
+              required 
+            />
+            <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('propertyRentalYield', 0.1)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('propertyRentalYield', 0.1)">+</button>
+          </div>
+          <small class="help-text">Net rental return after fees and tax (Australian average: 3.3%)</small>
+        </div>
+        <div class="form-group">
           <label for="savingsGrowthRate">Expected Savings Growth Rate</label>
           <div class="input-with-buttons">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('savingsGrowthRate', -0.5)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('savingsGrowthRate', -0.5)">-</button>
@@ -424,6 +442,7 @@ const retireAge = ref(65);
 const deathAge = ref(90);
 const savingsGrowthRate = ref(0.025); // 2.5% default
 const propertyGrowthRate = ref(0.03); // 3% default
+const propertyRentalYield = ref(0.033); // 3.3% default (Australian average net return)
 const cpiGrowthRate = ref(0.03); // 3% default CPI growth rate
 const mortgageBalance = ref(0);
 const mortgageRate = ref(0.06); // 6% default
@@ -498,6 +517,7 @@ const retireAgeFormatted = ref('65');
 const deathAgeFormatted = ref('90');
 const savingsGrowthRateFormatted = ref('2.5');
 const propertyGrowthRateFormatted = ref('3');
+const propertyRentalYieldFormatted = ref('3.3');
 const cpiGrowthRateFormatted = ref('3');
 const pensionAmountFormatted = ref('0');
 const partnerPensionAmountFormatted = ref('0');
@@ -612,6 +632,12 @@ watch(propertyGrowthRate, (newValue) => {
   }
 });
 
+watch(propertyRentalYield, (newValue) => {
+  if (!focusedFields.value.has('propertyRentalYield')) {
+    propertyRentalYieldFormatted.value = (newValue * 100).toFixed(1);
+  }
+});
+
 watch(cpiGrowthRate, (newValue) => {
   if (!focusedFields.value.has('cpiGrowthRate')) {
     cpiGrowthRateFormatted.value = (newValue * 100).toFixed(1);
@@ -703,6 +729,9 @@ function onFocus(fieldName: string) {
     case 'propertyGrowthRate':
       propertyGrowthRateFormatted.value = (propertyGrowthRate.value * 100).toString();
       break;
+    case 'propertyRentalYield':
+      propertyRentalYieldFormatted.value = (propertyRentalYield.value * 100).toString();
+      break;
     case 'cpiGrowthRate':
       cpiGrowthRateFormatted.value = (cpiGrowthRate.value * 100).toString();
       break;
@@ -777,6 +806,10 @@ function onBlur(fieldName: string) {
     case 'propertyGrowthRate':
       propertyGrowthRate.value = parsePercentageValue(propertyGrowthRateFormatted.value);
       propertyGrowthRateFormatted.value = (propertyGrowthRate.value * 100).toFixed(1);
+      break;
+    case 'propertyRentalYield':
+      propertyRentalYield.value = parsePercentageValue(propertyRentalYieldFormatted.value);
+      propertyRentalYieldFormatted.value = (propertyRentalYield.value * 100).toFixed(1);
       break;
     case 'cpiGrowthRate':
       cpiGrowthRate.value = parsePercentageValue(cpiGrowthRateFormatted.value);
@@ -864,6 +897,9 @@ function adjustValue(fieldName: string, adjustment: number) {
     case 'propertyGrowthRate':
       propertyGrowthRate.value = Math.max(0, Math.min(1, propertyGrowthRate.value + adjustment / 100));
       break;
+    case 'propertyRentalYield':
+      propertyRentalYield.value = Math.max(0, Math.min(1, propertyRentalYield.value + adjustment / 100));
+      break;
     case 'cpiGrowthRate':
       cpiGrowthRate.value = Math.max(0, Math.min(1, cpiGrowthRate.value + adjustment / 100));
       break;
@@ -948,6 +984,7 @@ watch(zeroNetWorthAtDeath, (checked) => {
       deathAge: deathAge.value,
       savingsGrowthRate: savingsGrowthRate.value,
       propertyGrowthRate: propertyGrowthRate.value,
+      propertyRentalYield: propertyRentalYield.value,
       cpiGrowthRate: cpiGrowthRate.value,
       pensionAmount: calculatedUserPension.value,
       pensionStartAge: 67, // hardcoded
@@ -988,6 +1025,7 @@ watch([
       deathAge: deathAge.value,
       savingsGrowthRate: savingsGrowthRate.value,
       propertyGrowthRate: propertyGrowthRate.value,
+      propertyRentalYield: propertyRentalYield.value,
       cpiGrowthRate: cpiGrowthRate.value,
       pensionAmount: calculatedUserPension.value,
       pensionStartAge: 67, // hardcoded
@@ -1023,6 +1061,7 @@ watchEffect(() => {
     deathAge: deathAge.value,
     savingsGrowthRate: savingsGrowthRate.value,
     propertyGrowthRate: propertyGrowthRate.value,
+    propertyRentalYield: propertyRentalYield.value,
     cpiGrowthRate: cpiGrowthRate.value,
     pensionAmount: calculatedUserPension.value,
     pensionStartAge: 67, // hardcoded
@@ -1061,6 +1100,7 @@ function saveToLocalStorage() {
     deathAge: deathAge.value,
     savingsGrowthRate: savingsGrowthRate.value,
     propertyGrowthRate: propertyGrowthRate.value,
+    propertyRentalYield: propertyRentalYield.value,
     cpiGrowthRate: cpiGrowthRate.value,
     pensionAmount: pensionAmount.value,
     pensionStartAge: 67, // hardcoded
@@ -1092,6 +1132,7 @@ function loadFromLocalStorage() {
       deathAge.value = parsed.deathAge ?? 90;
       savingsGrowthRate.value = parsed.savingsGrowthRate ?? 0.025;
       propertyGrowthRate.value = parsed.propertyGrowthRate ?? 0.03;
+      propertyRentalYield.value = parsed.propertyRentalYield ?? 0.033;
       cpiGrowthRate.value = parsed.cpiGrowthRate ?? parsed.inflationRate ?? 0.03;
       pensionAmount.value = parsed.pensionAmount ?? 0;
       pensionStartAge.value = 67; // always 67
@@ -1123,6 +1164,7 @@ function updateFormattedValues() {
   deathAgeFormatted.value = formatNumber(deathAge.value);
   savingsGrowthRateFormatted.value = (savingsGrowthRate.value * 100).toFixed(1);
   propertyGrowthRateFormatted.value = (propertyGrowthRate.value * 100).toFixed(1);
+  propertyRentalYieldFormatted.value = (propertyRentalYield.value * 100).toFixed(1);
   cpiGrowthRateFormatted.value = (cpiGrowthRate.value * 100).toFixed(1);
   pensionAmountFormatted.value = formatCurrency(pensionAmount.value);
   partnerPensionAmountFormatted.value = formatCurrency(partnerPensionAmount.value);
@@ -1152,6 +1194,7 @@ async function load() {
         deathAge.value = profile.deathAge || 90;
         savingsGrowthRate.value = profile.savingsGrowthRate || 0.025;
         propertyGrowthRate.value = profile.propertyGrowthRate || 0.03;
+        propertyRentalYield.value = profile.propertyRentalYield || 0.033;
         cpiGrowthRate.value = profile.cpiGrowthRate || profile.inflationRate || 0.03;
         pensionAmount.value = profile.pensionAmount || 0;
         pensionStartAge.value = 67; // always 67

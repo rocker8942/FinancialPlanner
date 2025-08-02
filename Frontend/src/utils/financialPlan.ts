@@ -17,6 +17,7 @@ export interface FinancialProfile {
   deathAge: number;
   savingsGrowthRate: number;
   propertyGrowthRate: number;
+  propertyRentalYield: number; // Net rental return after fees and tax
   cpiGrowthRate: number;
   pensionAmount: number;
   pensionStartAge: number;
@@ -110,6 +111,9 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     const partnerRetireAgeInUserTimeline = profile.currentAge + (profile.partnerRetireAge - profile.partnerAge);
     const currentPartnerSalary = age <= partnerRetireAgeInUserTimeline ? profile.partnerSalary : 0;
     
+    // Calculate CPI adjustment factor for asset test thresholds (compound growth from base year 2025)
+    const cpiAdjustmentFactor = Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
+    
     const pensionAmounts = getAgePensionAmounts(
       profile.relationshipStatus,
       profile.isHomeowner,
@@ -120,13 +124,17 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       currentUserSalary,
       currentPartnerSalary,
       age,
-      currentPartnerAge
+      currentPartnerAge,
+      cpiAdjustmentFactor
     );
     
     // Apply CPI adjustment to pension amounts (age pension typically increases with CPI)
     const cpiAdjustedUserPension = pensionAmounts.userPension * Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
     const cpiAdjustedPartnerPension = pensionAmounts.partnerPension * Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
 
+    // Calculate rental income from investment properties (based on grown property value)
+    const rentalIncome = propertyAssets * profile.propertyRentalYield;
+    
     // Calculate employment income - user input is total package including super
     let grossEmploymentIncome = 0; // This will be taxable income (after super carved out)
     let totalSuperContributions = 0;
@@ -183,10 +191,10 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     pensionIncomeThisYear = cpiAdjustedUserPension + cpiAdjustedPartnerPension;
     
     // Total package income for display purposes (what shows in "Total Income" column)
-    const displayTotalIncome = totalPackageAmount + pensionIncomeThisYear;
+    const displayTotalIncome = totalPackageAmount + pensionIncomeThisYear + rentalIncome;
     
-    // Income available for expenses/savings (net employment income + pension)
-    totalIncome = netEmploymentIncome + pensionIncomeThisYear;
+    // Income available for expenses/savings (net employment income + pension + rental income)
+    totalIncome = netEmploymentIncome + pensionIncomeThisYear + rentalIncome;
     
     // Store the total package income for reporting (this shows in table as "Total Income")
     originalTotalIncome = displayTotalIncome;
@@ -226,7 +234,9 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       savings = Math.max(0, savings - cpiAdjustedExpenses);
       
       // If there are remaining expenses and superannuation is available, deduct from super
-      if (remainingExpenses > 0 && superannuationBalance > 0) {
+      // Note: In Australia, super can only be accessed at preservation age (60+) 
+      // Early access for hardship requires special circumstances and APRA approval
+      if (remainingExpenses > 0 && superannuationBalance > 0 && age >= 60) {
         superannuationBalance = Math.max(0, superannuationBalance - remainingExpenses);
       }
 
@@ -305,6 +315,8 @@ export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): 
   // Convert partner's retirement age to main user's timeline
   const partnerRetireAgeInUserTimeline = profileInput.currentAge + (profileInput.partnerRetireAge - profileInput.partnerAge);
   const partnerSalaryIncome = profileInput.partnerSalary * Math.max(0, Math.min(partnerRetireAgeInUserTimeline, profileInput.deathAge) - profileInput.currentAge);
+  // Approximate rental income over lifetime (property value may grow, but using current value for simplicity)
+  const approximateRentalIncome = profileInput.propertyAssets * profileInput.propertyRentalYield * years;
   let pensionIncome = 0;
   // Calculate approximate pension income over the lifetime
   for (let age = profileInput.currentAge; age < profileInput.deathAge; age++) {
@@ -317,6 +329,9 @@ export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): 
     const avgSuper = profileInput.superannuationBalance;
     const avgMortgage = Math.max(0, profileInput.mortgageBalance * (1 - (age - profileInput.currentAge) / (profileInput.deathAge - profileInput.currentAge)));
     
+    // Calculate CPI adjustment factor for this year in the approximation
+    const yearCpiAdjustmentFactor = Math.pow(1 + profileInput.cpiGrowthRate, age - profileInput.currentAge);
+    
     const pensionAmounts = getAgePensionAmounts(
       profileInput.relationshipStatus,
       profileInput.isHomeowner,
@@ -327,12 +342,13 @@ export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): 
       currentUserSalary,
       currentPartnerSalary,
       age,
-      currentPartnerAge
+      currentPartnerAge,
+      yearCpiAdjustmentFactor
     );
     
     pensionIncome += pensionAmounts.userPension + pensionAmounts.partnerPension;
   }
-  let low = 0, high = (assets + salaryIncome + partnerSalaryIncome + pensionIncome) / years * 5;
+  let low = 0, high = (assets + salaryIncome + partnerSalaryIncome + pensionIncome + approximateRentalIncome) / years * 5;
   const tolerance = 0.01;
   let bestExpense = 0;
   for (let i = 0; i < 50; i++) {

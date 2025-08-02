@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
       "Bash(npm run dev:*)",
@@ -15,7 +16,10 @@
       "WebFetch(domain:www.servicesaustralia.gov.au)",
       "Bash(dotnet build)",
       "WebFetch(domain:www.superguide.com.au)",
-      "Bash(timeout 10 npm run dev)"
+      "Bash(timeout 10 npm run dev)",
+      "Bash(node:*)",
+      "Bash(timeout 5 npm run build)",
+      "Bash(git stash:*)"
     ],
     "deny": []
   }

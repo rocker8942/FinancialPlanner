@@ -12,6 +12,7 @@ export interface AgePensionParams {
   partnerAnnualIncome?: number; // only for couples
   age: number;
   partnerAge?: number; // only for couples
+  cpiAdjustmentFactor?: number; // multiplier to adjust thresholds for inflation (defaults to 1.0)
 }
 
 export interface AgePensionResult {
@@ -34,7 +35,7 @@ export interface AgePensionResult {
   finalTest: 'asset' | 'income';
 }
 
-// 2025 Australian Age Pension rates and thresholds
+// 2025 Australian Age Pension rates and thresholds (base year)
 const PENSION_RATES = {
   single: {
     fullPension: 29874, // Annual amount
@@ -47,7 +48,8 @@ const PENSION_RATES = {
   }
 };
 
-const ASSET_TEST_THRESHOLDS = {
+// Base asset test thresholds for 2025 (will be adjusted for inflation)
+const BASE_ASSET_TEST_THRESHOLDS = {
   single: {
     homeowner: {
       fullPension: 321500,
@@ -69,6 +71,24 @@ const ASSET_TEST_THRESHOLDS = {
     }
   }
 };
+
+// Helper function to get CPI-adjusted asset test thresholds
+function getAdjustedAssetTestThresholds(cpiAdjustmentFactor: number = 1.0) {
+  const adjusted = JSON.parse(JSON.stringify(BASE_ASSET_TEST_THRESHOLDS)); // Deep copy
+  
+  // Apply CPI adjustment to all threshold values
+  adjusted.single.homeowner.fullPension = Math.round(adjusted.single.homeowner.fullPension * cpiAdjustmentFactor);
+  adjusted.single.homeowner.cutOff = Math.round(adjusted.single.homeowner.cutOff * cpiAdjustmentFactor);
+  adjusted.single.nonHomeowner.fullPension = Math.round(adjusted.single.nonHomeowner.fullPension * cpiAdjustmentFactor);
+  adjusted.single.nonHomeowner.cutOff = Math.round(adjusted.single.nonHomeowner.cutOff * cpiAdjustmentFactor);
+  
+  adjusted.couple.homeowner.fullPension = Math.round(adjusted.couple.homeowner.fullPension * cpiAdjustmentFactor);
+  adjusted.couple.homeowner.cutOff = Math.round(adjusted.couple.homeowner.cutOff * cpiAdjustmentFactor);
+  adjusted.couple.nonHomeowner.fullPension = Math.round(adjusted.couple.nonHomeowner.fullPension * cpiAdjustmentFactor);
+  adjusted.couple.nonHomeowner.cutOff = Math.round(adjusted.couple.nonHomeowner.cutOff * cpiAdjustmentFactor);
+  
+  return adjusted;
+}
 
 const INCOME_TEST_THRESHOLDS = {
   single: {
@@ -118,10 +138,11 @@ function calculateDeemedIncome(financialAssets: number, relationshipStatus: Rela
 }
 
 function calculateAssetTest(params: AgePensionParams): AgePensionResult['assetTestResult'] {
-  const { relationshipStatus, isHomeowner, propertyAssets, financialAssets } = params;
+  const { relationshipStatus, isHomeowner, propertyAssets, financialAssets, cpiAdjustmentFactor = 1.0 } = params;
   
   const totalAssets = propertyAssets + Math.max(0, financialAssets);
-  const thresholds = ASSET_TEST_THRESHOLDS[relationshipStatus][isHomeowner ? 'homeowner' : 'nonHomeowner'];
+  const adjustedThresholds = getAdjustedAssetTestThresholds(cpiAdjustmentFactor);
+  const thresholds = adjustedThresholds[relationshipStatus][isHomeowner ? 'homeowner' : 'nonHomeowner'];
   
   if (totalAssets <= thresholds.fullPension) {
     return {
@@ -291,7 +312,8 @@ export function getAgePensionAmounts(
   userSalary: number,
   partnerSalary: number,
   userAge: number,
-  partnerAge: number
+  partnerAge: number,
+  cpiAdjustmentFactor: number = 1.0
 ): { userPension: number; partnerPension: number } {
   
   const financialAssets = savings + superannuation - mortgageBalance;
@@ -304,7 +326,8 @@ export function getAgePensionAmounts(
     annualIncome: userSalary,
     partnerAnnualIncome: partnerSalary,
     age: userAge,
-    partnerAge
+    partnerAge,
+    cpiAdjustmentFactor
   });
   
   return {
