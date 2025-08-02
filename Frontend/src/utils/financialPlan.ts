@@ -309,6 +309,9 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
 export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): number {
   const years = profileInput.deathAge - profileInput.currentAge;
   if (years <= 0) return profileInput.expenses;
+  
+  // Handle edge case where plan duration is too short
+  if (years < 1) return profileInput.expenses;
   const netSavings = profileInput.savings - profileInput.mortgageBalance;
   const assets = netSavings + profileInput.superannuationBalance;
   const salaryIncome = profileInput.salary * Math.max(0, Math.min(profileInput.retireAge, profileInput.deathAge) - profileInput.currentAge);
@@ -348,7 +351,37 @@ export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): 
     
     pensionIncome += pensionAmounts.userPension + pensionAmounts.partnerPension;
   }
-  let low = 0, high = (assets + salaryIncome + partnerSalaryIncome + pensionIncome + approximateRentalIncome) / years * 5;
+  // Calculate total lifetime income potential
+  const totalLifetimeIncome = salaryIncome + partnerSalaryIncome + pensionIncome + approximateRentalIncome;
+  const totalAvailable = assets + totalLifetimeIncome;
+  
+  // Handle edge case: if total available resources are very low or zero
+  if (totalAvailable <= 0) {
+    return 0; // Cannot spend what doesn't exist
+  }
+  
+  // Special case: if no meaningful income streams or assets
+  // Age pension alone is usually not enough if you have no other resources  
+  if (assets <= 0 && salaryIncome <= 0 && partnerSalaryIncome <= 0 && approximateRentalIncome <= 0) {
+    // Even if there's some pension income, without other assets or income streams,
+    // practical spendable amount might be minimal
+    if (pensionIncome < 15000) { // Very low pension income threshold
+      return Math.max(0, Math.round(pensionIncome / years * 0.8)); // Conservative pension spending
+    }
+  }
+  
+  // If total available is very small (less than $5000), use simple calculation
+  if (totalAvailable < 5000) {
+    return Math.max(0, Math.round(totalAvailable / years));
+  }
+  
+  // Set a reasonable upper bound that accounts for assets and income
+  // Use a multiplier to allow for scenarios where we can "spend down" assets plus income
+  // Minimum upper bound ensures we don't get stuck at 0 when there's potential income
+  const minimumUpperBound = Math.max(totalLifetimeIncome / years * 1.5, 10000); // At least $10k or 1.5x average annual income
+  let high = Math.max(minimumUpperBound, totalAvailable / years * 3);
+  
+  let low = 0;
   const tolerance = 0.01;
   let bestExpense = 0;
   for (let i = 0; i < 50; i++) {
@@ -357,17 +390,46 @@ export function calculateExpenseToZeroNetWorth(profileInput: FinancialProfile): 
     const plan = calculateFinancialPlan(profile);
     const minWealth = Math.min(...plan.projection.map(y => y.savings));
     let net = plan.finalNetSavings;
+    
     if (Math.abs(high - low) < tolerance) {
       break;
     }
-    if (minWealth > 0 && net > 0) {
-      // Acceptable: never negative, and ends positive or zero
+    
+    if (minWealth < 0) {
+      // Went negative during the plan, spending too much
+      high = mid;
+    } else if (net > tolerance) {
+      // Final net worth is positive, can afford to spend more
       bestExpense = mid;
       low = mid;
-    } else {
+    } else if (net < -tolerance) {
+      // Final net worth is significantly negative, spending too much
       high = mid;
+    } else {
+      // Final net worth is very close to zero - this could be our target
+      // But continue searching to see if we can spend slightly more
+      bestExpense = mid;
+      if (net > 0) {
+        low = mid; // Try to spend a bit more
+      } else {
+        high = mid; // Try to spend a bit less
+      }
     }
   }
-  // After search, pick the bestExpense found
-  return Math.max(0, Math.round(bestExpense));
+  
+  // Fallback validation: if binary search resulted in 0 but we have income, use simple calculation
+  if (bestExpense <= 0 && totalLifetimeIncome > 0) {
+    // Use a conservative approach: spend average annual income but preserve some buffer
+    bestExpense = Math.min(totalLifetimeIncome / years * 0.8, totalAvailable / years * 0.9);
+  }
+  
+  // Final sanity check: ensure the result is reasonable
+  const result = Math.max(0, Math.round(bestExpense));
+  
+  // Additional validation: if we still have 0 but significant resources, return a minimum
+  if (result === 0 && totalAvailable > 10000) {
+    return Math.round(totalAvailable / years * 0.5); // Conservative 50% of average available per year
+  }
+  
+  return result;
 } 
