@@ -823,9 +823,6 @@ describe('calculateExpenseToZeroNetWorth', () => {
       deathAge: 90
     })
     
-    // Override the pension calculation to return a more modest amount
-    const originalPensionAmount = 20000 // Reasonable annual pension
-    
     const expense = calculateExpenseToZeroNetWorth(profile)
     
     console.log(`Test case - Salary: ${profile.salary}, Calculated Expense: ${expense}`)
