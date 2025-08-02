@@ -90,6 +90,7 @@ const props = defineProps<{
   }>;
   currentAge?: number;
   retirementAge?: number;
+  cpiGrowthRate?: number;
 }>();
 const chart = ref<HTMLDivElement | null>(null);
 const chartContainer = ref<HTMLDivElement | null>(null);
@@ -123,8 +124,18 @@ function renderChart() {
       : p.propertyAssets
   );
   
-  // Prepare pension income data
-  const pensionIncome = props.projection.map(_p => _p.pensionIncome ?? 0);
+  // Prepare pension income data (inflation-adjusted if toggled)
+  const pensionIncome = props.projection.map((p) => {
+    const basePension = p.pensionIncome ?? 0;
+    if (useInflationAdjusted && props.currentAge && props.cpiGrowthRate) {
+      // Calculate years from current age
+      const yearsFromNow = p.age - props.currentAge;
+      // Apply inflation adjustment factor to show real purchasing power
+      const inflationAdjustmentFactor = Math.pow(1 + props.cpiGrowthRate, -yearsFromNow);
+      return basePension * inflationAdjustmentFactor;
+    }
+    return basePension;
+  });
   
   // Use savings data (inflation-adjusted if toggled)
   const savingsData = props.projection.map(p => 

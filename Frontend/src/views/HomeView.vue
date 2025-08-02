@@ -18,6 +18,7 @@
           :projection="projection" 
           :current-age="currentProfile?.currentAge"
           :retirement-age="currentProfile?.retireAge"
+          :cpi-growth-rate="currentProfile?.cpiGrowthRate"
         />
       </div>
       <div class="dashboard-right">
