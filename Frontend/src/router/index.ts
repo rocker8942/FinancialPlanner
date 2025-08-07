@@ -1,13 +1,15 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import CoverView from '../views/CoverView.vue';
-import LoginView from '../views/LoginView.vue';
-import RegisterView from '../views/RegisterView.vue';
-import ProfileView from '../views/ProfileView.vue';
-import PlansView from '../views/PlansView.vue';
-import ProgressView from '../views/ProgressView.vue';
-import SettingsView from '../views/SettingsView.vue';
 import { useAuthStore } from '../store/auth';
+
+// Lazy load all route components for code splitting
+const HomeView = () => import('../views/HomeView.vue');
+const CoverView = () => import('../views/CoverView.vue');
+const LoginView = () => import('../views/LoginView.vue');
+const RegisterView = () => import('../views/RegisterView.vue');
+const ProfileView = () => import('../views/ProfileView.vue');
+const PlansView = () => import('../views/PlansView.vue');
+const ProgressView = () => import('../views/ProgressView.vue');
+const SettingsView = () => import('../views/SettingsView.vue');
 
 const routes: RouteRecordRaw[] = [
   { path: '/', name: 'Cover', component: CoverView },

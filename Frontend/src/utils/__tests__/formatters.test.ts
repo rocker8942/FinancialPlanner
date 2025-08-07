@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, beforeAll } from 'vitest'
 import { formatCurrency, formatNumber, parseFormattedNumber, formatPercentage, generateShareableUrl } from '../formatters'
 
 // Mock window.location for URL generation tests

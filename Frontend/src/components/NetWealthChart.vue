@@ -71,7 +71,26 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, onUnmounted } from 'vue';
-import * as echarts from 'echarts';
+// Tree-shaken ECharts imports - only load what we need
+import * as echarts from 'echarts/core';
+import {
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+  MarkLineComponent
+} from 'echarts/components';
+import { LineChart } from 'echarts/charts';
+import { CanvasRenderer } from 'echarts/renderers';
+
+// Register only the components we need
+echarts.use([
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+  MarkLineComponent,
+  LineChart,
+  CanvasRenderer
+]);
 import { formatCurrency } from '../utils/formatters';
 
 const props = defineProps<{ 

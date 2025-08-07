@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
+    "build:analyze": "npm run build && start dist/stats.html",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
@@ -30,6 +31,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
     "jsdom": "^26.1.0",
+    "rollup-plugin-visualizer": "^6.0.3",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.8.3",
     "vite": "^7.0.4",
