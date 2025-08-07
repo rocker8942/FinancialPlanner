@@ -444,6 +444,10 @@ import { getAgePensionAmounts } from '../services/agePensionService';
 
 const emit = defineEmits(['update']);
 
+const props = defineProps<{
+  urlParams?: Partial<FinancialProfile>;
+}>();
+
 const isLoaded = ref(false);
 
 // Reactive values for the new asset structure
@@ -1253,6 +1257,7 @@ function updateFormattedValues() {
 }
 
 async function load() {
+  // Step 1: Load from localStorage or API (existing behavior)
   const localData = localStorage.getItem(LOCAL_KEY);
   if (localData) {
     loadFromLocalStorage();
@@ -1290,7 +1295,37 @@ async function load() {
       console.log('No existing profile found, using defaults');
     }
   }
+  
+  // Step 2: Override with URL parameters if provided (highest priority)
+  if (props.urlParams && Object.keys(props.urlParams).length > 0) {
+    applyUrlParameters();
+  }
+  
   isLoaded.value = true;
+}
+
+function applyUrlParameters() {
+  if (!props.urlParams) return;
+  
+  // Override values with URL parameters when they exist
+  if (props.urlParams.currentAge !== undefined) currentAge.value = props.urlParams.currentAge;
+  if (props.urlParams.retireAge !== undefined) retireAge.value = props.urlParams.retireAge;
+  if (props.urlParams.superannuationBalance !== undefined) superannuationBalance.value = props.urlParams.superannuationBalance;
+  if (props.urlParams.salary !== undefined) salary.value = props.urlParams.salary;
+  if (props.urlParams.expenses !== undefined) expenses.value = props.urlParams.expenses;
+  if (props.urlParams.propertyAssets !== undefined) propertyAssets.value = props.urlParams.propertyAssets;
+  if (props.urlParams.partnerAge !== undefined) partnerAge.value = props.urlParams.partnerAge;
+  if (props.urlParams.partnerRetireAge !== undefined) partnerRetireAge.value = props.urlParams.partnerRetireAge;
+  if (props.urlParams.savings !== undefined) savings.value = props.urlParams.savings;
+  if (props.urlParams.mortgageBalance !== undefined) mortgageBalance.value = props.urlParams.mortgageBalance;
+  if (props.urlParams.partnerSalary !== undefined) partnerSalary.value = props.urlParams.partnerSalary;
+  if (props.urlParams.relationshipStatus !== undefined) relationshipStatus.value = props.urlParams.relationshipStatus;
+  
+  // Update formatted values and save to localStorage
+  updateFormattedValues();
+  saveToLocalStorage();
+  
+  // The watchEffect will automatically trigger the calculation when values are updated
 }
 
 
@@ -1299,6 +1334,13 @@ onMounted(() => {
   sectionOpen.value = { profile: true, assets: false, income: false, advanced: false };
   load();
 });
+
+// Watch for changes to urlParams prop
+watch(() => props.urlParams, (newParams) => {
+  if (newParams && Object.keys(newParams).length > 0) {
+    applyUrlParameters();
+  }
+}, { deep: true, immediate: true });
 
 onUnmounted(() => {
   // Clean up any running intervals

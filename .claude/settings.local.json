@@ -20,7 +20,8 @@
       "Bash(node:*)",
       "Bash(timeout 5 npm run build)",
       "Bash(git stash:*)",
-      "Bash(npm run test:*)"
+      "Bash(npm run test:*)",
+      "Bash(npm run lint)"
     ],
     "deny": []
   }

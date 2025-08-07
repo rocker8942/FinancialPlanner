@@ -23,14 +23,15 @@
       </div>
       <div class="dashboard-right">
         <!-- <SummaryCard :netWorth="finalWealth" :details="summaryDetailsFiltered" /> -->
-        <AssetInputForm @update="onProfileUpdate" />
+        <AssetInputForm @update="onProfileUpdate" :urlParams="urlParams" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import NetWealthChart from '../components/NetWealthChart.vue';
 import AssetInputForm from '../components/AssetInputForm.vue';
 import SummaryCards from '../components/SummaryCards.vue';
@@ -54,6 +55,8 @@ interface ProjectionData {
 
 const projection = ref<ProjectionData[]>([]);
 const currentProfile = ref<FinancialProfile | null>(null);
+const route = useRoute();
+const urlParams = ref<Partial<FinancialProfile>>({});
 // const finalWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].wealth : 0);
 // const finalPropertyAssets = computed(() => projection.value.length ? projection.value[projection.value.length - 1].propertyAssets : 0);
 // const finalSavings = computed(() => projection.value.length ? projection.value[projection.value.length - 1].savings : 0);
@@ -123,6 +126,43 @@ function onProfileUpdate(profile: FinancialProfile) {
     projection.value = [];
   }
 }
+
+function parseUrlParameters() {
+  const query = route.query;
+  const params: Partial<FinancialProfile> = {};
+  
+  // Parse URL parameters and convert to appropriate types
+  if (query.currentAge) params.currentAge = Number(query.currentAge);
+  if (query.retirementAge) params.retireAge = Number(query.retirementAge);
+  if (query.retireAge) params.retireAge = Number(query.retireAge); // Support both variants
+  if (query.super) params.superannuationBalance = Number(query.super);
+  if (query.income) params.salary = Number(query.income);
+  if (query.expense) params.expenses = Number(query.expense);
+  if (query.investmentProperty) params.propertyAssets = Number(query.investmentProperty);
+  if (query.partnerAge) params.partnerAge = Number(query.partnerAge);
+  if (query.partnerRetirementAge) params.partnerRetireAge = Number(query.partnerRetirementAge);
+  if (query.partnerRetireAge) params.partnerRetireAge = Number(query.partnerRetireAge); // Support both variants
+  if (query.savings) params.savings = Number(query.savings);
+  if (query.mortgage) params.mortgageBalance = Number(query.mortgage);
+  if (query.partnerSalary) params.partnerSalary = Number(query.partnerSalary);
+  
+  // Automatically set relationship status to "couple" if any partner parameters are provided
+  const hasPartnerParams = query.partnerAge || query.partnerRetirementAge || query.partnerRetireAge || query.partnerSalary;
+  if (hasPartnerParams) {
+    params.relationshipStatus = 'couple';
+  }
+  
+  urlParams.value = params;
+}
+
+onMounted(() => {
+  parseUrlParameters();
+});
+
+// Watch for route changes
+watch(() => route.query, () => {
+  parseUrlParameters();
+}, { immediate: true });
 </script>
 
 <style scoped>
