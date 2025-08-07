@@ -146,6 +146,15 @@ function parseUrlParameters() {
   if (query.mortgage) params.mortgageBalance = Number(query.mortgage);
   if (query.partnerSalary) params.partnerSalary = Number(query.partnerSalary);
   
+  // Advanced options
+  if (query.deathAge) params.deathAge = Number(query.deathAge);
+  if (query.propertyGrowthRate) params.propertyGrowthRate = Number(query.propertyGrowthRate) / 100;
+  if (query.savingsGrowthRate) params.savingsGrowthRate = Number(query.savingsGrowthRate) / 100;
+  if (query.mortgageRate) params.mortgageRate = Number(query.mortgageRate) / 100;
+  if (query.superannuationRate) params.superannuationRate = Number(query.superannuationRate) / 100;
+  if (query.cpiGrowthRate) params.cpiGrowthRate = Number(query.cpiGrowthRate) / 100;
+  if (query.propertyRentalYield) params.propertyRentalYield = Number(query.propertyRentalYield) / 100;
+  
   // Automatically set relationship status to "couple" if any partner parameters are provided
   const hasPartnerParams = query.partnerAge || query.partnerRetirementAge || query.partnerRetireAge || query.partnerSalary;
   if (hasPartnerParams) {

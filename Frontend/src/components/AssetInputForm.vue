@@ -430,6 +430,20 @@
       <span class="expense-info">Auto-calculated annual expense: {{ formatCurrency(calculatedExpense) }}</span>
     </div>
 
+    <!-- Share Button -->
+    <div class="form-group">
+      <button 
+        type="button" 
+        :class="['share-btn', { success: shareSuccess }]" 
+        @click="handleShare"
+        :disabled="shareButtonDisabled"
+        :title="shareButtonDisabled ? 'Enter some financial data to share' : 'Copy shareable link to clipboard'"
+      >
+        <span class="material-icons share-icon">{{ shareSuccess ? 'check' : 'share' }}</span>
+        <span>{{ shareSuccess ? 'Link Copied!' : 'Share Plan' }}</span>
+      </button>
+    </div>
+
     <!-- Button removed: calculation is now automatic on input change -->
   </form>
 </template>
@@ -439,7 +453,7 @@ import { ref, onMounted, onUnmounted, watch, watchEffect, computed } from 'vue';
 import { getFinancialProfile } from '../services/api';
 import { calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
-import { formatCurrency, formatNumber, parseFormattedNumber, formatPercentage } from '../utils/formatters';
+import { formatCurrency, formatNumber, parseFormattedNumber, formatPercentage, generateShareableUrl } from '../utils/formatters';
 import { getAgePensionAmounts } from '../services/agePensionService';
 
 const emit = defineEmits(['update']);
@@ -524,6 +538,17 @@ const calculatedPartnerPension = computed(() => {
 // Checkbox for zero net worth at death
 const zeroNetWorthAtDeath = ref(false);
 const calculatedExpense = ref(0);
+
+// Share functionality
+const shareSuccess = ref(false);
+const shareButtonDisabled = computed(() => {
+  // Button is disabled if no meaningful data is entered
+  return currentAge.value <= 18 && 
+         salary.value <= 0 && 
+         savings.value <= 0 && 
+         propertyAssets.value <= 0 && 
+         superannuationBalance.value <= 0;
+});
 
 // Formatted string representations for display
 const propertyAssetsFormatted = ref('0');
@@ -1328,6 +1353,58 @@ function applyUrlParameters() {
   // The watchEffect will automatically trigger the calculation when values are updated
 }
 
+// Handle share functionality
+async function handleShare() {
+  if (shareButtonDisabled.value) return;
+  
+  try {
+    // Build current profile
+    const profile: FinancialProfile = {
+      propertyAssets: propertyAssets.value,
+      savings: savings.value,
+      mortgageBalance: mortgageBalance.value,
+      mortgageRate: mortgageRate.value,
+      superannuationBalance: superannuationBalance.value,
+      superannuationRate: superannuationRate.value,
+      salary: salary.value,
+      partnerSalary: partnerSalary.value,
+      expenses: expenses.value,
+      currentAge: currentAge.value,
+      retireAge: retireAge.value,
+      deathAge: deathAge.value,
+      savingsGrowthRate: savingsGrowthRate.value,
+      propertyGrowthRate: propertyGrowthRate.value,
+      propertyRentalYield: propertyRentalYield.value,
+      cpiGrowthRate: cpiGrowthRate.value,
+      pensionAmount: calculatedUserPension.value,
+      pensionStartAge: 67,
+      partnerPensionAmount: calculatedPartnerPension.value,
+      partnerPensionStartAge: 67,
+      partnerAge: partnerAge.value,
+      partnerRetireAge: partnerRetireAge.value,
+      relationshipStatus: relationshipStatus.value,
+      isHomeowner: isHomeowner.value
+    };
+    
+    // Generate shareable URL
+    const shareableUrl = generateShareableUrl(profile);
+    
+    // Copy to clipboard
+    await navigator.clipboard.writeText(shareableUrl);
+    
+    // Show success feedback
+    shareSuccess.value = true;
+    setTimeout(() => {
+      shareSuccess.value = false;
+    }, 2000);
+    
+  } catch (error) {
+    console.error('Failed to copy to clipboard:', error);
+    // Fallback: try to select text manually
+    // For now, just log the error - in a real app you might show a toast notification
+  }
+}
+
 
 onMounted(() => {
   // Expand 'person profile', close other sections on load
@@ -1535,6 +1612,53 @@ onUnmounted(() => {
 
 .submit-btn:active {
   background: #10b981;
+}
+
+.share-btn {
+  width: 100%;
+  padding: 0.6rem 1.2rem;
+  background: #374151;
+  color: #e0e3e8;
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.share-btn:hover:not(:disabled) {
+  background: #4b5563;
+  border-color: #6ee7b7;
+  color: #6ee7b7;
+}
+
+.share-btn:active:not(:disabled) {
+  background: #6b7280;
+  transform: translateY(1px);
+}
+
+.share-btn:disabled {
+  background: #1f2937;
+  color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.5;
+  border-color: #374151;
+}
+
+.share-icon {
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.share-btn.success {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
 }
 
 .form-section {

@@ -49,3 +49,93 @@ export function formatPercentage(value: number): string {
   // Format with up to 2 decimal places, removing trailing zeros
   return percentage.toString();
 }
+
+/**
+ * Generates a shareable URL with financial profile data as query parameters
+ * @param profile - The financial profile to encode in the URL
+ * @returns Complete shareable URL string
+ */
+export function generateShareableUrl(profile: any): string {
+  const baseUrl = `${window.location.origin}/retirementplanner`;
+  const params = new URLSearchParams();
+  
+  // Add non-zero values to keep URL clean
+  if (profile.currentAge && profile.currentAge !== 30) {
+    params.append('currentAge', profile.currentAge.toString());
+  }
+  
+  if (profile.retireAge && profile.retireAge !== 65) {
+    params.append('retireAge', profile.retireAge.toString());
+  }
+  
+  if (profile.superannuationBalance && profile.superannuationBalance > 0) {
+    params.append('super', profile.superannuationBalance.toString());
+  }
+  
+  if (profile.salary && profile.salary > 0) {
+    params.append('income', profile.salary.toString());
+  }
+  
+  if (profile.expenses && profile.expenses > 0) {
+    params.append('expense', profile.expenses.toString());
+  }
+  
+  if (profile.propertyAssets && profile.propertyAssets > 0) {
+    params.append('investmentProperty', profile.propertyAssets.toString());
+  }
+  
+  if (profile.savings && profile.savings > 0) {
+    params.append('savings', profile.savings.toString());
+  }
+  
+  if (profile.mortgageBalance && profile.mortgageBalance > 0) {
+    params.append('mortgage', profile.mortgageBalance.toString());
+  }
+  
+  // Partner information
+  if (profile.relationshipStatus === 'couple') {
+    if (profile.partnerAge && profile.partnerAge !== 30) {
+      params.append('partnerAge', profile.partnerAge.toString());
+    }
+    
+    if (profile.partnerRetireAge && profile.partnerRetireAge !== 65) {
+      params.append('partnerRetireAge', profile.partnerRetireAge.toString());
+    }
+    
+    if (profile.partnerSalary && profile.partnerSalary > 0) {
+      params.append('partnerSalary', profile.partnerSalary.toString());
+    }
+  }
+  
+  // Advanced options (only if different from defaults)
+  if (profile.deathAge && profile.deathAge !== 90) {
+    params.append('deathAge', profile.deathAge.toString());
+  }
+  
+  if (profile.propertyGrowthRate && profile.propertyGrowthRate !== 0.03) {
+    params.append('propertyGrowthRate', (profile.propertyGrowthRate * 100).toString());
+  }
+  
+  if (profile.savingsGrowthRate && profile.savingsGrowthRate !== 0.025) {
+    params.append('savingsGrowthRate', (profile.savingsGrowthRate * 100).toString());
+  }
+  
+  if (profile.mortgageRate && profile.mortgageRate !== 0.06) {
+    params.append('mortgageRate', (profile.mortgageRate * 100).toString());
+  }
+  
+  if (profile.superannuationRate && profile.superannuationRate !== 0.07) {
+    params.append('superannuationRate', (profile.superannuationRate * 100).toString());
+  }
+  
+  if (profile.cpiGrowthRate && profile.cpiGrowthRate !== 0.03) {
+    params.append('cpiGrowthRate', (profile.cpiGrowthRate * 100).toString());
+  }
+  
+  if (profile.propertyRentalYield && profile.propertyRentalYield !== 0.033) {
+    params.append('propertyRentalYield', (profile.propertyRentalYield * 100).toString());
+  }
+  
+  const queryString = params.toString();
+  return queryString ? `${baseUrl}?${queryString}` : baseUrl;
+}
