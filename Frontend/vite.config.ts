@@ -1,20 +1,20 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
-import { visualizer } from 'rollup-plugin-visualizer'
+// import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     tailwindcss(),
     vue(),
-    // Bundle analyzer - generates stats.html after build
-    visualizer({
-      filename: 'dist/stats.html',
-      open: true,
-      gzipSize: true,
-      brotliSize: true,
-    })
+    // Bundle analyzer - generates stats.html after build (disabled)
+    // visualizer({
+    //   filename: 'dist/stats.html',
+    //   open: true,
+    //   gzipSize: true,
+    //   brotliSize: true,
+    // })
   ],
   server: {
     proxy: {
