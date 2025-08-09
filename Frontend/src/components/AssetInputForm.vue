@@ -1848,7 +1848,7 @@ onUnmounted(() => {
   font-size: 0.75rem;
   color: #e0e3e8;
   font-weight: normal;
-  margin-bottom: 0;
+  margin-bottom: 0.4rem;
 }
 
 .form-group .checkbox-label input[type="checkbox"] {
