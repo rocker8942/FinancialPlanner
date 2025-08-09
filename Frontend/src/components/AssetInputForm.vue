@@ -1821,8 +1821,9 @@ onUnmounted(() => {
 
 .radio-group {
   display: flex;
-  gap: 1rem;
-  margin-top: 0.5rem;
+  gap: 2rem;
+  margin-top: 0.75rem;
+  align-items: flex-start;
 }
 
 .radio-label {
@@ -1833,6 +1834,9 @@ onUnmounted(() => {
   color: #e0e3e8;
   font-weight: normal;
   margin-bottom: 0;
+  margin-right: 1rem;
+  min-width: fit-content;
+  white-space: nowrap;
 }
 
 .radio-label input[type="radio"] {
@@ -1960,8 +1964,9 @@ onUnmounted(() => {
   
   .radio-group {
     flex-direction: row;
-    gap: 0.75rem;
+    gap: 1.25rem;
     flex-wrap: wrap;
+    margin-top: 0.75rem;
   }
 }
 
@@ -2020,6 +2025,12 @@ onUnmounted(() => {
     font-size: 0.7rem;
   }
   
+  /* Extra spacing for radio buttons on very narrow screens */
+  .radio-group {
+    gap: 2.5rem;
+    margin-top: 1rem;
+  }
+  
   .privacy-notice {
     padding: 0.5rem 0.75rem;
     font-size: 0.75rem;
@@ -2039,6 +2050,41 @@ onUnmounted(() => {
     /* Prevent buttons from causing horizontal overflow */
     max-width: 100%;
     box-sizing: border-box;
+  }
+}
+
+/* iOS Safari/Chrome specific adjustments */
+@supports (-webkit-touch-callout: none) {
+  .radio-group {
+    gap: 2.5rem !important;
+    margin-top: 1rem !important;
+  }
+  
+  .radio-label {
+    margin-right: 1.5rem !important;
+    padding-right: 0.5rem;
+  }
+  
+  /* Force layout recalculation on iOS */
+  .radio-group::after {
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+  }
+}
+
+/* Additional iOS mobile browser detection */
+@media screen and (max-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
+  .radio-group {
+    gap: 3rem !important;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+  }
+  
+  .radio-label {
+    flex-shrink: 0;
+    margin-right: 2rem !important;
   }
 }
 </style>
