@@ -191,7 +191,7 @@ onMounted(() => {
   parseUrlParameters();
 });
 
-// Watch for route changes (both query params and hash fragments)
+// Watch for route changes (both query params and hash fragments).
 watch(() => route.query, () => {
   parseUrlParameters();
 }, { immediate: true });
