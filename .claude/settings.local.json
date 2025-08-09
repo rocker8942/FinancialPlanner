@@ -28,7 +28,9 @@
       "Bash(timeout 15 npm run dev)",
       "Bash(timeout 10s npm run dev)",
       "Bash(echo $APPDATA)",
-      "Bash(claude config-path)"
+      "Bash(claude config-path)",
+      "Bash(git push:*)",
+      "Bash(timeout 5s npm run dev)"
     ],
     "deny": []
   }

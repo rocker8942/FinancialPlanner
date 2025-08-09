@@ -1948,4 +1948,81 @@ onUnmounted(() => {
     gap: 0.5rem;
   }
 }
+
+/* iPhone and narrow mobile screens */
+@media (max-width: 414px) {
+  .asset-form {
+    padding: 0.5rem;
+    /* Ensure form never exceeds viewport */
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .form-section {
+    padding: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .form-section-title {
+    font-size: 0.8rem;
+    padding: 0.375rem;
+  }
+  
+  .form-group {
+    margin-bottom: 0.75rem;
+  }
+  
+  .input-with-buttons {
+    /* Ensure inputs don't overflow */
+    max-width: 100%;
+    min-width: 0;
+  }
+  
+  .input-with-buttons input {
+    padding: 0.625rem 0.375rem;
+    font-size: 0.85rem;
+    /* Prevent input from expanding beyond container */
+    min-width: 0;
+    flex: 1;
+  }
+  
+  .increment-btn {
+    width: 32px;
+    height: 36px;
+    font-size: 0.9rem;
+    /* Ensure buttons don't cause overflow */
+    flex-shrink: 0;
+  }
+  
+  .form-group label {
+    font-size: 0.75rem;
+    margin-bottom: 0.375rem;
+  }
+  
+  .help-text, .validation-error {
+    font-size: 0.7rem;
+  }
+  
+  .privacy-notice {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .privacy-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  
+  /* Ensure action buttons are properly sized */
+  .action-button, .calculate-btn, .reset-btn {
+    padding: 0.625rem 1rem;
+    font-size: 0.85rem;
+    /* Prevent buttons from causing horizontal overflow */
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
 </style>

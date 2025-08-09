@@ -340,4 +340,41 @@ watch(() => route.hash, () => {
     align-self: flex-start;
   }
 }
+
+/* iPhone and narrow mobile screens */
+@media (max-width: 414px) {
+  .dashboard {
+    padding: 0.125rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+    gap: 0.375rem;
+  }
+  
+  .beta-badge {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.65rem;
+  }
+  
+  .dashboard-main {
+    gap: 0.5rem;
+  }
+  
+  .dashboard-right {
+    /* Remove fixed width constraints for iPhone */
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+    /* Ensure proper spacing */
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Ensure the form doesn't exceed viewport */
+  .dashboard-right > * {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
 </style>
