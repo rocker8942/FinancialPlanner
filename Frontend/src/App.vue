@@ -1,6 +1,6 @@
 
 <template>
-  <div class="min-h-screen bg-gray-900 text-gray-100 font-sans flex">
+  <div class="min-h-screen bg-gray-900 text-gray-100 font-sans flex max-w-full overflow-hidden">
     <!-- Sidebar: left navigation -->
     <aside :class="['bg-gray-800 flex flex-col justify-between min-h-screen shadow-lg transition-all duration-300', 'hidden md:flex', sidebarCollapsed ? 'w-16' : 'w-64']">
       <div>
@@ -65,9 +65,9 @@
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col max-w-full overflow-hidden">
       <!-- Mobile menu toggle -->
-      <div class="md:hidden flex items-center justify-between bg-gray-800 px-4 py-3 border-b border-gray-700">
+      <div class="md:hidden flex items-center justify-between bg-gray-800 px-4 py-3 border-b border-gray-700 max-w-full">
         <div class="flex items-center gap-2">
           <span class="text-xl font-bold text-teal-300">FP</span>
           <span class="beta-badge-mobile">β</span>
@@ -77,14 +77,14 @@
         </button>
       </div>
       
-      <main class="flex-1 p-4 md:p-8">
+      <main class="flex-1 p-4 md:p-8 max-w-full overflow-hidden">
         <router-view />
       </main>
       
       <!-- Footer -->
-      <footer class="bg-gray-800 border-t border-gray-700 py-4 px-8">
+      <footer class="bg-gray-800 border-t border-gray-700 py-4 px-4 md:px-8 max-w-full overflow-hidden">
         <div class="flex justify-center">
-          <p class="text-gray-400 text-sm">
+          <p class="text-gray-400 text-sm text-center">
             Have questions or feedback? 
             <a href="mailto:help@moneystock.net" class="text-teal-300 hover:text-teal-200 underline ml-1">
               Contact us

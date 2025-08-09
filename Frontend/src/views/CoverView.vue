@@ -985,4 +985,76 @@ function startPlanning() {
     text-align: center;
   }
 }
+
+/* iPhone and narrow mobile screens */
+@media (max-width: 414px) {
+  .cover-page {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 0.5rem;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  .hero-section {
+    padding: 2rem 0.5rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.125rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+  
+  .section {
+    margin-bottom: 2.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .hero-nav {
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .nav-link {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .start-button {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .feature-card,
+  .methodology-card,
+  .privacy-card,
+  .pension-detail-card {
+    padding: 1.5rem;
+  }
+  
+  .privacy-section,
+  .pension-section,
+  .faq-section {
+    padding: 2rem 0.75rem;
+  }
+  
+  .final-cta-section {
+    padding: 2.5rem 0.75rem;
+  }
+}
 </style>

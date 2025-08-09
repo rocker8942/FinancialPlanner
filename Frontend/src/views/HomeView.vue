@@ -347,6 +347,11 @@ watch(() => route.hash, () => {
     padding: 0.5rem;
     /* Center the entire dashboard content */
     align-items: center;
+    /* Ensure container never exceeds viewport */
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
   
   .dashboard-header {

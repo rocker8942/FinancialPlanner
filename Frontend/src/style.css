@@ -30,6 +30,10 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* Prevent horizontal overflow on mobile */
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 h1 {
@@ -63,6 +67,23 @@ button:focus-visible {
 #app {
   width: 100%;
   min-height: 100vh;
+  /* Prevent overflow issues on mobile */
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Global box-sizing for all elements to prevent overflow */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Additional mobile viewport protection */
+@media (max-width: 768px) {
+  html, body, #app {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
 }
 
 @media (prefers-color-scheme: light) {

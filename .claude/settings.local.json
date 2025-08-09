@@ -30,7 +30,8 @@
       "Bash(echo $APPDATA)",
       "Bash(claude config-path)",
       "Bash(git push:*)",
-      "Bash(timeout 5s npm run dev)"
+      "Bash(timeout 5s npm run dev)",
+      "Bash(claude mcp add:*)"
     ],
     "deny": []
   }
