@@ -344,12 +344,23 @@ watch(() => route.hash, () => {
 /* iPhone and narrow mobile screens */
 @media (max-width: 414px) {
   .dashboard {
-    padding: 0.125rem;
+    padding: 0.5rem;
+    /* Center the entire dashboard content */
+    align-items: center;
+  }
+  
+  .dashboard-header {
+    /* Center the header content */
+    text-align: center;
+    width: 100%;
   }
   
   .page-title {
     font-size: 1.5rem;
     gap: 0.375rem;
+    /* Center the title and badge */
+    justify-content: center;
+    text-align: center;
   }
   
   .beta-badge {
@@ -359,6 +370,15 @@ watch(() => route.hash, () => {
   
   .dashboard-main {
     gap: 0.5rem;
+    /* Center the main content sections */
+    align-items: center;
+    width: 100%;
+  }
+  
+  .dashboard-center {
+    /* Center charts and summary cards */
+    align-items: center;
+    width: 100%;
   }
   
   .dashboard-right {
@@ -366,12 +386,13 @@ watch(() => route.hash, () => {
     min-width: unset;
     max-width: unset;
     width: 100%;
-    /* Ensure proper spacing */
+    /* Center the form */
+    align-items: center;
     margin: 0;
     padding: 0;
   }
   
-  /* Ensure the form doesn't exceed viewport */
+  /* Ensure the form doesn't exceed viewport but stays centered */
   .dashboard-right > * {
     max-width: 100%;
     overflow-x: hidden;

@@ -217,6 +217,15 @@ function closeMobileMenu() {
   .hidden-on-iphone {
     display: none !important;
   }
+  
+  /* Center main content on iPhone */
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.5rem !important;
+  }
 }
 </style>
 
