@@ -137,7 +137,6 @@ const annualPension = computed(() => {
 .summary-card:hover {
   border-color: #6ee7b7;
   box-shadow: 0 4px 16px rgba(0,0,0,0.16);
-  transform: translateY(-2px);
 }
 
 .summary-card-content {

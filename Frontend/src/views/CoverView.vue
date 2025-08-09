@@ -823,8 +823,8 @@ function startPlanning() {
 
 /* Disclaimer Section */
 .disclaimer-section {
-  background: #451a03;
-  border: 2px solid #ea580c;
+  background: rgba(69, 26, 3, 0.3);
+  border: 2px solid rgba(234, 88, 12, 0.6);
   border-radius: 1rem;
   padding: 2rem;
   margin: 3rem 0;
