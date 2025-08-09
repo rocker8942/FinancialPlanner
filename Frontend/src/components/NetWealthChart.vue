@@ -229,7 +229,12 @@ function renderChart() {
     legend: {
       data: ['Property Assets', 'Financial Assets', 'Pension Income'],
       top: 10,
-      selected: currentLegendSelection
+      selected: currentLegendSelection,
+      textStyle: {
+        color: '#e0e3e8'
+      },
+      inactiveColor: '#6b7280',
+      selectedMode: true
     },
     xAxis: { 
       type: 'category', 

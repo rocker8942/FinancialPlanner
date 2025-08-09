@@ -42,7 +42,7 @@
             <input 
               id="currentAge"
               v-model="currentAgeFormatted"
-              @focus="onFocus('currentAge')"
+              @focus="onFocus('currentAge', $event)"
               @blur="onBlur('currentAge')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -65,7 +65,7 @@
             <input 
               id="retireAge"
               v-model="retireAgeFormatted"
-              @focus="onFocus('retireAge')"
+              @focus="onFocus('retireAge', $event)"
               @blur="onBlur('retireAge')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -84,7 +84,7 @@
             <input 
               id="partnerAge"
               v-model="partnerAgeFormatted"
-              @focus="onFocus('partnerAge')"
+              @focus="onFocus('partnerAge', $event)"
               @blur="onBlur('partnerAge')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -101,7 +101,7 @@
             <input 
               id="partnerRetireAge"
               v-model="partnerRetireAgeFormatted"
-              @focus="onFocus('partnerRetireAge')"
+              @focus="onFocus('partnerRetireAge', $event)"
               @blur="onBlur('partnerRetireAge')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -129,7 +129,7 @@
             <input 
               id="propertyAssets"
               v-model="propertyAssetsFormatted"
-              @focus="onFocus('propertyAssets')"
+              @focus="onFocus('propertyAssets', $event)"
               @blur="onBlur('propertyAssets')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -147,7 +147,7 @@
             <input 
               id="savings"
               v-model="savingsFormatted"
-              @focus="onFocus('savings')"
+              @focus="onFocus('savings', $event)"
               @blur="onBlur('savings')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -167,7 +167,7 @@
             <input 
               id="mortgageBalance"
               v-model="mortgageBalanceFormatted"
-              @focus="onFocus('mortgageBalance')"
+              @focus="onFocus('mortgageBalance', $event)"
               @blur="onBlur('mortgageBalance')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -185,7 +185,7 @@
             <input 
               id="superannuationBalance"
               v-model="superannuationBalanceFormatted"
-              @focus="onFocus('superannuationBalance')"
+              @focus="onFocus('superannuationBalance', $event)"
               @blur="onBlur('superannuationBalance')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -213,7 +213,7 @@
             <input 
               id="salary"
               v-model="salaryFormatted"
-              @focus="onFocus('salary')"
+              @focus="onFocus('salary', $event)"
               @blur="onBlur('salary')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -230,7 +230,7 @@
             <input 
               id="partnerSalary"
               v-model="partnerSalaryFormatted"
-              @focus="onFocus('partnerSalary')"
+              @focus="onFocus('partnerSalary', $event)"
               @blur="onBlur('partnerSalary')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -256,7 +256,7 @@
             <input 
               id="expenses"
               v-model="expensesFormatted"
-              @focus="onFocus('expenses')"
+              @focus="onFocus('expenses', $event)"
               @blur="onBlur('expenses')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -304,7 +304,7 @@
             <input 
               id="deathAge"
               v-model="deathAgeFormatted"
-              @focus="onFocus('deathAge')"
+              @focus="onFocus('deathAge', $event)"
               @blur="onBlur('deathAge')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -321,7 +321,7 @@
             <input 
               id="propertyGrowthRate"
               v-model="propertyGrowthRateFormatted"
-              @focus="onFocus('propertyGrowthRate')"
+              @focus="onFocus('propertyGrowthRate', $event)"
               @blur="onBlur('propertyGrowthRate')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -339,7 +339,7 @@
             <input 
               id="propertyRentalYield"
               v-model="propertyRentalYieldFormatted"
-              @focus="onFocus('propertyRentalYield')"
+              @focus="onFocus('propertyRentalYield', $event)"
               @blur="onBlur('propertyRentalYield')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -357,7 +357,7 @@
             <input 
               id="savingsGrowthRate"
               v-model="savingsGrowthRateFormatted"
-              @focus="onFocus('savingsGrowthRate')"
+              @focus="onFocus('savingsGrowthRate', $event)"
               @blur="onBlur('savingsGrowthRate')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -375,7 +375,7 @@
             <input 
               id="mortgageRate"
               v-model="mortgageRateFormatted"
-              @focus="onFocus('mortgageRate')"
+              @focus="onFocus('mortgageRate', $event)"
               @blur="onBlur('mortgageRate')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -393,7 +393,7 @@
             <input 
               id="superannuationRate"
               v-model="superannuationRateFormatted"
-              @focus="onFocus('superannuationRate')"
+              @focus="onFocus('superannuationRate', $event)"
               @blur="onBlur('superannuationRate')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -411,7 +411,7 @@
             <input 
               id="cpiGrowthRate"
               v-model="cpiGrowthRateFormatted"
-              @focus="onFocus('cpiGrowthRate')"
+              @focus="onFocus('cpiGrowthRate', $event)"
               @blur="onBlur('cpiGrowthRate')"
               @keydown.enter="onEnter($event)"
               type="text" 
@@ -804,8 +804,17 @@ watch(partnerSalary, (newValue) => {
 });
 
 // Extend onFocus/onBlur to handle new pension fields
-function onFocus(fieldName: string) {
+function onFocus(fieldName: string, event?: Event) {
   focusedFields.value.add(fieldName);
+  
+  // Select all text when input is focused
+  if (event?.target && event.target instanceof HTMLInputElement) {
+    // Use setTimeout to ensure the selection happens after the focus event
+    setTimeout(() => {
+      (event.target as HTMLInputElement).select();
+    }, 0);
+  }
+  
   switch (fieldName) {
     case 'propertyAssets':
       propertyAssetsFormatted.value = propertyAssets.value.toString();
