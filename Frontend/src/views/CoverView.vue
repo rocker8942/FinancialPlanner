@@ -334,7 +334,7 @@
         <p>Start building your personalized Australian retirement projection with Age Pension calculations today.</p>
         <button @click="startPlanning" class="start-button large" aria-label="Get started with Australian retirement planning">
           Get Started With Free Calculator
-          <span class="material-icons" aria-hidden="true">launch</span>
+          <span class="material-icons" aria-hidden="true">arrow_forward</span>
         </button>
       </div>
     </section>
