@@ -38,6 +38,7 @@ import SummaryCards from '../components/SummaryCards.vue';
 // import SummaryCard from '../components/SummaryCard.vue';
 import { calculateFinancialPlan } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
+import { parseSecureUrlFragment } from '../utils/encryption';
 
 interface ProjectionData {
   age: number;
@@ -128,8 +129,26 @@ function onProfileUpdate(profile: FinancialProfile) {
 }
 
 function parseUrlParameters() {
+  let params: Partial<FinancialProfile> = {};
+  
+  // First, try to parse encrypted fragment (new secure format)
+  const fragment = window.location.hash.substring(1); // Remove # from fragment
+  if (fragment) {
+    try {
+      const encryptedData = parseSecureUrlFragment<Partial<FinancialProfile>>(fragment);
+      if (encryptedData) {
+        params = encryptedData;
+        console.log('Successfully parsed encrypted URL data');
+        urlParams.value = params;
+        return;
+      }
+    } catch (error) {
+      console.warn('Failed to parse encrypted URL fragment, trying legacy format:', error);
+    }
+  }
+  
+  // Fallback to legacy query parameter parsing
   const query = route.query;
-  const params: Partial<FinancialProfile> = {};
   
   // Parse URL parameters and convert to appropriate types
   if (query.currentAge) params.currentAge = Number(query.currentAge);
@@ -161,6 +180,10 @@ function parseUrlParameters() {
     params.relationshipStatus = 'couple';
   }
   
+  if (Object.keys(params).length > 0) {
+    console.log('Parsed legacy URL parameters');
+  }
+  
   urlParams.value = params;
 }
 
@@ -168,8 +191,12 @@ onMounted(() => {
   parseUrlParameters();
 });
 
-// Watch for route changes
+// Watch for route changes (both query params and hash fragments)
 watch(() => route.query, () => {
+  parseUrlParameters();
+}, { immediate: true });
+
+watch(() => route.hash, () => {
   parseUrlParameters();
 }, { immediate: true });
 </script>

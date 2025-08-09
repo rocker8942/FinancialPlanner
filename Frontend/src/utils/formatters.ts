@@ -1,3 +1,5 @@
+import { generateSecureShareableUrl } from './encryption';
+
 /**
  * Formats a number with commas as thousand separators
  * @param value - The number to format
@@ -51,12 +53,30 @@ export function formatPercentage(value: number): string {
 }
 
 /**
- * Generates a shareable URL with financial profile data as query parameters
+ * Generates a secure shareable URL with encrypted financial profile data
+ * Falls back to legacy URL parameters if encryption fails or for backward compatibility
  * @param profile - The financial profile to encode in the URL
- * @returns Complete shareable URL string
+ * @param useEncryption - Whether to use encrypted URLs (default: true)
+ * @returns Complete shareable URL string with encrypted fragment or legacy parameters
  */
-export function generateShareableUrl(profile: any): string {
+export function generateShareableUrl(profile: any, useEncryption: boolean = true): string {
   const baseUrl = `${window.location.origin}/retirementplanner`;
+  
+  if (useEncryption) {
+    try {
+      // Use the new secure URL generation from encryption utils
+      const secureUrl = generateSecureShareableUrl(profile, baseUrl);
+      
+      // If secure URL generation succeeded and is different from base URL, use it
+      if (secureUrl !== baseUrl) {
+        return secureUrl;
+      }
+    } catch (error) {
+      console.warn('Encrypted URL generation failed, falling back to legacy format:', error);
+    }
+  }
+  
+  // Legacy URL generation for backward compatibility or fallback
   const params = new URLSearchParams();
   
   // Add non-zero values to keep URL clean

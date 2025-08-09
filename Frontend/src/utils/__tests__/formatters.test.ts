@@ -74,7 +74,7 @@ describe('formatPercentage', () => {
 })
 
 describe('generateShareableUrl', () => {
-  it('should generate URL with basic profile data', () => {
+  it('should generate encrypted URL by default', () => {
     const profile = {
       currentAge: 35,
       retireAge: 60,
@@ -86,6 +86,23 @@ describe('generateShareableUrl', () => {
 
     const url = generateShareableUrl(profile)
     expect(url).toContain('http://localhost:5173/retirementplanner')
+    expect(url).toContain('#enc:') // Should use encrypted format
+    expect(url).not.toContain('currentAge=35') // Should not contain plaintext data
+    expect(url).not.toContain('100000') // Should not contain plaintext values
+  })
+
+  it('should generate legacy URL with basic profile data when encryption disabled', () => {
+    const profile = {
+      currentAge: 35,
+      retireAge: 60,
+      salary: 100000,
+      expenses: 50000,
+      savings: 25000,
+      relationshipStatus: 'single'
+    }
+
+    const url = generateShareableUrl(profile, false) // Disable encryption
+    expect(url).toContain('http://localhost:5173/retirementplanner')
     expect(url).toContain('currentAge=35')
     expect(url).toContain('retireAge=60')
     expect(url).toContain('income=100000')
@@ -93,7 +110,7 @@ describe('generateShareableUrl', () => {
     expect(url).toContain('savings=25000')
   })
 
-  it('should exclude default values', () => {
+  it('should exclude default values in legacy format', () => {
     const profile = {
       currentAge: 30, // default value
       retireAge: 65, // default value
@@ -101,13 +118,13 @@ describe('generateShareableUrl', () => {
       relationshipStatus: 'single'
     }
 
-    const url = generateShareableUrl(profile)
+    const url = generateShareableUrl(profile, false) // Disable encryption for legacy test
     expect(url).not.toContain('currentAge=30')
     expect(url).not.toContain('retireAge=65')
     expect(url).toContain('income=50000')
   })
 
-  it('should include partner information for couples', () => {
+  it('should include partner information for couples in legacy format', () => {
     const profile = {
       relationshipStatus: 'couple',
       partnerAge: 32,
@@ -116,7 +133,7 @@ describe('generateShareableUrl', () => {
       salary: 50000
     }
 
-    const url = generateShareableUrl(profile)
+    const url = generateShareableUrl(profile, false) // Disable encryption for legacy test
     expect(url).toContain('partnerAge=32')
     expect(url).toContain('partnerRetireAge=62')
     expect(url).toContain('partnerSalary=60000')
@@ -137,7 +154,7 @@ describe('generateShareableUrl', () => {
     expect(url).not.toContain('partnerSalary')
   })
 
-  it('should include advanced options when different from defaults', () => {
+  it('should include advanced options when different from defaults in legacy format', () => {
     const profile = {
       salary: 50000,
       deathAge: 85, // different from default 90
@@ -146,18 +163,61 @@ describe('generateShareableUrl', () => {
       relationshipStatus: 'single'
     }
 
-    const url = generateShareableUrl(profile)
+    const url = generateShareableUrl(profile, false) // Disable encryption for legacy test
     expect(url).toContain('deathAge=85')
     expect(url).toContain('propertyGrowthRate=4')
     expect(url).toContain('savingsGrowthRate=5')
   })
 
-  it('should return base URL when no meaningful data provided', () => {
+  it('should return base URL when no meaningful data provided in legacy format', () => {
     const profile = {
       relationshipStatus: 'single'
     }
 
-    const url = generateShareableUrl(profile)
+    const url = generateShareableUrl(profile, false) // Disable encryption for legacy test
     expect(url).toBe('http://localhost:5173/retirementplanner')
+  })
+
+  it('should generate encrypted URL when no meaningful data provided', () => {
+    const profile = {
+      relationshipStatus: 'single'
+    }
+
+    const url = generateShareableUrl(profile) // Default encrypted format
+    expect(url).toContain('http://localhost:5173/retirementplanner')
+    expect(url).toContain('#enc:') // Should still encrypt even minimal data
+    expect(url).not.toContain('relationshipStatus') // Should not contain plaintext
+  })
+
+  it('should generate encrypted URL for profiles with non-default values', () => {
+    const profile = {
+      currentAge: 35,
+      salary: 75000,
+      expenses: 45000,
+      relationshipStatus: 'single'
+    }
+
+    const url = generateShareableUrl(profile) // Default encrypted format
+    expect(url).toContain('http://localhost:5173/retirementplanner')
+    expect(url).toContain('#enc:') // Should use encrypted format
+    expect(url).not.toContain('75000') // Should not contain plaintext data
+    expect(url).not.toContain('salary') // Should not contain field names
+    expect(url).not.toContain('currentAge=35') // Should not contain query parameters
+  })
+
+  it('should generate encrypted URL for couple profiles', () => {
+    const profile = {
+      relationshipStatus: 'couple',
+      partnerAge: 32,
+      partnerSalary: 60000,
+      salary: 80000
+    }
+
+    const url = generateShareableUrl(profile) // Default encrypted format
+    expect(url).toContain('http://localhost:5173/retirementplanner')
+    expect(url).toContain('#enc:') // Should use encrypted format
+    expect(url).not.toContain('60000') // Should not contain plaintext partner salary
+    expect(url).not.toContain('80000') // Should not contain plaintext salary
+    expect(url).not.toContain('partnerAge') // Should not contain field names
   })
 })

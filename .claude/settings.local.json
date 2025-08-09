@@ -21,7 +21,12 @@
       "Bash(timeout 5 npm run build)",
       "Bash(git stash:*)",
       "Bash(npm run test:*)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(npm uninstall:*)",
+      "Bash(npx vite build:*)",
+      "Bash(grep:*)",
+      "Bash(timeout 15 npm run dev)",
+      "Bash(timeout 10s npm run dev)"
     ],
     "deny": []
   }

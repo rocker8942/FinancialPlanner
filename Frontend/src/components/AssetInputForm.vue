@@ -6,7 +6,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-9a2 2 0 00-2-2H6a2 2 0 00-2 2v9a2 2 0 002 2z"></path>
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V7a2 2 0 114 0v4"></path>
       </svg>
-      <span>Your data is stored locally on your device for privacy and security.</span>
+      <span>Your data is encrypted and stored locally on your device for privacy and security.</span>
     </div>
     <!-- Person Profile Group -->
     <fieldset class="form-section" :class="{ 'section-active': sectionOpen.profile }">
@@ -437,10 +437,10 @@
         :class="['share-btn', { success: shareSuccess }]" 
         @click="handleShare"
         :disabled="shareButtonDisabled"
-        :title="shareButtonDisabled ? 'Enter some financial data to share' : 'Copy shareable link to clipboard'"
+        :title="shareButtonDisabled ? 'Enter some financial data to share' : 'Copy secure, encrypted shareable link to clipboard'"
       >
         <span class="material-icons share-icon">{{ shareSuccess ? 'check' : 'share' }}</span>
-        <span>{{ shareSuccess ? 'Link Copied!' : 'Share Plan' }}</span>
+        <span>{{ shareSuccess ? 'Secure Link Copied!' : 'Share Plan' }}</span>
       </button>
     </div>
 
@@ -454,6 +454,7 @@ import { getFinancialProfile } from '../services/api';
 import { calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
 import { formatCurrency, formatNumber, parseFormattedNumber, formatPercentage, generateShareableUrl } from '../utils/formatters';
+import { setSecureItem, getSecureItem } from '../utils/encryption';
 import { getAgePensionAmounts } from '../services/agePensionService';
 
 const emit = defineEmits(['update']);
@@ -1053,9 +1054,9 @@ function startContinuousAdjustment(fieldName: string, adjustment: number) {
   const initialDelay = 500; // 500ms before starting continuous
   const fastInterval = 100; // 100ms between adjustments
   
-  continuousAdjustmentState.value.timeout = setTimeout(() => {
+  continuousAdjustmentState.value.timeout = window.setTimeout(() => {
     if (continuousAdjustmentState.value.fieldName === fieldName) {
-      continuousAdjustmentState.value.interval = setInterval(() => {
+      continuousAdjustmentState.value.interval = window.setInterval(() => {
         adjustValue(fieldName, adjustment);
       }, fastInterval);
     }
@@ -1193,6 +1194,34 @@ watchEffect(() => {
 
 const LOCAL_KEY = 'financial-input';
 
+// Type definition for stored financial data
+interface StoredFinancialData {
+  propertyAssets?: number;
+  savings?: number;
+  mortgageBalance?: number;
+  mortgageRate?: number;
+  superannuationBalance?: number;
+  superannuationRate?: number;
+  salary?: number;
+  partnerSalary?: number;
+  expenses?: number;
+  currentAge?: number;
+  retireAge?: number;
+  deathAge?: number;
+  savingsGrowthRate?: number;
+  propertyGrowthRate?: number;
+  propertyRentalYield?: number;
+  cpiGrowthRate?: number;
+  inflationRate?: number; // Legacy field
+  pensionAmount?: number;
+  pensionStartAge?: number;
+  partnerPensionAmount?: number;
+  partnerAge?: number;
+  partnerRetireAge?: number;
+  relationshipStatus?: string;
+  isHomeowner?: boolean;
+}
+
 function saveToLocalStorage() {
   const data = {
     propertyAssets: propertyAssets.value,
@@ -1219,14 +1248,15 @@ function saveToLocalStorage() {
     relationshipStatus: relationshipStatus.value,
     isHomeowner: isHomeowner.value
   };
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
+  // Use encrypted storage for sensitive financial data
+  setSecureItem(LOCAL_KEY, data);
 }
 
 function loadFromLocalStorage() {
-  const data = localStorage.getItem(LOCAL_KEY);
-  if (data) {
+  // Use secure decryption for sensitive financial data
+  const parsed = getSecureItem<StoredFinancialData>(LOCAL_KEY);
+  if (parsed) {
     try {
-      const parsed = JSON.parse(data);
       propertyAssets.value = parsed.propertyAssets ?? 0;
       savings.value = parsed.savings ?? 0;
       mortgageBalance.value = parsed.mortgageBalance ?? 0;
@@ -1248,12 +1278,14 @@ function loadFromLocalStorage() {
       partnerPensionAmount.value = parsed.partnerPensionAmount ?? 0;
       partnerAge.value = parsed.partnerAge ?? 30;
       partnerRetireAge.value = parsed.partnerRetireAge ?? 65;
-      relationshipStatus.value = parsed.relationshipStatus ?? 'single';
+      relationshipStatus.value = (parsed.relationshipStatus as 'single' | 'couple') ?? 'single';
       isHomeowner.value = parsed.isHomeowner ?? true;
       
       // Update formatted values
       updateFormattedValues();
-    } catch {}
+    } catch (error) {
+      console.warn('Failed to load financial data from storage:', error);
+    }
   }
 }
 
@@ -1282,8 +1314,8 @@ function updateFormattedValues() {
 }
 
 async function load() {
-  // Step 1: Load from localStorage or API (existing behavior)
-  const localData = localStorage.getItem(LOCAL_KEY);
+  // Step 1: Load from encrypted localStorage or API (existing behavior)
+  const localData = getSecureItem<StoredFinancialData>(LOCAL_KEY);
   if (localData) {
     loadFromLocalStorage();
   } else {
@@ -1386,17 +1418,17 @@ async function handleShare() {
       isHomeowner: isHomeowner.value
     };
     
-    // Generate shareable URL
+    // Generate secure shareable URL (encrypted by default)
     const shareableUrl = generateShareableUrl(profile);
     
     // Copy to clipboard
     await navigator.clipboard.writeText(shareableUrl);
     
-    // Show success feedback
+    // Show success feedback with security information
     shareSuccess.value = true;
     setTimeout(() => {
       shareSuccess.value = false;
-    }, 2000);
+    }, 3000); // Show longer for security message
     
   } catch (error) {
     console.error('Failed to copy to clipboard:', error);
