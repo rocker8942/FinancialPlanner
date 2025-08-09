@@ -1817,12 +1817,13 @@ onUnmounted(() => {
 }
 
 .radio-label {
-  display: flex;
+  display: flex !important;
   align-items: center;
   cursor: pointer;
   font-size: 0.75rem;
   color: #e0e3e8;
   font-weight: normal;
+  margin-bottom: 0;
 }
 
 .radio-label input[type="radio"] {
@@ -1830,18 +1831,23 @@ onUnmounted(() => {
   accent-color: #6ee7b7;
 }
 
-.checkbox-label {
-  display: flex;
+.form-group .checkbox-label {
+  display: flex !important;
   align-items: center;
+  flex-wrap: nowrap;
   cursor: pointer;
   font-size: 0.75rem;
   color: #e0e3e8;
   font-weight: normal;
+  margin-bottom: 0;
 }
 
-.checkbox-label input[type="checkbox"] {
+.form-group .checkbox-label input[type="checkbox"] {
   margin-right: 0.3rem;
   accent-color: #6ee7b7;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
 }
 
 .partner-section {
@@ -1944,8 +1950,9 @@ onUnmounted(() => {
   }
   
   .radio-group {
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: row;
+    gap: 0.75rem;
+    flex-wrap: wrap;
   }
 }
 
