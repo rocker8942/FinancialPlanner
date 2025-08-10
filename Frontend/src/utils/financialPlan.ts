@@ -206,24 +206,28 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
 
     // Apply income and expenses only if not current year
     if (age > profile.currentAge) {
-      // Use income to pay mortgage interest first
-      if (mortgageBalance > 0 && totalIncome > 0) {
+      // Calculate disposable income after expenses
+      const disposableIncome = Math.max(0, totalIncome - cpiAdjustedExpenses);
+      let remainingDisposableIncome = disposableIncome;
+
+      // Use disposable income to pay mortgage interest first
+      if (mortgageBalance > 0 && remainingDisposableIncome > 0) {
         // Calculate interest on net mortgage (mortgage - savings, but not less than 0)
         const netMortgage = Math.max(0, mortgageBalance - savings);
         const mortgageInterest = netMortgage * profile.mortgageRate;
-        const mortgageInterestPaymentFromIncome = Math.min(totalIncome, mortgageInterest);
-        totalIncome -= mortgageInterestPaymentFromIncome;
+        const mortgageInterestPaymentFromIncome = Math.min(remainingDisposableIncome, mortgageInterest);
+        remainingDisposableIncome -= mortgageInterestPaymentFromIncome;
       }
 
-      // Use remaining income to reduce mortgage principal first, then add to savings
-      if (mortgageBalance > 0 && totalIncome > 0) {
-        const mortgagePrincipalPayment = Math.min(totalIncome, mortgageBalance);
+      // Use remaining disposable income to reduce mortgage principal first, then add to savings
+      if (mortgageBalance > 0 && remainingDisposableIncome > 0) {
+        const mortgagePrincipalPayment = Math.min(remainingDisposableIncome, mortgageBalance);
         mortgageBalance -= mortgagePrincipalPayment;
-        totalIncome -= mortgagePrincipalPayment;
+        remainingDisposableIncome -= mortgagePrincipalPayment;
       }
 
-      // Add any remaining income to savings
-      savings += totalIncome;
+      // Add any remaining disposable income to savings
+      savings += remainingDisposableIncome;
       
       // Access superannuation at age 60+
       // if (age >= 60 && superannuationBalance > 0) {
@@ -234,15 +238,20 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       //   }
       // }
 
-      // Subtract CPI-adjusted expenses from savings first, then from super if needed
-      const remainingExpenses = Math.max(0, cpiAdjustedExpenses - savings);
-      savings = Math.max(0, savings - cpiAdjustedExpenses);
-      
-      // If there are remaining expenses and superannuation is available, deduct from super
-      // Note: In Australia, super can only be accessed at preservation age (60+) 
-      // Early access for hardship requires special circumstances and APRA approval
-      if (remainingExpenses > 0 && superannuationBalance > 0 && age >= 60) {
-        superannuationBalance = Math.max(0, superannuationBalance - remainingExpenses);
+      // If disposable income was insufficient to cover expenses, deduct shortfall from savings/super
+      const expenseShortfall = Math.max(0, cpiAdjustedExpenses - totalIncome);
+      if (expenseShortfall > 0) {
+        // First try to cover shortfall from savings
+        const expenseFromSavings = Math.min(expenseShortfall, savings);
+        savings -= expenseFromSavings;
+        const remainingExpenseShortfall = expenseShortfall - expenseFromSavings;
+        
+        // If there are remaining expenses and superannuation is available, deduct from super
+        // Note: In Australia, super can only be accessed at preservation age (60+) 
+        // Early access for hardship requires special circumstances and APRA approval
+        if (remainingExpenseShortfall > 0 && superannuationBalance > 0 && age >= 60) {
+          superannuationBalance = Math.max(0, superannuationBalance - remainingExpenseShortfall);
+        }
       }
 
       // Ensure superannuation balance is not negative

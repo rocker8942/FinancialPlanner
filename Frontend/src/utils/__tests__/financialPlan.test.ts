@@ -155,8 +155,8 @@ describe('calculateFinancialPlan', () => {
       // CPI-adjusted total income in year 2: (120000 + 60000) * 1.02 = 183600
       // Super contributions: ~19512 (net after tax)
       // Higher income results in better cash flow after expenses and mortgage payment
-      // Expected net financial assets with CPI adjustment: ~49827
-      expect(secondYear.savings).toBeCloseTo(49827, 0) // Net financial assets with CPI-adjusted income
+      // Expected net financial assets with CPI adjustment and disposable income mortgage payments: ~47827
+      expect(secondYear.savings).toBeCloseTo(47827, 0) // Net financial assets with CPI-adjusted income and disposable income mortgage logic
     })
   })
 

@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## best practice to follow
+- keep it simple as much as possible
+- readability over eligance code
+- run relevant test whenever changed code
+
 ## domain knowledge
 
 - This app is financial planner web application.
