@@ -82,14 +82,18 @@ describe('calculateFinancialPlan', () => {
       // Check second year (first year after growth)
       const secondYear = result.projection[1]
       expect(secondYear.propertyAssets).toBeCloseTo(100000 * 1.05, 0) // Net property value (no mortgage)
-      // Expected with CPI-adjusted income: savings grow, add income, subtract expenses
+      // Expected with CPI-adjusted income and corrected net income logic:
       // Savings: 50000 * 1.025 = 51250
-      // CPI-adjusted income in year 2: (80000 + 60000) * 1.02 = 142800
-      // Add net income after tax and super: ~80080
-      // Net savings: 51250 + 80080 = 131330  
-      // Super: 0 + 17136 (net after tax) = ~16000 (after contributions tax)
-      // Net financial assets: 131330 + 16000 = 147330 (approximately)
-      expect(secondYear.savings).toBeCloseTo(147415, 0) // Net financial assets with CPI-adjusted income
+      // CPI-adjusted salaries: (80000 + 60000) * 1.02 = 142800
+      // Super contributions (12%): 17136
+      // Taxable income: 142800 - 17136 = 125664
+      // Net income after tax: ~94664
+      // Expenses: 60000 * 1.02 = 61200
+      // Disposable income: 94664 - 61200 = 33464
+      // New savings: 51250 + 33464 = 84714
+      // Super after tax: 17136 * 0.85 = ~14566
+      // Net financial assets: 84714 + 14566 = 99280 (approximately)
+      expect(secondYear.savings).toBeCloseTo(99279, 0) // Net financial assets with corrected logic
     })
 
     it('should not apply growth in the first year', () => {
@@ -151,12 +155,16 @@ describe('calculateFinancialPlan', () => {
 
       // Check that expenses are being subtracted and mortgage is paid down
       const secondYear = result.projection[1]
-      // Actual calculation with CPI-adjusted income:
-      // CPI-adjusted total income in year 2: (120000 + 60000) * 1.02 = 183600
-      // Super contributions: ~19512 (net after tax)
-      // Higher income results in better cash flow after expenses and mortgage payment
-      // Expected net financial assets with CPI adjustment and disposable income mortgage payments: ~47827
-      expect(secondYear.savings).toBeCloseTo(47827, 0) // Net financial assets with CPI-adjusted income and disposable income mortgage logic
+      // Corrected calculation with net income logic:
+      // CPI-adjusted total salaries: (120000 + 60000) * 1.02 = 183600
+      // Super contributions (12%): 22032
+      // Taxable income: 183600 - 22032 = 161568
+      // Net income after tax: ~117220
+      // Expenses: 100000 * 1.02 = 102000
+      // Disposable income: 117220 - 102000 = 15220
+      // Starting net financial: 100000 - 200000 + 50000 = -50000
+      // With mortgage payments and savings growth, net result: ~-18553
+      expect(secondYear.savings).toBeCloseTo(-18553, 0) // Net financial assets with corrected logic
     })
   })
 
@@ -367,12 +375,15 @@ describe('calculateFinancialPlan', () => {
       const result = calculateFinancialPlan(profile)
       const secondYear = result.projection[1]
 
-      // Updated expectation with CPI-adjusted income growth:
+      // Corrected expectation with net income logic:
       // Property: 500000 * 1.03 = 515000 ✓
-      // Income in year 2: (20000 + 10000) * 1.02 = 30600
-      // With CPI-adjusted income, more goes toward mortgage paydown
+      // Salaries: (20000 + 10000) * 1.02 = 30600
+      // Super (12%): 3672
+      // Taxable: 30600 - 3672 = 26928
+      // Net income after tax: ~24663
+      // With corrected net income calculation: ~-6301
       expect(secondYear.propertyAssets).toBeCloseTo(515000, 0)
-      expect(secondYear.savings).toBeCloseTo(-1233, 0) // Net financial assets with CPI-adjusted income
+      expect(secondYear.savings).toBeCloseTo(-6301, 0) // Net financial assets with corrected logic
     })
 
     it('should handle zero mortgage balance', () => {
@@ -400,12 +411,15 @@ describe('calculateFinancialPlan', () => {
       const result = calculateFinancialPlan(profile)
       const secondYear = result.projection[1]
 
-      // Updated expectation with CPI-adjusted income growth:
+      // Corrected expectation with net income logic:
       // Property: 500000 * 1.03 = 515000 ✓
-      // Income in year 2: (50000 + 40000) * 1.02 = 91800
-      // With CPI-adjusted higher income, mortgage gets paid off and more goes to savings
+      // Salaries: (50000 + 40000) * 1.02 = 91800
+      // Super (12%): 11016
+      // Taxable: 91800 - 11016 = 80784
+      // Net income after tax: ~65627
+      // With corrected net income, mortgage paid off, result: ~239004
       expect(secondYear.propertyAssets).toBeCloseTo(515000, 0)
-      expect(secondYear.savings).toBeCloseTo(266659, 0) // Net financial assets with CPI-adjusted income
+      expect(secondYear.savings).toBeCloseTo(239004, 0) // Net financial assets with corrected logic
     })
   })
 

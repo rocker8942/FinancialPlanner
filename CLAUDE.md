@@ -4,6 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## best practice to follow
 - keep it simple as much as possible
+- keep the file, class, method size as small as possible using the coding best practices
 - readability over eligance code
 - run relevant test whenever changed code
 
@@ -62,6 +63,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Pension income calculations starting at specified ages
 - Net financial asset = net-saving - morgate + superannuation. 
 - Auto-optimize expense: get the optimal exepese that make the net financial asset to be near 0 at the project ends. 
+- Income provided by user is growth income including super and tax. 
+- Disposible income = growth income - super - tax
 
 ### Data Flow
 1. User inputs financial data via `AssetInputForm.vue`

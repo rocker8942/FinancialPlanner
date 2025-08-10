@@ -1,6 +1,55 @@
 import { getAgePensionAmounts } from '../services/agePensionService';
 import { calculateNetIncome, getTaxBreakdown, calculateNetSuperContributions } from './taxCalculation';
 
+/**
+ * Calculate current disposable income (net income after taxes but before expenses)
+ */
+export function calculateDisposableIncome(profile: FinancialProfile): number {
+  let totalDisposableIncome = 0;
+  
+  // Calculate user's net income from salary (after taxes)
+  if (profile.salary > 0) {
+    // Input salary includes super (12% of total package)
+    const userSuperContributions = profile.salary * 0.12;
+    const userTaxableIncome = profile.salary - userSuperContributions;
+    const userNetIncome = calculateNetIncome(userTaxableIncome);
+    totalDisposableIncome += userNetIncome;
+  }
+  
+  // Calculate partner's net income from salary (after taxes)
+  if (profile.relationshipStatus === 'couple' && profile.partnerSalary > 0) {
+    // Input salary includes super (12% of total package)
+    const partnerSuperContributions = profile.partnerSalary * 0.12;
+    const partnerTaxableIncome = profile.partnerSalary - partnerSuperContributions;
+    const partnerNetIncome = calculateNetIncome(partnerTaxableIncome);
+    totalDisposableIncome += partnerNetIncome;
+  }
+  
+  // Add rental income (assumed net after taxes and expenses)
+  if (profile.propertyAssets > 0) {
+    const rentalIncome = profile.propertyAssets * profile.propertyRentalYield;
+    totalDisposableIncome += rentalIncome;
+  }
+  
+  // Add pension income (generally tax-free due to low amounts)
+  const pensionAmounts = getAgePensionAmounts(
+    profile.relationshipStatus,
+    profile.isHomeowner,
+    profile.propertyAssets,
+    profile.savings,
+    profile.superannuationBalance,
+    profile.mortgageBalance,
+    profile.salary,
+    profile.partnerSalary,
+    profile.currentAge,
+    profile.partnerAge
+  );
+  
+  totalDisposableIncome += pensionAmounts.userPension + pensionAmounts.partnerPension;
+  
+  return Math.max(0, totalDisposableIncome);
+}
+
 // Types for financial plan calculation
 export interface FinancialProfile {
   propertyAssets: number;
@@ -198,7 +247,10 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     // Total package income for display purposes (what shows in "Total Income" column)
     const displayTotalIncome = totalPackageAmount + pensionIncomeThisYear + rentalIncome;
     
-    // Use total package income to match test expectations (tests expect gross income calculations)
+    // For cash flow calculations, use net employment income (actual spendable money)
+    const spendableIncome = netEmploymentIncome + pensionIncomeThisYear + rentalIncome;
+    
+    // Use total package income for display purposes (what shows in "Total Income" column)
     totalIncome = totalPackageAmount + pensionIncomeThisYear + rentalIncome;
     
     // Store the total package income for reporting (this shows in table as "Total Income")
@@ -206,8 +258,8 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
 
     // Apply income and expenses only if not current year
     if (age > profile.currentAge) {
-      // Calculate disposable income after expenses
-      const disposableIncome = Math.max(0, totalIncome - cpiAdjustedExpenses);
+      // Calculate disposable income after expenses using SPENDABLE income (not total package)
+      const disposableIncome = Math.max(0, spendableIncome - cpiAdjustedExpenses);
       let remainingDisposableIncome = disposableIncome;
 
       // Use disposable income to pay mortgage interest first
@@ -239,7 +291,7 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
       // }
 
       // If disposable income was insufficient to cover expenses, deduct shortfall from savings/super
-      const expenseShortfall = Math.max(0, cpiAdjustedExpenses - totalIncome);
+      const expenseShortfall = Math.max(0, cpiAdjustedExpenses - spendableIncome);
       if (expenseShortfall > 0) {
         // First try to cover shortfall from savings
         const expenseFromSavings = Math.min(expenseShortfall, savings);

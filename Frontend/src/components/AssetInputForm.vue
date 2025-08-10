@@ -251,7 +251,7 @@
               <span class="toggle-slider"></span>
             </button>
           </div>
-          <div class="input-with-buttons">
+          <div class="input-with-buttons" :class="{ 'input-valid': isFieldValid('expenses'), 'input-invalid': !isFieldValid('expenses') && isFieldTouched('expenses') }">
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('expenses', -1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('expenses', -1000)" :disabled="zeroNetWorthAtDeath">-</button>
             <input 
               id="expenses"
@@ -265,8 +265,22 @@
               :disabled="zeroNetWorthAtDeath"
             />
             <button type="button" class="increment-btn" @mousedown="startContinuousAdjustment('expenses', 1000)" @mouseup="stopContinuousAdjustment" @mouseleave="stopContinuousAdjustment" @click="adjustValue('expenses', 1000)" :disabled="zeroNetWorthAtDeath">+</button>
+            <div v-if="isFieldValid('expenses')" class="field-validation-icon valid">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
           </div>
-          <small class="help-text">{{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}</small>
+          <small v-if="!isFieldValid('expenses') && isFieldTouched('expenses')" class="validation-error">
+            Expenses cannot exceed disposable income of {{ formatCurrency(currentDisposableIncome) }}
+          </small>
+          <small v-if="expensesAutoCapped" class="validation-warning">
+            ⚠️ Expense has been automatically adjusted to your maximum disposable income of {{ formatCurrency(currentDisposableIncome) }}
+          </small>
+          <small v-if="!zeroNetWorthAtDeath && currentDisposableIncome > 0" class="help-text">
+            Disposable income: {{ formatCurrency(currentDisposableIncome) }} | {{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}
+          </small>
+          <small v-else class="help-text">{{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}</small>
         </div>
         <!-- Calculated Age Pension section hidden as requested -->
         <!-- <div class="form-group">
@@ -451,7 +465,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, watchEffect, computed } from 'vue';
 import { getFinancialProfile } from '../services/api';
-import { calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
+import { calculateExpenseToZeroNetWorth, calculateDisposableIncome } from '../utils/financialPlan';
 import type { FinancialProfile } from '../utils/financialPlan';
 import { formatCurrency, formatNumber, parseFormattedNumber, formatPercentage, generateShareableUrl } from '../utils/formatters';
 import { setSecureItem, getSecureItem } from '../utils/encryption';
@@ -536,12 +550,48 @@ const calculatedPartnerPension = computed(() => {
   return pensionAmounts.partnerPension;
 });
 
+// Computed property for current disposable income
+const currentDisposableIncome = computed(() => {
+  if (!isLoaded.value) return 0;
+  
+  const profile: FinancialProfile = {
+    propertyAssets: propertyAssets.value,
+    savings: savings.value,
+    mortgageBalance: mortgageBalance.value,
+    mortgageRate: mortgageRate.value,
+    superannuationBalance: superannuationBalance.value,
+    superannuationRate: superannuationRate.value,
+    salary: salary.value,
+    partnerSalary: partnerSalary.value,
+    expenses: expenses.value,
+    currentAge: currentAge.value,
+    retireAge: retireAge.value,
+    deathAge: deathAge.value,
+    savingsGrowthRate: savingsGrowthRate.value,
+    propertyGrowthRate: propertyGrowthRate.value,
+    propertyRentalYield: propertyRentalYield.value,
+    cpiGrowthRate: cpiGrowthRate.value,
+    pensionAmount: calculatedUserPension.value,
+    pensionStartAge: 67,
+    partnerPensionAmount: calculatedPartnerPension.value,
+    partnerPensionStartAge: 67,
+    partnerAge: partnerAge.value,
+    partnerRetireAge: partnerRetireAge.value,
+    relationshipStatus: relationshipStatus.value,
+    isHomeowner: isHomeowner.value
+  };
+  
+  return calculateDisposableIncome(profile);
+});
+
 // Checkbox for zero net worth at death
 const zeroNetWorthAtDeath = ref(false);
 const calculatedExpense = ref(0);
 
 // Share functionality
 const shareSuccess = ref(false);
+// Track when expenses were automatically capped
+const expenseWasCapped = ref(false);
 const shareButtonDisabled = computed(() => {
   // Button is disabled if no meaningful data is entered
   return currentAge.value <= 18 && 
@@ -549,6 +599,11 @@ const shareButtonDisabled = computed(() => {
          savings.value <= 0 && 
          propertyAssets.value <= 0 && 
          superannuationBalance.value <= 0;
+});
+
+// Detect when expenses were automatically adjusted to disposable income
+const expensesAutoCapped = computed(() => {
+  return expenseWasCapped.value;
 });
 
 // Formatted string representations for display
@@ -651,9 +706,13 @@ function isFieldValid(fieldName: string): boolean {
     case 'savings':
     case 'superannuationBalance':
     case 'salary':
-    case 'expenses':
     case 'mortgageBalance':
       return typeof value === 'number' && value >= 0;
+    case 'expenses':
+      // Expenses must be >= 0 and <= disposable income
+      return typeof value === 'number' && 
+             value >= 0 && 
+             (zeroNetWorthAtDeath.value || value <= currentDisposableIncome.value);
     case 'relationshipStatus':
       return value === 'single' || value === 'couple';
     case 'propertyGrowthRate':
@@ -896,11 +955,22 @@ function onBlur(fieldName: string) {
       const parsedSalary = parseFormattedNumber(salaryFormatted.value)
       salary.value = parsedSalary >= 0 ? parsedSalary : 0
       salaryFormatted.value = formatCurrency(salary.value)
+      // Reset expense capping flag when salary changes as disposable income may have changed
+      expenseWasCapped.value = false;
       break;
     case 'expenses':
-      const parsedExpenses = parseFormattedNumber(expensesFormatted.value)
-      expenses.value = parsedExpenses >= 0 ? parsedExpenses : 0
-      expensesFormatted.value = formatCurrency(expenses.value)
+      const parsedExpenses = parseFormattedNumber(expensesFormatted.value);
+      const validatedExpenses = parsedExpenses >= 0 ? parsedExpenses : 0;
+      // Cap expenses at disposable income unless auto-optimize is enabled
+      if (zeroNetWorthAtDeath.value) {
+        expenses.value = validatedExpenses;
+        expenseWasCapped.value = false;
+      } else {
+        const cappedValue = Math.min(validatedExpenses, currentDisposableIncome.value);
+        expenseWasCapped.value = validatedExpenses > currentDisposableIncome.value && currentDisposableIncome.value > 0;
+        expenses.value = cappedValue;
+      }
+      expensesFormatted.value = formatCurrency(expenses.value);
       break;
     case 'currentAge':
       currentAge.value = parseNumericValue(currentAgeFormatted.value);
@@ -952,6 +1022,8 @@ function onBlur(fieldName: string) {
       const parsedPartnerSalary = parseFormattedNumber(partnerSalaryFormatted.value)
       partnerSalary.value = parsedPartnerSalary >= 0 ? parsedPartnerSalary : 0
       partnerSalaryFormatted.value = formatCurrency(partnerSalary.value)
+      // Reset expense capping flag when partner salary changes as disposable income may have changed
+      expenseWasCapped.value = false;
       break;
     case 'mortgageBalance':
       const parsedMortgageBalance = parseFormattedNumber(mortgageBalanceFormatted.value)
@@ -1026,7 +1098,8 @@ function adjustValue(fieldName: string, adjustment: number) {
       break;
     case 'expenses':
       if (!zeroNetWorthAtDeath.value) {
-        expenses.value = Math.max(0, expenses.value + adjustment);
+        const newValue = expenses.value + adjustment;
+        expenses.value = Math.max(0, Math.min(newValue, currentDisposableIncome.value));
       }
       break;
     case 'pensionAmount':
@@ -1087,6 +1160,9 @@ function stopContinuousAdjustment() {
 
 // Watch for checkbox and recalculate
 watch(zeroNetWorthAtDeath, (checked) => {
+  // Clear expense capping flag when auto-optimize toggle changes
+  expenseWasCapped.value = false;
+  
   if (checked) {
     const profile: FinancialProfile = {
       propertyAssets: propertyAssets.value,
@@ -1555,6 +1631,15 @@ onUnmounted(() => {
   line-height: 1.3;
 }
 
+.validation-warning {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #f59e0b;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
 .form-group input {
   width: 100%;
   padding: 0.5rem;
@@ -2021,7 +2106,7 @@ onUnmounted(() => {
     margin-bottom: 0.375rem;
   }
   
-  .help-text, .validation-error {
+  .help-text, .validation-error, .validation-warning {
     font-size: 0.7rem;
   }
   
