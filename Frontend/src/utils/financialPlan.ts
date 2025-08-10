@@ -136,7 +136,6 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
 
   for (let age = profile.currentAge; age <= profile.deathAge; age++) {
     let pensionIncomeThisYear = 0;
-    let totalIncome = 0;
     let originalTotalIncome = 0;
     
     // Calculate CPI-adjusted expenses for this year
@@ -250,8 +249,6 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
     // For cash flow calculations, use net employment income (actual spendable money)
     const spendableIncome = netEmploymentIncome + pensionIncomeThisYear + rentalIncome;
     
-    // Use total package income for display purposes (what shows in "Total Income" column)
-    totalIncome = totalPackageAmount + pensionIncomeThisYear + rentalIncome;
     
     // Store the total package income for reporting (this shows in table as "Total Income")
     originalTotalIncome = displayTotalIncome;
