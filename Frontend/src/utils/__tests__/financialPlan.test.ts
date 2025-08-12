@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { calculateFinancialPlan, calculateExpenseToZeroNetWorth, type FinancialProfile } from '../financialPlan'
+import { calculateFinancialPlan, calculateExpenseToZeroNetWorth } from '../financialPlan'
+import type { FinancialProfile } from '../models/FinancialTypes'
 
 describe('calculateFinancialPlan', () => {
   const createMockProfile = (overrides: Partial<FinancialProfile> = {}): FinancialProfile => ({

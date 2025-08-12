@@ -1,5 +1,9 @@
 import { getAgePensionAmounts } from '../services/agePensionService';
 import { calculateNetIncome, getTaxBreakdown, calculateNetSuperContributions } from './taxCalculation';
+import type { FinancialProfile, YearlyWealth, FinancialPlanResult } from './models/FinancialTypes';
+
+// Re-export types for easier importing
+export type { FinancialProfile, YearlyWealth, FinancialPlanResult } from './models/FinancialTypes';
 
 /**
  * Calculate current disposable income (net income after taxes but before expenses)
@@ -50,61 +54,6 @@ export function calculateDisposableIncome(profile: FinancialProfile): number {
   return Math.max(0, totalDisposableIncome);
 }
 
-// Types for financial plan calculation
-export interface FinancialProfile {
-  propertyAssets: number;
-  savings: number;
-  mortgageBalance: number;
-  mortgageRate: number;
-  superannuationBalance: number;
-  superannuationRate: number;
-  salary: number;
-  partnerSalary: number;
-  expenses: number;
-  currentAge: number;
-  retireAge: number;
-  deathAge: number;
-  savingsGrowthRate: number;
-  propertyGrowthRate: number;
-  propertyRentalYield: number; // Net rental return after fees and tax
-  cpiGrowthRate: number;
-  pensionAmount: number;
-  pensionStartAge: number;
-  partnerPensionAmount: number;
-  partnerPensionStartAge: number;
-  partnerAge: number; // Partner's current age
-  partnerRetireAge: number; // Partner's desired retirement age
-  // Age pension calculation fields
-  relationshipStatus: 'single' | 'couple';
-  isHomeowner: boolean;
-}
-
-export interface YearlyWealth {
-  age: number;
-  wealth: number;
-  propertyAssets: number;
-  savings: number;
-  superannuationBalance: number;
-  inflationAdjustedWealth: number;
-  inflationAdjustedPropertyAssets: number;
-  inflationAdjustedSavings: number;
-  pensionIncome: number;
-  totalIncome: number; // This will show gross income in the table
-  expenses: number;
-  // Internal tax tracking fields (not displayed in table)
-  grossIncome?: number;
-  incomeTax?: number;
-  medicareLevy?: number;
-  netIncome?: number;
-  superContributionsTax?: number;
-}
-
-export interface FinancialPlanResult {
-  projection: YearlyWealth[];
-  finalWealth: number;
-  finalNetSavings: number;
-  summary: string;
-}
 
 function applyGrowth(currentValue: number, growthRate: number): number {
   return currentValue * (1 + growthRate);

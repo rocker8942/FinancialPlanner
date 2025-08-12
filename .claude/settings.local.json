@@ -31,7 +31,13 @@
       "Bash(claude config-path)",
       "Bash(git push:*)",
       "Bash(timeout 5s npm run dev)",
-      "Bash(claude mcp add:*)"
+      "Bash(claude mcp add:*)",
+      "Bash(claude mcp:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(uv:*)",
+      "Bash(where uv)",
+      "Bash(powershell:*)"
     ],
     "deny": []
   }

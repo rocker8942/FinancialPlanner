@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { calculateDisposableIncome } from '../financialPlan';
-import type { FinancialProfile } from '../financialPlan';
+import type { FinancialProfile } from '../models/FinancialTypes';
 
 describe('calculateDisposableIncome', () => {
   const baseProfile: FinancialProfile = {
