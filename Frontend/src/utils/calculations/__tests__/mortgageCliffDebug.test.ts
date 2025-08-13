@@ -12,6 +12,7 @@ describe('Debug Mortgage Cliff Issue', () => {
     isHomeowner: true,
     propertyAssets: 0,
     savings: 0,
+    mortgageBalance: 0,
     superannuationBalance: 0,
     superannuationRate: 0.07,
     salary: 100000,
