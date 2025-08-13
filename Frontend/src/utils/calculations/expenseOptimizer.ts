@@ -81,10 +81,21 @@ function calculateOptimizationBounds(profile: FinancialProfile): { low: number; 
   // Calculate reasonable bounds based on available resources and income
   const averageAnnualIncome = calculateAverageAnnualIncome(profile);
   
-  // Set a reasonable upper bound that accounts for assets and income
-  // Use a multiplier to allow for scenarios where we can "spend down" assets plus income
-  const minimumUpperBound = Math.max(averageAnnualIncome * 1.5, 10000); // At least $10k or 1.5x average annual income
-  const upperBound = Math.max(minimumUpperBound, totalAvailableResources / years * 3);
+  // Calculate a reasonable upper bound that prevents unrealistic scenarios
+  // For someone with a mortgage, they can't sustainably spend more than their gross income
+  let upperBound = Math.max(averageAnnualIncome * 1.5, 10000); // At least $10k or 1.5x average annual income
+  
+  // If there are significant assets, allow higher spending by drawing down assets
+  if (totalAvailableResources > averageAnnualIncome * 5) {
+    upperBound = Math.max(upperBound, totalAvailableResources / years * 2);
+  }
+  
+  // Hard cap: never suggest expenses higher than 90% of current gross income if mortgage exists
+  // This prevents unsustainable scenarios where expenses exceed income without massive asset drawdown
+  if (profile.mortgageBalance > 0 && profile.salary > 0) {
+    const currentGrossIncome = profile.salary + (profile.partnerSalary || 0);
+    upperBound = Math.min(upperBound, currentGrossIncome * 0.9);
+  }
   
   return {
     low: 0,
@@ -116,12 +127,22 @@ function performBinarySearchOptimization(
     const testProfile = { ...profile, expenses: mid };
     const plan = calculateFinancialPlanModular(testProfile);
     
-    // Check if any point goes negative during the plan (asset depletion)
-    const minWealth = Math.min(...plan.projection.map(y => y.savings));
+    // Check if the plan is feasible (net financial assets don't go too negative)
+    const minNetFinancialAssets = Math.min(...plan.projection.map(y => y.savings));
     const finalNetWorth = plan.finalNetSavings;
     
-    // Track the best result so far
-    if (Math.abs(finalNetWorth) < Math.abs(bestFinalWealth)) {
+    // Allow for reasonable negative net financial assets (due to mortgage)  
+    // But prevent scenarios where debt becomes unserviceable
+    // Use a buffer above the current mortgage to allow for some debt growth
+    const currentGrossIncome = profile.salary + (profile.partnerSalary || 0);
+    const maxReasonableDebt = Math.max(
+      profile.mortgageBalance * 1.1,  // Allow 10% above current mortgage
+      currentGrossIncome * 2.5        // Or 2.5x income, whichever is higher
+    );
+    const reasonableDebtLimit = -maxReasonableDebt;
+    
+    // Track the best result so far (only if debt remains serviceable)
+    if (minNetFinancialAssets >= reasonableDebtLimit && Math.abs(finalNetWorth) < Math.abs(bestFinalWealth)) {
       bestExpense = mid;
       bestFinalWealth = finalNetWorth;
     }
@@ -131,8 +152,8 @@ function performBinarySearchOptimization(
       break;
     }
     
-    if (minWealth < 0) {
-      // Went negative during the plan, spending too much
+    if (minNetFinancialAssets < reasonableDebtLimit) {
+      // Net debt became unserviceable during the plan, spending too much
       high = mid;
     } else if (finalNetWorth > tolerance) {
       // Final net worth is positive, can afford to spend more
@@ -178,7 +199,15 @@ function validateOptimizationResult(
   if (bestExpense <= 0 && hasMeaningfulIncomeStreams(profile)) {
     const averageIncome = calculateAverageAnnualIncome(profile);
     // Use a conservative approach: spend average annual income but preserve some buffer
-    const fallbackExpense = Math.min(averageIncome * 0.8, totalAvailableResources / years * 0.9);
+    let fallbackExpense = Math.min(averageIncome * 0.8, totalAvailableResources / years * 0.9);
+    
+    // Apply the same mortgage constraint as in bounds calculation
+    // Hard cap: never suggest expenses higher than 90% of current gross income if mortgage exists
+    if (profile.mortgageBalance > 0 && profile.salary > 0) {
+      const currentGrossIncome = profile.salary + (profile.partnerSalary || 0);
+      fallbackExpense = Math.min(fallbackExpense, currentGrossIncome * 0.9);
+    }
+    
     return {
       expense: Math.max(0, Math.round(fallbackExpense)),
       finalWealth: 0 // Estimate

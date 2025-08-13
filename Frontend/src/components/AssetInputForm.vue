@@ -465,7 +465,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, watchEffect, computed } from 'vue';
 import { getFinancialProfile } from '../services/api';
-import { calculateExpenseToZeroNetWorth, calculateDisposableIncome } from '../utils/financialPlan';
+import { calculateDisposableIncome } from '../utils/financialPlan';
+import { optimizeExpenseToZeroNetWorth } from '../utils/calculations/expenseOptimizer';
 import type { FinancialProfile } from '../utils/financialPlan';
 import { formatCurrency, formatNumber, parseFormattedNumber, formatPercentage, generateShareableUrl } from '../utils/formatters';
 import { setSecureItem, getSecureItem } from '../utils/encryption';
@@ -581,7 +582,17 @@ const currentDisposableIncome = computed(() => {
     isHomeowner: isHomeowner.value
   };
   
-  return calculateDisposableIncome(profile);
+  let disposableIncome = calculateDisposableIncome(profile);
+  
+  // Subtract mandatory mortgage interest payments from disposable income
+  if (mortgageBalance.value > 0) {
+    // Calculate net mortgage (mortgage - savings offset, but not less than 0)
+    const netMortgage = Math.max(0, mortgageBalance.value - savings.value);
+    const annualMortgageInterest = netMortgage * mortgageRate.value;
+    disposableIncome = Math.max(0, disposableIncome - annualMortgageInterest);
+  }
+  
+  return disposableIncome;
 });
 
 // Checkbox for zero net worth at death
@@ -1190,7 +1201,8 @@ watch(zeroNetWorthAtDeath, (checked) => {
       relationshipStatus: relationshipStatus.value,
       isHomeowner: isHomeowner.value
     };
-    calculatedExpense.value = calculateExpenseToZeroNetWorth(profile);
+    const optimizationResult = optimizeExpenseToZeroNetWorth(profile);
+    calculatedExpense.value = optimizationResult.optimalExpense;
     expenses.value = calculatedExpense.value;
     expensesFormatted.value = formatCurrency(calculatedExpense.value);
   }
@@ -1231,7 +1243,8 @@ watch([
       relationshipStatus: relationshipStatus.value,
       isHomeowner: isHomeowner.value
     };
-    calculatedExpense.value = calculateExpenseToZeroNetWorth(profile);
+    const optimizationResult = optimizeExpenseToZeroNetWorth(profile);
+    calculatedExpense.value = optimizationResult.optimalExpense;
     expenses.value = calculatedExpense.value;
     expensesFormatted.value = formatCurrency(calculatedExpense.value);
   }
