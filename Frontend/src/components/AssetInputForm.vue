@@ -271,16 +271,13 @@
               </svg>
             </div>
           </div>
-          <small v-if="!isFieldValid('expenses') && isFieldTouched('expenses')" class="validation-error">
-            Expenses cannot exceed disposable income of {{ formatCurrency(currentDisposableIncome) }}
+          <small v-if="expensesExceedMaxAllowable" class="validation-warning">
+            ⚠️ Expenses exceed recommended maximum of {{ formatCurrency(maxAllowableExpense) }} and will be funded by drawing down financial assets beyond sustainable levels
           </small>
-          <small v-if="expensesAutoCapped" class="validation-warning">
-            ⚠️ Expense has been automatically adjusted to your maximum disposable income of {{ formatCurrency(currentDisposableIncome) }}
+          <small v-else-if="expensesExceedDisposableIncome" class="validation-warning">
+            ⚠️ Expenses exceed disposable income of {{ formatCurrency(currentDisposableIncome) }} and will be funded by drawing down {{ savings > 0 ? 'savings and ' : '' }}financial assets
           </small>
-          <small v-if="!zeroNetWorthAtDeath && currentDisposableIncome > 0" class="help-text">
-            Disposable income: {{ formatCurrency(currentDisposableIncome) }} | {{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}
-          </small>
-          <small v-else class="help-text">{{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}</small>
+          <small v-else class="help-text">{{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : '' }}</small>
         </div>
         <!-- Calculated Age Pension section hidden as requested -->
         <!-- <div class="form-group">
@@ -595,6 +592,35 @@ const currentDisposableIncome = computed(() => {
   return disposableIncome;
 });
 
+// Computed property for maximum allowable expense (includes disposable income + drawdown from savings)
+const maxAllowableExpense = computed(() => {
+  if (!isLoaded.value) return 0;
+  
+  const baseDisposableIncome = currentDisposableIncome.value;
+  
+  // Calculate how much savings can be drawn down annually until pension age (67)
+  const pensionAge = 67;
+  const yearsUntilPension = Math.max(0, pensionAge - currentAge.value);
+  
+  // If already at or past pension age, don't allow savings drawdown for expenses
+  if (yearsUntilPension <= 0) return baseDisposableIncome;
+  
+  // Allow drawing down savings over years until pension age
+  // Use net savings (savings minus mortgage offset effect already considered in disposable income calculation)
+  let availableSavings = savings.value;
+  
+  // If there's a mortgage, savings may be used as offset, reducing the effective available savings
+  if (mortgageBalance.value > 0) {
+    // The savings offset benefit is already captured in disposable income through reduced mortgage interest
+    // So we can use the full savings amount for expense calculation
+    availableSavings = savings.value;
+  }
+  
+  const annualSavingsDrawdown = availableSavings > 0 ? availableSavings / yearsUntilPension : 0;
+  
+  return baseDisposableIncome + annualSavingsDrawdown;
+});
+
 // Checkbox for zero net worth at death
 const zeroNetWorthAtDeath = ref(false);
 const calculatedExpense = ref(0);
@@ -612,9 +638,20 @@ const shareButtonDisabled = computed(() => {
          superannuationBalance.value <= 0;
 });
 
-// Detect when expenses were automatically adjusted to disposable income
-const expensesAutoCapped = computed(() => {
-  return expenseWasCapped.value;
+// Detect when expenses exceed disposable income (show warning)
+const expensesExceedDisposableIncome = computed(() => {
+  return !zeroNetWorthAtDeath.value && 
+         expenses.value > currentDisposableIncome.value && 
+         currentDisposableIncome.value > 0 && 
+         isLoaded.value;
+});
+
+// Detect when expenses exceed maximum allowable (includes savings drawdown)
+const expensesExceedMaxAllowable = computed(() => {
+  return !zeroNetWorthAtDeath.value && 
+         expenses.value > maxAllowableExpense.value && 
+         maxAllowableExpense.value > 0 && 
+         isLoaded.value;
 });
 
 // Formatted string representations for display
@@ -720,10 +757,8 @@ function isFieldValid(fieldName: string): boolean {
     case 'mortgageBalance':
       return typeof value === 'number' && value >= 0;
     case 'expenses':
-      // Expenses must be >= 0 and <= disposable income
-      return typeof value === 'number' && 
-             value >= 0 && 
-             (zeroNetWorthAtDeath.value || value <= currentDisposableIncome.value);
+      // Expenses must be >= 0 (allow higher amounts for simulation)
+      return typeof value === 'number' && value >= 0;
     case 'relationshipStatus':
       return value === 'single' || value === 'couple';
     case 'propertyGrowthRate':
@@ -972,15 +1007,9 @@ function onBlur(fieldName: string) {
     case 'expenses':
       const parsedExpenses = parseFormattedNumber(expensesFormatted.value);
       const validatedExpenses = parsedExpenses >= 0 ? parsedExpenses : 0;
-      // Cap expenses at disposable income unless auto-optimize is enabled
-      if (zeroNetWorthAtDeath.value) {
-        expenses.value = validatedExpenses;
-        expenseWasCapped.value = false;
-      } else {
-        const cappedValue = Math.min(validatedExpenses, currentDisposableIncome.value);
-        expenseWasCapped.value = validatedExpenses > currentDisposableIncome.value && currentDisposableIncome.value > 0;
-        expenses.value = cappedValue;
-      }
+      // Allow any valid expense amount (don't cap automatically)
+      expenses.value = validatedExpenses;
+      expenseWasCapped.value = false;
       expensesFormatted.value = formatCurrency(expenses.value);
       break;
     case 'currentAge':
@@ -1110,7 +1139,7 @@ function adjustValue(fieldName: string, adjustment: number) {
     case 'expenses':
       if (!zeroNetWorthAtDeath.value) {
         const newValue = expenses.value + adjustment;
-        expenses.value = Math.max(0, Math.min(newValue, currentDisposableIncome.value));
+        expenses.value = Math.max(0, newValue);
       }
       break;
     case 'pensionAmount':
