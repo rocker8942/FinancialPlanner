@@ -245,9 +245,9 @@ export function calculateFinancialPlan(profile: FinancialProfile): FinancialPlan
         const remainingExpenseShortfall = expenseShortfall - expenseFromSavings;
         
         // If there are remaining expenses and superannuation is available, deduct from super
-        // Note: In Australia, super can only be accessed at preservation age (60+) 
-        // Early access for hardship requires special circumstances and APRA approval
-        if (remainingExpenseShortfall > 0 && superannuationBalance > 0 && age >= 60) {
+        // Note: This is a simplified cashflow simulation that allows accessing superannuation for expenses
+        // regardless of age restrictions to better model scenarios where people need to access retirement funds
+        if (remainingExpenseShortfall > 0 && superannuationBalance > 0) {
           superannuationBalance = Math.max(0, superannuationBalance - remainingExpenseShortfall);
         }
       }
