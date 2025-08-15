@@ -266,12 +266,6 @@
           Important Disclaimer
         </h2>
         <div class="disclaimer-text">
-          <div class="beta-notice">
-            <p>
-              <strong>🚧 BETA VERSION:</strong> This application is currently in beta testing. 
-              Features may be incomplete, calculations may contain errors, and functionality may change without notice.
-            </p>
-          </div>
           <p>
             <strong>This is a financial modeling tool based on assumptions and projections.</strong> 
             The results are estimates only and should not be considered as financial advice.
@@ -388,7 +382,7 @@ function startPlanning() {
 }
 
 .beta-badge {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 2rem;
@@ -396,7 +390,7 @@ function startPlanning() {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
   border: 2px solid rgba(255, 255, 255, 0.2);
   animation: pulse-beta 2s infinite;
 }
@@ -404,11 +398,11 @@ function startPlanning() {
 @keyframes pulse-beta {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
   }
 }
 
@@ -823,8 +817,8 @@ function startPlanning() {
 
 /* Disclaimer Section */
 .disclaimer-section {
-  background: rgba(69, 26, 3, 0.3);
-  border: 2px solid rgba(234, 88, 12, 0.6);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(217, 119, 6, 0.05) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.2);
   border-radius: 1rem;
   padding: 2rem;
   margin: 3rem 0;
@@ -836,18 +830,18 @@ function startPlanning() {
   gap: 0.75rem;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #fed7aa;
+  color: #fbbf24;
   margin-bottom: 1.5rem;
   justify-content: center;
 }
 
 .disclaimer-title .material-icons {
-  color: #ea580c;
+  color: #f59e0b;
   font-size: 2rem;
 }
 
 .disclaimer-text {
-  color: #fed7aa;
+  color: #d1d5db;
   line-height: 1.7;
 }
 
@@ -865,7 +859,7 @@ function startPlanning() {
 }
 
 .disclaimer-text strong {
-  color: #fef3c7;
+  color: #f3f4f6;
 }
 
 .beta-notice {

@@ -230,7 +230,7 @@ watch(() => route.hash, () => {
 }
 
 .beta-badge {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   color: white;
   padding: 0.375rem 0.75rem;
   border-radius: 1.5rem;
@@ -238,7 +238,7 @@ watch(() => route.hash, () => {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
   animation: pulse-beta 2s infinite;
 }
@@ -246,11 +246,11 @@ watch(() => route.hash, () => {
 @keyframes pulse-beta {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
   }
 }
 .dashboard-main {
