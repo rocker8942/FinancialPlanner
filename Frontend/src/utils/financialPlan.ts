@@ -1,9 +1,12 @@
 import { getAgePensionAmounts } from '../services/agePensionService';
-import { calculateNetIncome, getTaxBreakdown, calculateNetSuperContributions } from './taxCalculation';
-import type { FinancialProfile, YearlyWealth, FinancialPlanResult } from './models/FinancialTypes';
+import { calculateNetIncome } from './taxCalculation';
+import type { FinancialProfile } from './models/FinancialTypes';
 
 // Re-export types for easier importing
 export type { FinancialProfile, YearlyWealth, FinancialPlanResult } from './models/FinancialTypes';
+
+// Re-export expense optimization functions
+export { optimizeExpenseToZeroNetWorth as calculateExpenseToZeroNetWorth } from './calculations/expenseOptimizer';
 
 /**
  * Calculate current disposable income (net income after taxes but before expenses)

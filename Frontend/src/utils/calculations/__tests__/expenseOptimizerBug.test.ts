@@ -539,7 +539,6 @@ describe('Expense Optimizer Bug Fixes', () => {
     console.log(`4. Algorithm ignores cash flow sustainability during working years`);
     
     // This test demonstrates the problem but now the algorithm should be fixed
-    const annualDeficit = profile.expenses - profile.salary;
     console.log(`\n🔧 EXPECTED: Algorithm should now find a sustainable expense, not $${profile.expenses.toLocaleString()}`);
     
     // Test the ACTUAL optimized result to see if it's now reasonable

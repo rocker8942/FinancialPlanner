@@ -204,7 +204,8 @@ const currentDisposableIncome = computed(() => {
 
 const calculatedOptimalExpense = computed(() => {
   if (!incomeExpenses.value.zeroNetWorthAtDeath) return 0;
-  return calculateExpenseToZeroNetWorth(currentFinancialProfile.value);
+  const result = calculateExpenseToZeroNetWorth(currentFinancialProfile.value);
+  return result.optimalExpense;
 });
 
 // Section management
