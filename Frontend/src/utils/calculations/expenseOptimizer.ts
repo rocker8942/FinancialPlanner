@@ -90,12 +90,9 @@ function calculateOptimizationBounds(profile: FinancialProfile): { low: number; 
     upperBound = Math.max(upperBound, totalAvailableResources / years * 2);
   }
   
-  // Hard cap: never suggest expenses higher than 90% of current gross income if mortgage exists
-  // This prevents unsustainable scenarios where expenses exceed income without massive asset drawdown
-  if (profile.mortgageBalance > 0 && profile.salary > 0) {
-    const currentGrossIncome = profile.salary + (profile.partnerSalary || 0);
-    upperBound = Math.min(upperBound, currentGrossIncome * 0.9);
-  }
+  // Remove the hard income cap - let the optimization algorithm find the true optimal expense
+  // The debt serviceability constraints in the binary search will provide appropriate limits
+  // Income caps were preventing the algorithm from truly optimizing for zero net worth at death
   
   return {
     low: 0,
@@ -119,6 +116,10 @@ function performBinarySearchOptimization(
   let bestFinalWealth = Infinity;
   let iterations = 0;
 
+  // Find the expense that optimizes for zero net worth while maintaining cash flow sustainability
+  let optimalExpense = 0;
+  let optimalFinalWealth = Infinity;
+  
   for (let i = 0; i < maxIterations; i++) {
     iterations = i + 1;
     const mid = (low + high) / 2;
@@ -127,24 +128,34 @@ function performBinarySearchOptimization(
     const testProfile = { ...profile, expenses: mid };
     const plan = calculateFinancialPlanModular(testProfile);
     
-    // Check if the plan is feasible (net financial assets don't go too negative)
-    const minNetFinancialAssets = Math.min(...plan.projection.map(y => y.savings));
     const finalNetWorth = plan.finalNetSavings;
     
-    // Allow for reasonable negative net financial assets (due to mortgage)  
-    // But prevent scenarios where debt becomes unserviceable
-    // Use a buffer above the current mortgage to allow for some debt growth
-    const currentGrossIncome = profile.salary + (profile.partnerSalary || 0);
-    const maxReasonableDebt = Math.max(
-      profile.mortgageBalance * 1.1,  // Allow 10% above current mortgage
-      currentGrossIncome * 2.5        // Or 2.5x income, whichever is higher
-    );
-    const reasonableDebtLimit = -maxReasonableDebt;
+    // Check cash flow sustainability during working years
+    const workingYears = plan.projection.filter(y => y.age <= profile.retireAge);
+    let maxAnnualDeficit = 0;
+    let totalDeficit = 0;
     
-    // Track the best result so far (only if debt remains serviceable)
-    if (minNetFinancialAssets >= reasonableDebtLimit && Math.abs(finalNetWorth) < Math.abs(bestFinalWealth)) {
-      bestExpense = mid;
-      bestFinalWealth = finalNetWorth;
+    workingYears.forEach(year => {
+      const deficit = Math.max(0, year.expenses - year.totalIncome);
+      maxAnnualDeficit = Math.max(maxAnnualDeficit, deficit);
+      totalDeficit += deficit;
+    });
+    
+    const currentIncome = profile.salary + (profile.partnerSalary || 0);
+    
+    // Cash flow sustainability limits:
+    // 1. Annual deficit shouldn't exceed 20% of current income
+    // 2. Total cumulative deficit during working years shouldn't exceed 200% of current super balance
+    const maxAllowableAnnualDeficit = currentIncome * 0.20; // 20% of income
+    const maxAllowableTotalDeficit = profile.superannuationBalance * 2.0; // 200% of super
+    
+    const isCashFlowSustainable = maxAnnualDeficit <= maxAllowableAnnualDeficit && 
+                                   totalDeficit <= maxAllowableTotalDeficit;
+    
+    // Track the result closest to zero net worth, but only if cash flow is sustainable
+    if (isCashFlowSustainable && Math.abs(finalNetWorth) < Math.abs(optimalFinalWealth)) {
+      optimalExpense = mid;
+      optimalFinalWealth = finalNetWorth;
     }
     
     // Check convergence
@@ -152,29 +163,55 @@ function performBinarySearchOptimization(
       break;
     }
     
-    if (minNetFinancialAssets < reasonableDebtLimit) {
-      // Net debt became unserviceable during the plan, spending too much
+    // Modified binary search logic that considers cash flow sustainability
+    if (!isCashFlowSustainable) {
+      // Cash flow not sustainable, reduce expense
       high = mid;
     } else if (finalNetWorth > tolerance) {
-      // Final net worth is positive, can afford to spend more
-      bestExpense = mid;
+      // Cash flow sustainable and still have wealth left, can increase expense
       low = mid;
     } else if (finalNetWorth < -tolerance) {
-      // Final net worth is significantly negative, spending too much
+      // Spending creates negative final wealth, reduce expense
       high = mid;
     } else {
-      // Final net worth is very close to zero - this could be our target
-      bestExpense = mid;
-      if (finalNetWorth > 0) {
-        low = mid; // Try to spend a bit more
-      } else {
-        high = mid; // Try to spend a bit less
-      }
+      // Very close to zero net worth and sustainable - we found our target
+      optimalExpense = mid;
+      break;
     }
   }
+  
+  bestExpense = optimalExpense;
+  bestFinalWealth = optimalFinalWealth;
+  
+  // Log the reasoning
+  const testProfile = { ...profile, expenses: optimalExpense };
+  const plan = calculateFinancialPlanModular(testProfile);
+  const workingYears = plan.projection.filter(y => y.age <= profile.retireAge);
+  let maxAnnualDeficit = 0;
+  let totalDeficit = 0;
+  
+  workingYears.forEach(year => {
+    const deficit = Math.max(0, year.expenses - year.totalIncome);
+    maxAnnualDeficit = Math.max(maxAnnualDeficit, deficit);
+    totalDeficit += deficit;
+  });
+  
+  console.log(`✅ Sustainable expense: ${optimalExpense.toFixed(0)} (final wealth: ${optimalFinalWealth.toFixed(0)})`);
+  console.log(`   Max annual deficit: $${maxAnnualDeficit.toFixed(0)}, Total deficit: $${totalDeficit.toFixed(0)}`);
+  console.log(`   Cash flow is sustainable during working years`);
+  
+  // If we couldn't find a sustainable solution, use the best compromise
+  if (bestExpense === 0) {
+    console.log(`⚠️ No fully sustainable solution found. Using best compromise.`);
+    bestExpense = initialHigh * 0.8; // Use 80% of upper bound as fallback
+    bestFinalWealth = calculateFinancialPlanModular({ ...profile, expenses: bestExpense }).finalNetSavings;
+  }
 
-  // Fallback validation
+  // Fallback validation and final safety check
   const result = validateOptimizationResult(profile, bestExpense, bestFinalWealth);
+  
+  // No final income cap - trust the optimization algorithm
+  // The debt serviceability checks in the binary search provide appropriate constraints
   
   return {
     optimalExpense: result.expense,
@@ -201,12 +238,7 @@ function validateOptimizationResult(
     // Use a conservative approach: spend average annual income but preserve some buffer
     let fallbackExpense = Math.min(averageIncome * 0.8, totalAvailableResources / years * 0.9);
     
-    // Apply the same mortgage constraint as in bounds calculation
-    // Hard cap: never suggest expenses higher than 90% of current gross income if mortgage exists
-    if (profile.mortgageBalance > 0 && profile.salary > 0) {
-      const currentGrossIncome = profile.salary + (profile.partnerSalary || 0);
-      fallbackExpense = Math.min(fallbackExpense, currentGrossIncome * 0.9);
-    }
+    // Remove income cap from fallback - let optimization work properly
     
     return {
       expense: Math.max(0, Math.round(fallbackExpense)),

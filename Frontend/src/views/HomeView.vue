@@ -36,7 +36,7 @@ import NetWealthChart from '../components/NetWealthChart.vue';
 import AssetInputForm from '../components/AssetInputForm.vue';
 import SummaryCards from '../components/SummaryCards.vue';
 // import SummaryCard from '../components/SummaryCard.vue';
-import { calculateFinancialPlan } from '../utils/financialPlan';
+import { calculateFinancialPlanModular } from '../utils/calculations/financialPlanOrchestrator';
 import type { FinancialProfile } from '../utils/financialPlan';
 import { parseSecureUrlFragment } from '../utils/encryption';
 
@@ -121,7 +121,7 @@ const urlParams = ref<Partial<FinancialProfile>>({});
 function onProfileUpdate(profile: FinancialProfile) {
   currentProfile.value = profile;
   if (profile) {
-    const plan = calculateFinancialPlan(profile);
+    const plan = calculateFinancialPlanModular(profile);
     projection.value = plan.projection;
   } else {
     projection.value = [];

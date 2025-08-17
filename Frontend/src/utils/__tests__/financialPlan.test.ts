@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { calculateFinancialPlan, calculateExpenseToZeroNetWorth } from '../financialPlan'
+import { calculateFinancialPlanModular } from '../calculations/financialPlanOrchestrator'
+import { calculateExpenseToZeroNetWorthModular } from '../calculations/expenseToZeroNetWorthOrchestrator'
 import type { FinancialProfile } from '../models/FinancialTypes'
 
-describe('calculateFinancialPlan', () => {
+describe('calculateFinancialPlanModular', () => {
   const createMockProfile = (overrides: Partial<FinancialProfile> = {}): FinancialProfile => ({
     propertyAssets: 500000,
     savings: 100000,
@@ -34,7 +35,7 @@ describe('calculateFinancialPlan', () => {
   describe('Basic calculation', () => {
     it('should calculate financial plan with basic inputs', () => {
       const profile = createMockProfile()
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       expect(result).toBeDefined()
       expect(result.projection).toBeDefined()
@@ -45,7 +46,7 @@ describe('calculateFinancialPlan', () => {
 
     it('should start with current wealth at current age', () => {
       const profile = createMockProfile()
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const firstYear = result.projection[0]
 
       expect(firstYear.age).toBe(profile.currentAge)
@@ -59,7 +60,7 @@ describe('calculateFinancialPlan', () => {
 
     it('should end at death age', () => {
       const profile = createMockProfile()
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const lastYear = result.projection[result.projection.length - 1]
 
       expect(lastYear.age).toBe(profile.deathAge)
@@ -78,7 +79,7 @@ describe('calculateFinancialPlan', () => {
         savingsGrowthRate: 0.025,
         propertyRentalYield: 0, // No rental income for simple calculation
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       // Check second year (first year after growth)
       const secondYear = result.projection[1]
@@ -99,7 +100,7 @@ describe('calculateFinancialPlan', () => {
 
     it('should not apply growth in the first year', () => {
       const profile = createMockProfile()
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const firstYear = result.projection[0]
 
       expect(firstYear.propertyAssets).toBe(profile.propertyAssets) // Full property value
@@ -115,7 +116,7 @@ describe('calculateFinancialPlan', () => {
         salary: 100000,
         expenses: 50000
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       // Check a year before retirement
       const preRetirementYear = result.projection.find(y => y.age === 64)
@@ -129,7 +130,7 @@ describe('calculateFinancialPlan', () => {
         retireAge: 65,
         salary: 100000
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       // Check retirement year
       const retirementYear = result.projection.find(y => y.age === 65)
@@ -152,7 +153,7 @@ describe('calculateFinancialPlan', () => {
         salary: 120000,
         propertyRentalYield: 0, // No rental income for this test to match expectations
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       // Check that expenses are being subtracted and mortgage is paid down
       const secondYear = result.projection[1]
@@ -176,7 +177,7 @@ describe('calculateFinancialPlan', () => {
         partnerAge: 28,
         partnerRetireAge: 63
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       // Partner retires at age 63, which is 35 years from now (63-28)
       // So in user's timeline, partner retires when user is 30 + 35 = 65
@@ -193,7 +194,7 @@ describe('calculateFinancialPlan', () => {
         partnerAge: 28,
         partnerRetireAge: 63
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       // Find years around partner retirement in user's timeline
       const partnerRetireAgeInUserTimeline = profile.currentAge + (profile.partnerRetireAge - profile.partnerAge)
@@ -219,7 +220,7 @@ describe('calculateFinancialPlan', () => {
         isHomeowner: true,
         relationshipStatus: 'single'
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       const pensionStartYear = result.projection.find(y => y.age === 67)
       const yearBeforePension = result.projection.find(y => y.age === 66)
@@ -244,7 +245,7 @@ describe('calculateFinancialPlan', () => {
         isHomeowner: true,
         relationshipStatus: 'couple'
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       // Partner turns 67 when user is 67 + (67 - 66) = 68
       const partnerPensionStartYear = result.projection.find(y => y.age === 68)
@@ -266,7 +267,7 @@ describe('calculateFinancialPlan', () => {
         cpiGrowthRate: 0.03,
         expenses: 50000 // Lower expenses to maintain positive wealth
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       const lastYear = result.projection[result.projection.length - 1]
 
@@ -284,7 +285,7 @@ describe('calculateFinancialPlan', () => {
 
     it('should have same nominal and inflation-adjusted values in current year', () => {
       const profile = createMockProfile()
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const firstYear = result.projection[0]
 
       expect(firstYear.inflationAdjustedWealth).toBe(firstYear.wealth)
@@ -301,7 +302,7 @@ describe('calculateFinancialPlan', () => {
         salary: 50000,
         expenses: 100000 // Higher than income
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       // Check that raw savings never go below 0 (before mortgage deduction)
       // With mortgage=0, displayed savings should equal raw savings
@@ -317,7 +318,7 @@ describe('calculateFinancialPlan', () => {
         savingsGrowthRate: 0,
         propertyGrowthRate: 0
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       expect(result).toBeDefined()
       expect(result.projection.length).toBe(profile.deathAge - profile.currentAge + 1)
@@ -328,7 +329,7 @@ describe('calculateFinancialPlan', () => {
         savingsGrowthRate: -0.02,
         propertyGrowthRate: -0.01
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       expect(result).toBeDefined()
       // Assets should decrease over time
@@ -342,7 +343,7 @@ describe('calculateFinancialPlan', () => {
         currentAge: 65,
         deathAge: 65
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       expect(result.projection.length).toBe(1)
       expect(result.projection[0].age).toBe(65)
@@ -356,7 +357,7 @@ describe('calculateFinancialPlan', () => {
         savings: 100000,
         mortgageBalance: 300000
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const firstYear = result.projection[0]
 
       expect(firstYear.propertyAssets).toBe(800000) // Full property value
@@ -373,7 +374,7 @@ describe('calculateFinancialPlan', () => {
         partnerSalary: 10000,
         expenses: 0,
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const secondYear = result.projection[1]
 
       // Corrected expectation with net income logic:
@@ -392,7 +393,7 @@ describe('calculateFinancialPlan', () => {
         propertyAssets: 500000,
         mortgageBalance: 0
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const firstYear = result.projection[0]
 
       expect(firstYear.propertyAssets).toBe(500000)
@@ -409,7 +410,7 @@ describe('calculateFinancialPlan', () => {
         partnerSalary: 40000,
         expenses: 0,
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const secondYear = result.projection[1]
 
       // Corrected expectation with net income logic:
@@ -432,7 +433,7 @@ describe('calculateFinancialPlan', () => {
         mortgageBalance: 200000,
         superannuationBalance: 80000
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const firstYear = result.projection[0]
 
       // Net worth = property + net financial assets (savings - mortgage + super)
@@ -453,7 +454,7 @@ describe('calculateFinancialPlan', () => {
         partnerSalary: 0,
         expenses: 0,
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const secondYear = result.projection[1]
 
       // Updated expectation with realistic calculations:
@@ -473,7 +474,7 @@ describe('calculateFinancialPlan', () => {
         partnerSalary: 80000,
         expenses: 0
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       const secondYear = result.projection[1]
 
       // Super contributions: 9.5% of both salaries = 9.5% * (100000 + 80000) = 17100
@@ -496,7 +497,7 @@ describe('calculateFinancialPlan', () => {
         partnerSalary: 0,
         expenses: 0
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
       
       const retirementYear = result.projection.find(y => y.age === 60)
       const postRetirementYear = result.projection.find(y => y.age === 61)
@@ -526,7 +527,7 @@ describe('calculateFinancialPlan', () => {
         expenses: 0,
         propertyGrowthRate: 0.04 // 4% property growth
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       const firstYear = result.projection[0]
       const secondYear = result.projection[1]
@@ -548,7 +549,7 @@ describe('calculateFinancialPlan', () => {
         partnerSalary: 30000,
         expenses: 0
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       const firstYear = result.projection[0]
       // Total income should only include employment income (after tax), no rental
@@ -569,7 +570,7 @@ describe('calculateFinancialPlan', () => {
         savingsGrowthRate: 0.05,
         propertyGrowthRate: 0.03
       })
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       const secondYear = result.projection[1]
       
@@ -587,7 +588,7 @@ describe('calculateFinancialPlan', () => {
   describe('Summary generation', () => {
     it('should generate meaningful summary', () => {
       const profile = createMockProfile()
-      const result = calculateFinancialPlan(profile)
+      const result = calculateFinancialPlanModular(profile)
 
       expect(result.summary).toContain(`Retiring at age ${profile.retireAge}`)
       expect(result.summary).toContain(`at age ${profile.deathAge}`)
@@ -597,7 +598,7 @@ describe('calculateFinancialPlan', () => {
   })
 })
 
-describe('calculateExpenseToZeroNetWorth', () => {
+describe('calculateExpenseToZeroNetWorthModular', () => {
   const createMockProfile = (overrides: Partial<FinancialProfile> = {}): FinancialProfile => ({
     propertyAssets: 500000,
     savings: 100000,
@@ -633,7 +634,7 @@ describe('calculateExpenseToZeroNetWorth', () => {
       mortgageBalance: 100000,
       superannuationBalance: 60000
     })
-    const optimalExpense = calculateExpenseToZeroNetWorth(profile)
+    const optimalExpense = calculateExpenseToZeroNetWorthModular(profile)
 
     expect(optimalExpense).toBeGreaterThan(0)
     // With dynamic pension calculations, bound is more complex
@@ -645,7 +646,7 @@ describe('calculateExpenseToZeroNetWorth', () => {
       currentAge: 65,
       deathAge: 65
     })
-    const optimalExpense = calculateExpenseToZeroNetWorth(profile)
+    const optimalExpense = calculateExpenseToZeroNetWorthModular(profile)
 
     expect(optimalExpense).toBe(profile.expenses)
   })
@@ -656,7 +657,7 @@ describe('calculateExpenseToZeroNetWorth', () => {
       savings: 1000000,
       salary: 100000
     })
-    const optimalExpense = calculateExpenseToZeroNetWorth(profile)
+    const optimalExpense = calculateExpenseToZeroNetWorthModular(profile)
 
     expect(optimalExpense).toBeGreaterThan(profile.expenses)
   })
@@ -669,7 +670,7 @@ describe('calculateExpenseToZeroNetWorth', () => {
       superannuationBalance: 5000,
       salary: 50000
     })
-    const optimalExpense = calculateExpenseToZeroNetWorth(profile)
+    const optimalExpense = calculateExpenseToZeroNetWorthModular(profile)
 
     expect(optimalExpense).toBeGreaterThan(0)
     // In low asset scenarios, optimal expense might be higher than salary due to growth and pension
@@ -692,8 +693,8 @@ describe('calculateExpenseToZeroNetWorth', () => {
       superannuationBalance: 30000
     })
 
-    const expenseWithMortgage = calculateExpenseToZeroNetWorth(profileWithMortgage)
-    const expenseWithoutMortgage = calculateExpenseToZeroNetWorth(profileWithoutMortgage)
+    const expenseWithMortgage = calculateExpenseToZeroNetWorthModular(profileWithMortgage)
+    const expenseWithoutMortgage = calculateExpenseToZeroNetWorthModular(profileWithoutMortgage)
 
     // Both should be similar since net assets are the same (allow for growth rate differences and pension calculation differences)
     expect(Math.abs(expenseWithMortgage - expenseWithoutMortgage)).toBeLessThan(200000)
@@ -714,8 +715,8 @@ describe('calculateExpenseToZeroNetWorth', () => {
       superannuationBalance: 0
     })
 
-    const expenseWithSuper = calculateExpenseToZeroNetWorth(profileWithSuper)
-    const expenseWithoutSuper = calculateExpenseToZeroNetWorth(profileWithoutSuper)
+    const expenseWithSuper = calculateExpenseToZeroNetWorthModular(profileWithSuper)
+    const expenseWithoutSuper = calculateExpenseToZeroNetWorthModular(profileWithoutSuper)
 
     // Should be similar since total assets are the same (allow for growth rate differences)
     // Increased tolerance due to improved algorithm precision
@@ -731,7 +732,7 @@ describe('calculateExpenseToZeroNetWorth', () => {
       salary: 80000 // Has salary income
     })
     
-    const expense = calculateExpenseToZeroNetWorth(profileZeroAssets)
+    const expense = calculateExpenseToZeroNetWorthModular(profileZeroAssets)
     
     // Should not return 0 when there's salary income
     expect(expense).toBeGreaterThan(0)
@@ -750,7 +751,7 @@ describe('calculateExpenseToZeroNetWorth', () => {
       partnerSalary: 0
     })
     
-    const expense = calculateExpenseToZeroNetWorth(profileNoResources)
+    const expense = calculateExpenseToZeroNetWorthModular(profileNoResources)
     
     // Should return a minimal amount (might have some age pension income)
     // but should be relatively low since no other income sources
@@ -773,11 +774,11 @@ describe('calculateExpenseToZeroNetWorth', () => {
       partnerPensionAmount: 0
     })
     
-    const optimalExpense = calculateExpenseToZeroNetWorth(profile)
+    const optimalExpense = calculateExpenseToZeroNetWorthModular(profile)
     
     // Test the calculation by running the financial plan
     const testProfile = { ...profile, expenses: optimalExpense }
-    const result = calculateFinancialPlan(testProfile)
+    const result = calculateFinancialPlanModular(testProfile)
     const finalWealth = result.finalNetSavings
     
     // Calculate pension income for debugging
@@ -817,7 +818,7 @@ describe('calculateExpenseToZeroNetWorth', () => {
       deathAge: 90
     })
     
-    const expense = calculateExpenseToZeroNetWorth(profile)
+    const expense = calculateExpenseToZeroNetWorthModular(profile)
     
     console.log(`Test case - Salary: ${profile.salary}, Calculated Expense: ${expense}`)
     
@@ -846,11 +847,11 @@ describe('calculateExpenseToZeroNetWorth', () => {
     
     // Test with lower expense - should deplete assets later
     const testProfile1 = { ...baseProfile, expenses: 30000 }
-    const result1 = calculateFinancialPlan(testProfile1)
+    const result1 = calculateFinancialPlanModular(testProfile1)
     
     // Test with higher expense - should deplete assets earlier
     const testProfile2 = { ...baseProfile, expenses: 50000 }
-    const result2 = calculateFinancialPlan(testProfile2)
+    const result2 = calculateFinancialPlanModular(testProfile2)
     
     // Find when assets reach 0 for each scenario
     const depletionAge1 = result1.projection.find(p => p.savings <= 0)?.age || baseProfile.deathAge
@@ -864,13 +865,13 @@ describe('calculateExpenseToZeroNetWorth', () => {
     expect(depletionAge2).toBeLessThanOrEqual(depletionAge1)
     
     // Now test that the auto-optimize gives different results for different target outcomes
-    const optimalExpense = calculateExpenseToZeroNetWorth(baseProfile)
+    const optimalExpense = calculateExpenseToZeroNetWorthModular(baseProfile)
     
     console.log(`Auto-optimized expense: ${optimalExpense}`)
     
     // Verify the optimized expense actually reaches close to zero
     const testOptimal = { ...baseProfile, expenses: optimalExpense }
-    const resultOptimal = calculateFinancialPlan(testOptimal)
+    const resultOptimal = calculateFinancialPlanModular(testOptimal)
     
     console.log(`Optimal expense final wealth: ${resultOptimal.finalNetSavings}`)
     
@@ -901,16 +902,16 @@ describe('calculateExpenseToZeroNetWorth', () => {
     const testLow = { ...profile, expenses: lowExpense }
     const testHigh = { ...profile, expenses: highExpense }
     
-    const resultLow = calculateFinancialPlan(testLow)
-    const resultHigh = calculateFinancialPlan(testHigh)
+    const resultLow = calculateFinancialPlanModular(testLow)
+    const resultHigh = calculateFinancialPlanModular(testHigh)
     
     console.log(`Low expense (${lowExpense}): Final wealth = ${resultLow.finalNetSavings}`)
     console.log(`High expense (${highExpense}): Final wealth = ${resultHigh.finalNetSavings}`)
     
     // Find the auto-optimized expense
-    const optimalExpense = calculateExpenseToZeroNetWorth(profile)
+    const optimalExpense = calculateExpenseToZeroNetWorthModular(profile)
     const resultOptimal = { ...profile, expenses: optimalExpense }
-    const planOptimal = calculateFinancialPlan(resultOptimal)
+    const planOptimal = calculateFinancialPlanModular(resultOptimal)
     
     console.log(`Optimal expense (${optimalExpense}): Final wealth = ${planOptimal.finalNetSavings}`)
     
