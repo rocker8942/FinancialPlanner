@@ -60,7 +60,7 @@
         <div class="summary-text">
           <h3 class="summary-title">Age Pension</h3>
           <p class="summary-value">{{ formatCurrency(annualPension) }}</p>
-          <p class="summary-subtitle">Annual from age 67</p>
+          <p class="summary-subtitle">Annual from age {{ firstPensionAge }}</p>
         </div>
       </div>
     </div>
@@ -112,8 +112,14 @@ const yearsToRetirement = computed(() => {
 
 const annualPension = computed(() => {
   if (!props.projection.length) return 0;
-  const pensionData = props.projection.find(p => p.age >= 67 && p.pensionIncome > 0);
+  const pensionData = props.projection.find(p => p.pensionIncome > 0);
   return pensionData?.pensionIncome || 0;
+});
+
+const firstPensionAge = computed(() => {
+  if (!props.projection.length) return 67;
+  const pensionData = props.projection.find(p => p.pensionIncome > 0);
+  return pensionData?.age || 67;
 });
 </script>
 
