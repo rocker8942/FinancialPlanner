@@ -85,12 +85,6 @@ namespace FinancialPlanner.Backend.Services
 
                     // Subtract expenses from savings only
                     savings -= profile.Expenses;
-                    
-                    // Ensure savings don't go negative
-                    if (savings < 0)
-                    {
-                        savings = 0;
-                    }
                 }
                 
                 decimal netSavings = savings - mortgageBalance;

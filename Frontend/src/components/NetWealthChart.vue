@@ -43,10 +43,10 @@
           <thead class="table-header">
             <tr>
               <th class="table-cell-header">Age</th>
-              <th class="table-cell-header text-right">Net Financial Assets</th>
-              <th class="table-cell-header text-right">Superannuation</th>
               <th class="table-cell-header text-right">Total Income</th>
               <th class="table-cell-header text-right">Expenses</th>
+              <th class="table-cell-header text-right">Superannuation</th>
+              <th class="table-cell-header text-right">Net Financial Assets</th>
             </tr>
           </thead>
           <tbody>
@@ -57,10 +57,10 @@
               class="table-row"
             >
               <td class="table-cell">{{ item.age }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(Math.max(0, item.savings)) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(item.superannuationBalance) }}</td>
               <td class="table-cell text-right">{{ formatCurrency(item.totalIncome) }}</td>
               <td class="table-cell text-right">{{ formatCurrency(item.expenses) }}</td>
+              <td class="table-cell text-right">{{ formatCurrency(item.superannuationBalance) }}</td>
+              <td class="table-cell text-right">{{ formatCurrency(Math.max(0, item.savings)) }}</td>
             </tr>
           </tbody>
         </table>

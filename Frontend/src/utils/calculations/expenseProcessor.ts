@@ -11,17 +11,8 @@ export function processExpensesAndCashFlow(
   cpiAdjustedExpenses: number,
   isFirstYear: boolean = false
 ): CashFlowResult {
-  // Don't apply cash flow changes in the first year
-  if (isFirstYear) {
-    return {
-      updatedAssets: { ...assetState },
-      shortfall: 0,
-      mortgageInterestPaid: 0,
-      mortgagePrincipalPaid: 0,
-      expensesFromAssets: 0
-    };
-  }
-
+  // For the first year, we still process income and expenses, but we only apply 
+  // the net change to avoid double-counting initial assets
   const updatedAssets = { ...assetState };
   let shortfall = 0;
   let mortgageInterestPaid = 0;
@@ -69,6 +60,28 @@ export function processExpensesAndCashFlow(
   // Ensure superannuation balance is not negative
   updatedAssets.superannuationBalance = Math.max(0, updatedAssets.superannuationBalance);
 
+  // SPECIAL HANDLING FOR FIRST YEAR: If this is the first year, we need to preserve
+  // the initial asset state but still account for the cash flow changes.
+  // The issue was that first year was completely ignored, which meant that people 
+  // retiring at their current age never got their income/expense processing.
+  if (isFirstYear) {
+    // Calculate the net cash flow change and apply only that change
+    const netCashFlowChange = remainingDisposableIncome - expensesFromAssets;
+    
+    return {
+      updatedAssets: {
+        ...assetState, // Start with original state
+        savings: assetState.savings + netCashFlowChange, // Apply only the net change
+        mortgageBalance: updatedAssets.mortgageBalance, // Mortgage payments are real changes
+        superannuationBalance: assetState.superannuationBalance // Keep original super balance in first year
+      },
+      shortfall,
+      mortgageInterestPaid,
+      mortgagePrincipalPaid,
+      expensesFromAssets
+    };
+  }
+
   return {
     updatedAssets,
     shortfall,
@@ -96,10 +109,16 @@ function processExpenseShortfall(
   let expensesFromAssets = 0;
 
   // First try to cover shortfall from savings
-  const expenseFromSavings = Math.min(remainingShortfall, updatedAssets.savings);
+  const expenseFromSavings = Math.max(0, Math.min(remainingShortfall, updatedAssets.savings));
   updatedAssets.savings -= expenseFromSavings;
   remainingShortfall -= expenseFromSavings;
   expensesFromAssets += expenseFromSavings;
+  
+  // Allow savings to go negative for the remaining shortfall (tracking debt)
+  if (remainingShortfall > 0) {
+    updatedAssets.savings -= remainingShortfall;
+    // Note: This creates negative savings to track the debt, but we don't double-count the expense
+  }
 
   // If there are remaining expenses and superannuation is available, deduct from super
   // Note: In Australia, super can only be accessed at preservation age (60+) 
