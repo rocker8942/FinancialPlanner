@@ -213,14 +213,31 @@ function renderChart() {
           const savingsValue = useInflationAdjusted && projectionData.inflationAdjustedSavings !== undefined 
             ? projectionData.inflationAdjustedSavings 
             : projectionData.savings;
+          
+          // Calculate inflation-adjusted superannuation value for tooltip
+          let superValue = projectionData.superannuationBalance;
+          if (useInflationAdjusted && props.currentAge && props.cpiGrowthRate) {
+            const yearsFromNow = projectionData.age - props.currentAge;
+            const inflationAdjustmentFactor = Math.pow(1 + props.cpiGrowthRate, -yearsFromNow);
+            superValue = projectionData.superannuationBalance * inflationAdjustmentFactor;
+          }
+          
+          // Calculate inflation-adjusted pension income value for tooltip
+          let pensionValue = projectionData.pensionIncome ?? 0;
+          if (useInflationAdjusted && props.currentAge && props.cpiGrowthRate) {
+            const yearsFromNow = projectionData.age - props.currentAge;
+            const inflationAdjustmentFactor = Math.pow(1 + props.cpiGrowthRate, -yearsFromNow);
+            pensionValue = (projectionData.pensionIncome ?? 0) * inflationAdjustmentFactor;
+          }
+          
           const valueType = useInflationAdjusted ? ' (Real Value)' : ' (Nominal)';
           
           return `
             Age: ${age}<br/>
             Property Assets${valueType}: ${formatCurrency(propertyValue)}<br/>
             Net Financial Asset${valueType}: ${formatCurrency(Math.max(0, savingsValue))}<br/>
-            Superannuation: ${formatCurrency(projectionData.superannuationBalance)}<br/>
-            Pension Income: ${formatCurrency(projectionData.pensionIncome ?? 0)}
+            Superannuation${valueType}: ${formatCurrency(superValue)}<br/>
+            Pension Income${valueType}: ${formatCurrency(pensionValue)}
           `;
         }
         return `Age: ${age}<br/>Net Wealth: ${formatCurrency(dataPoint.value)}`;
