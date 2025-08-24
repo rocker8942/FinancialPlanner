@@ -20,17 +20,24 @@ export function processExpensesAndCashFlow(
   let expensesFromAssets = 0;
 
   // Calculate disposable income after expenses using spendable income (not total package)
-  const disposableIncome = Math.max(0, spendableIncome - cpiAdjustedExpenses);
-  let remainingDisposableIncome = disposableIncome;
+  let remainingDisposableIncome = Math.max(0, spendableIncome - cpiAdjustedExpenses);
 
-  // Use disposable income to pay mortgage interest first
-  if (updatedAssets.mortgageBalance > 0 && remainingDisposableIncome > 0) {
+  let mortgageInterest = 0;
+  if (updatedAssets.mortgageBalance > 0)
+  {
     // Calculate interest on net mortgage (mortgage - savings offset, but not less than 0)
     const netMortgage = Math.max(0, updatedAssets.mortgageBalance - updatedAssets.savings);
-    const mortgageInterest = netMortgage * profile.mortgageRate;
+    mortgageInterest = netMortgage * profile.mortgageRate;
+  }
+
+  // Use disposable income to pay mortgage interest first
+  if (mortgageInterest > 0 && remainingDisposableIncome > 0) {
     mortgageInterestPaid = Math.min(remainingDisposableIncome, mortgageInterest);
     remainingDisposableIncome -= mortgageInterestPaid;
+    mortgageInterest -= mortgageInterestPaid;
   }
+
+  const remainingMortgageInterest = mortgageInterest;
 
   // Use remaining disposable income to reduce mortgage principal first, then add to savings
   if (updatedAssets.mortgageBalance > 0 && remainingDisposableIncome > 0) {
@@ -43,7 +50,7 @@ export function processExpensesAndCashFlow(
   updatedAssets.savings += remainingDisposableIncome;
 
   // If disposable income was insufficient to cover expenses, deduct shortfall from savings/super
-  const expenseShortfall = Math.max(0, cpiAdjustedExpenses - spendableIncome);
+  const expenseShortfall =   cpiAdjustedExpenses + remainingMortgageInterest - spendableIncome;
   if (expenseShortfall > 0) {
     const assetDrawdown = processExpenseShortfall(
       updatedAssets,
@@ -114,12 +121,6 @@ function processExpenseShortfall(
   remainingShortfall -= expenseFromSavings;
   expensesFromAssets += expenseFromSavings;
   
-  // Allow savings to go negative for the remaining shortfall (tracking debt)
-  if (remainingShortfall > 0) {
-    updatedAssets.savings -= remainingShortfall;
-    // Note: This creates negative savings to track the debt, but we don't double-count the expense
-  }
-
   // If there are remaining expenses and superannuation is available, deduct from super
   // Note: In Australia, super can only be accessed at preservation age (60+) 
   // Early access for hardship requires special circumstances and APRA approval
@@ -128,6 +129,12 @@ function processExpenseShortfall(
     updatedAssets.superannuationBalance -= expenseFromSuper;
     remainingShortfall -= expenseFromSuper;
     expensesFromAssets += expenseFromSuper;
+  }
+
+  // Allow savings to go negative for the remaining shortfall (tracking debt)
+  if (remainingShortfall > 0) {
+    updatedAssets.savings -= remainingShortfall;
+    // Note: This creates negative savings to track the debt, but we don't double-count the expense
   }
 
   return {

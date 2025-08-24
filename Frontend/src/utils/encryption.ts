@@ -33,21 +33,25 @@ function generateApplicationKey(): string {
  * @returns Encrypted string
  */
 export function encryptSensitiveData<T>(data: T): string {
+  // First, try to stringify the data to check for circular references
+  let jsonString: string;
+  try {
+    jsonString = JSON.stringify(data);
+  } catch (jsonError) {
+    console.warn('Failed to encrypt data, storing unencrypted:', jsonError);
+    return '{}'; // Return empty object JSON if stringify fails
+  }
+
   try {
     const key = generateSessionKey();
-    const jsonString = JSON.stringify(data);
     const encrypted = CryptoJS.AES.encrypt(jsonString, key).toString();
     
     // Add a prefix to identify encrypted data
     return 'encrypted:' + encrypted;
   } catch (error) {
     console.warn('Failed to encrypt data, storing unencrypted:', error);
-    // In case of encryption failure, return a safe fallback
-    try {
-      return JSON.stringify(data);
-    } catch {
-      return '{}'; // Return empty object JSON if even stringify fails
-    }
+    // If encryption fails but stringify worked, return the JSON string
+    return jsonString;
   }
 }
 
@@ -271,7 +275,13 @@ export function compressAndEncryptForUrl<T>(data: T): string | null {
     const minimizedData = minimizeFinancialData(data);
     
     // Step 2: Convert minimized data to JSON
-    const jsonString = JSON.stringify(minimizedData);
+    let jsonString: string;
+    try {
+      jsonString = JSON.stringify(minimizedData);
+    } catch (jsonError) {
+      console.warn('Failed to serialize data to JSON:', jsonError);
+      return null;
+    }
     
     // Step 3: Compress using LZ-string (browser-optimized)
     const compressed = compressData(jsonString);
