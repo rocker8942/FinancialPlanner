@@ -143,8 +143,8 @@ describe('Encryption Utilities', () => {
       circularObj.self = circularObj; // Create circular reference
       
       const result = encryptSensitiveData(circularObj);
-      // Should fall back to JSON.stringify which will also fail, but handled gracefully
-      expect(typeof result).toBe('string');
+      // Should fall back to empty object JSON when both JSON.stringify and encryption fail
+      expect(result).toBe('{}');
     });
 
     it('should handle decryption failures gracefully', () => {
