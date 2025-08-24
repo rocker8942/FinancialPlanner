@@ -401,7 +401,7 @@ describe('calculateFinancialPlanModular', () => {
       // Net income after tax: ~24663
       // With corrected net income calculation: ~-6301
       expect(secondYear.propertyAssets).toBeCloseTo(515000, 0)
-      expect(secondYear.savings).toBeCloseTo(31422, 0) // Net financial assets with corrected logic
+      expect(secondYear.savings).toBeCloseTo(35274, 0) // Net financial assets with super contributions properly included
     })
 
     it('should handle zero mortgage balance', () => {
@@ -441,7 +441,7 @@ describe('calculateFinancialPlanModular', () => {
       // Net income after tax: ~65627
       // With corrected net income, mortgage paid off, result: ~239004
       expect(secondYear.propertyAssets).toBeCloseTo(515000, 0)
-      expect(secondYear.savings).toBeCloseTo(322550, 0) // Net financial assets with corrected logic
+      expect(secondYear.savings).toBeCloseTo(332908, 0) // Net financial assets with super contributions properly included
     })
   })
 

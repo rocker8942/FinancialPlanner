@@ -57,10 +57,10 @@
               class="table-row"
             >
               <td class="table-cell">{{ item.age }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(item.totalIncome) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(item.expenses) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(item.superannuationBalance) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(Math.max(0, item.savings)) }}</td>
+              <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.totalIncome, item.age)) }}</td>
+              <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.expenses, item.age)) }}</td>
+              <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.superannuationBalance, item.age)) }}</td>
+              <td class="table-cell text-right">{{ formatCurrency(Math.max(0, showInflationAdjusted && item.inflationAdjustedSavings !== undefined ? item.inflationAdjustedSavings : item.savings)) }}</td>
             </tr>
           </tbody>
         </table>
@@ -121,6 +121,15 @@ let currentLegendSelection: Record<string, boolean> = {
   'Financial Assets': true,
   'Pension Income': true
 };
+
+function getDisplayValue(value: number, age: number): number {
+  if (!showInflationAdjusted.value || !props.currentAge || !props.cpiGrowthRate) {
+    return value;
+  }
+  const yearsFromNow = age - props.currentAge;
+  const inflationAdjustmentFactor = Math.pow(1 + props.cpiGrowthRate, -yearsFromNow);
+  return value * inflationAdjustmentFactor;
+}
 
 function renderChart() {
   if (!chart.value) return;

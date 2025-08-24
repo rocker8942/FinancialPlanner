@@ -35,10 +35,8 @@ export function calculateIncomeComponents(
     isFirstYear
   );
   
-  // Update super balance with contributions if not first year
-  if (!isFirstYear) {
-    updatedSuperBalance += employmentIncome.netSuperContributions;
-  }
+  // Update super balance with contributions (always, including first year)
+  updatedSuperBalance += employmentIncome.netSuperContributions;
   
   // Calculate pension income
   const pensionIncome = calculatePensionIncome(
@@ -120,13 +118,11 @@ function calculateEmploymentIncome(
     totalSuperContributions += userSuperContributions;
     totalPackageAmount += userTotalPackage;
     
-    // Calculate net super contributions for balance update (only if not first year)
-    if (!isFirstYear) {
-      netSuperContributions += calculateNetSuperContributions(
-        userSuperContributions,
-        userTaxableIncome
-      );
-    }
+    // Calculate net super contributions for balance update
+    netSuperContributions += calculateNetSuperContributions(
+      userSuperContributions,
+      userTaxableIncome
+    );
   }
   
   // Process partner salary
@@ -141,13 +137,11 @@ function calculateEmploymentIncome(
     totalSuperContributions += partnerSuperContributions;
     totalPackageAmount += partnerTotalPackage;
     
-    // Calculate net super contributions for balance update (only if not first year)
-    if (!isFirstYear) {
-      netSuperContributions += calculateNetSuperContributions(
-        partnerSuperContributions,
-        partnerTaxableIncome
-      );
-    }
+    // Calculate net super contributions for balance update
+    netSuperContributions += calculateNetSuperContributions(
+      partnerSuperContributions,
+      partnerTaxableIncome
+    );
   }
   
   // Calculate net employment income after tax (for actual spending)
