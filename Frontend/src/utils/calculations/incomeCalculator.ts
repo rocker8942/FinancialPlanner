@@ -14,6 +14,7 @@ export function calculateIncomeComponents(
   incomeComponents: IncomeComponents;
   updatedSuperBalance: number;
 } {
+
   const yearsFromStart = age - profile.currentAge;
   const currentPartnerAge = profile.partnerAge + yearsFromStart;
   
@@ -93,7 +94,7 @@ export function calculateIncomeComponents(
 function calculateEmploymentIncome(
   currentUserSalary: number,
   currentPartnerSalary: number,
-  isFirstYear: boolean
+  _isFirstYear: boolean
 ): {
   grossEmploymentIncome: number;
   netEmploymentIncome: number;

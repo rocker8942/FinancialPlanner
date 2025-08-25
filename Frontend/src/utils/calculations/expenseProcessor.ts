@@ -19,6 +19,21 @@ export function processExpensesAndCashFlow(
   let mortgagePrincipalPaid = 0;
   let expensesFromAssets = 0;
 
+  if (isFirstYear) {
+    // Preserve initial asset state for first year
+    updatedAssets.savings = assetState.savings;
+    updatedAssets.mortgageBalance = assetState.mortgageBalance;
+    updatedAssets.superannuationBalance = assetState.superannuationBalance;
+
+    return {
+      updatedAssets,
+      shortfall,
+      mortgageInterestPaid,
+      mortgagePrincipalPaid,
+      expensesFromAssets
+    };
+  }
+
   // Calculate disposable income after expenses using spendable income (not total package)
   let remainingDisposableIncome = Math.max(0, spendableIncome - cpiAdjustedExpenses);
 

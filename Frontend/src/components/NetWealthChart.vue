@@ -45,6 +45,7 @@
               <th class="table-cell-header">Age</th>
               <th class="table-cell-header text-right">Total Income</th>
               <th class="table-cell-header text-right">Expenses</th>
+              <th class="table-cell-header text-right">Mortgage</th>
               <th class="table-cell-header text-right">Superannuation</th>
               <th class="table-cell-header text-right">Net Financial Assets</th>
             </tr>
@@ -59,6 +60,7 @@
               <td class="table-cell">{{ item.age }}</td>
               <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.totalIncome, item.age)) }}</td>
               <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.expenses, item.age)) }}</td>
+              <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.mortgageBalance, item.age)) }}</td>
               <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.superannuationBalance, item.age)) }}</td>
               <td class="table-cell text-right">{{ formatCurrency(Math.max(0, showInflationAdjusted && item.inflationAdjustedSavings !== undefined ? item.inflationAdjustedSavings : item.savings)) }}</td>
             </tr>
@@ -100,6 +102,7 @@ const props = defineProps<{
     propertyAssets: number; 
     savings: number; 
     superannuationBalance: number;
+    mortgageBalance: number;
     pensionIncome: number; // Updated to match backend response
     totalIncome: number;
     expenses: number;

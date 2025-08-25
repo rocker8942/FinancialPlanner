@@ -64,7 +64,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Net financial asset = net-saving - morgate + superannuation. 
 - Auto-optimize expense: get the optimal exepese that make the net financial asset to be near 0 at the project ends. 
 - Income provided by user is growth income including super and tax. 
-- Disposible income = growth income - super - tax - mortgage interest (if there is a mortgage)
+- Disposible income = growth income - super contribution - tax - mortgage interest (if there is a mortgage)
 
 ### Data Flow
 1. User inputs financial data via `AssetInputForm.vue`

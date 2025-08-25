@@ -47,6 +47,7 @@ export interface YearlyWealth {
   propertyAssets: number;
   savings: number;
   superannuationBalance: number;
+  mortgageBalance: number;
   inflationAdjustedWealth: number;
   inflationAdjustedPropertyAssets: number;
   inflationAdjustedSavings: number;
