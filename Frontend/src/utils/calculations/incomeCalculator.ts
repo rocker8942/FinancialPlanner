@@ -36,8 +36,10 @@ export function calculateIncomeComponents(
     isFirstYear
   );
   
-  // Update super balance with contributions (always, including first year)
-  updatedSuperBalance += employmentIncome.netSuperContributions;
+  // Update super balance with contributions (but not in first year to preserve starting point)
+  if (!isFirstYear) {
+    updatedSuperBalance += employmentIncome.netSuperContributions;
+  }
   
   // Calculate pension income
   const pensionIncome = calculatePensionIncome(
