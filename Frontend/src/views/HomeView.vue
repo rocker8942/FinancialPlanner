@@ -45,6 +45,7 @@ interface ProjectionData {
   wealth: number;
   propertyAssets: number;
   savings: number;
+  rawSavings: number;
   superannuationBalance: number;
   mortgageBalance: number;
   inflationAdjustedWealth: number;

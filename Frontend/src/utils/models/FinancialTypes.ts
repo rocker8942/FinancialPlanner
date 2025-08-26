@@ -46,6 +46,7 @@ export interface YearlyWealth {
   wealth: number;
   propertyAssets: number;
   savings: number;
+  rawSavings: number; // Just the savings amount without super or mortgage
   superannuationBalance: number;
   mortgageBalance: number;
   inflationAdjustedWealth: number;

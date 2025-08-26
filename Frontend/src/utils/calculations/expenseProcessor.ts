@@ -82,28 +82,6 @@ export function processExpensesAndCashFlow(
   // Ensure superannuation balance is not negative
   updatedAssets.superannuationBalance = Math.max(0, updatedAssets.superannuationBalance);
 
-  // SPECIAL HANDLING FOR FIRST YEAR: If this is the first year, we need to preserve
-  // the initial asset state but still account for the cash flow changes.
-  // The issue was that first year was completely ignored, which meant that people 
-  // retiring at their current age never got their income/expense processing.
-  if (isFirstYear) {
-    // Calculate the net cash flow change and apply only that change
-    const netCashFlowChange = remainingDisposableIncome - expensesFromAssets;
-    
-    return {
-      updatedAssets: {
-        ...assetState, // Start with original state
-        savings: assetState.savings + netCashFlowChange, // Apply only the net change
-        mortgageBalance: updatedAssets.mortgageBalance, // Mortgage payments are real changes
-        superannuationBalance: assetState.superannuationBalance // Keep original super balance in first year
-      },
-      shortfall,
-      mortgageInterestPaid,
-      mortgagePrincipalPaid,
-      expensesFromAssets
-    };
-  }
-
   return {
     updatedAssets,
     shortfall,
@@ -144,6 +122,15 @@ function processExpenseShortfall(
     updatedAssets.superannuationBalance -= expenseFromSuper;
     remainingShortfall -= expenseFromSuper;
     expensesFromAssets += expenseFromSuper;
+
+    if (updatedAssets.savings < 0 && updatedAssets.superannuationBalance > 0) {
+      // If savings went negative, try to cover that from super as well
+      const additionalFromSuper = Math.min(-updatedAssets.savings, updatedAssets.superannuationBalance);
+      updatedAssets.superannuationBalance -= additionalFromSuper;
+      updatedAssets.savings += additionalFromSuper;
+      expensesFromAssets += additionalFromSuper;
+      remainingShortfall -= additionalFromSuper;
+    }
   }
 
   // Allow savings to go negative for the remaining shortfall (tracking debt)

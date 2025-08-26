@@ -139,6 +139,7 @@ export function calculateYearlyProjection(
     wealth: totalWealth,
     propertyAssets: currentState.propertyAssets,
     savings: netFinancialAsset,
+    rawSavings: currentState.savings,
     superannuationBalance: currentState.superannuationBalance,
     mortgageBalance: currentState.mortgageBalance,
     inflationAdjustedWealth: totalWealth * inflationAdjustmentFactor,

@@ -74,6 +74,7 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
       wealth: totalWealth,
       propertyAssets: assetState.propertyAssets,
       savings: netFinancialAsset,
+      rawSavings: assetState.savings,
       superannuationBalance: assetState.superannuationBalance,
       mortgageBalance: assetState.mortgageBalance,
       inflationAdjustedWealth: inflationData.inflationAdjustedWealth,
