@@ -45,9 +45,9 @@
               <th class="table-cell-header">Age</th>
               <th class="table-cell-header text-right">Total Income</th>
               <th class="table-cell-header text-right">Expenses</th>
-              <th class="table-cell-header text-right">Mortgage</th>
+              <th class="table-cell-header text-right hidden-mobile">Mortgage</th>
               <th class="table-cell-header text-right">Superannuation</th>
-              <th class="table-cell-header text-right">Savings</th>
+              <th class="table-cell-header text-right hidden-mobile">Savings</th>
               <th class="table-cell-header text-right">Net Financial Assets</th>
             </tr>
           </thead>
@@ -61,9 +61,9 @@
               <td class="table-cell">{{ item.age }}</td>
               <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.totalIncome, item.age)) }}</td>
               <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.expenses, item.age)) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.mortgageBalance, item.age)) }}</td>
+              <td class="table-cell text-right hidden-mobile">{{ formatCurrency(getDisplayValue(item.mortgageBalance, item.age)) }}</td>
               <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.superannuationBalance, item.age)) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.rawSavings, item.age)) }}</td>
+              <td class="table-cell text-right hidden-mobile">{{ formatCurrency(getDisplayValue(item.rawSavings, item.age)) }}</td>
               <td class="table-cell text-right">{{ formatCurrency(Math.max(0, showInflationAdjusted && item.inflationAdjustedSavings !== undefined ? item.inflationAdjustedSavings : item.savings)) }}</td>
             </tr>
           </tbody>
@@ -618,6 +618,10 @@ watch(showInflationAdjusted, renderChart);
 
 /* Mobile table optimizations */
 @media (max-width: 768px) {
+  .hidden-mobile {
+    display: none;
+  }
+  
   .table-container {
     max-height: 16rem; /* Reduce height on mobile */
   }

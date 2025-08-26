@@ -69,13 +69,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Data Flow
 1. User inputs financial data via `AssetInputForm.vue`
 2. Data stored browser local storage
-3. `calculateFinancialPlan` processes projections
+3. `calculateFinancialPlanModular` processes projections
 4. Results displayed in `NetWealthChart.vue` using ECharts
 5. Year-by-year wealth projections with inflation adjustments
 
 ### Key Files to Understand
 - `Backend/Models/FinancialProfile.cs` - Core data model
-- `Frontend/src/utils/financialPlan.ts` - Financial algorithms
+- `Frontend/src/utils/calculations/financialPlanOrchestrator.ts` - Financial algorithms
 - `Frontend/src/components/NetWealthChart.vue` - Chart visualization
 - `Frontend/src/store/auth.ts` - Authentication state
 - `Frontend/src/services/api.ts` - API layer

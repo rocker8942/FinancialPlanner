@@ -246,6 +246,8 @@ const firstPensionAge = computed(() => {
     grid-template-columns: 1fr;
     gap: 0.5rem;
     margin-bottom: 0.75rem;
+    width: 100%;
+    max-width: none;
   }
   
   .summary-card {

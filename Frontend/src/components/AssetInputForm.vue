@@ -242,7 +242,7 @@
         </div>
         <div class="form-group">
           <div class="label-with-toggle">
-            <label for="expenses">Annual Expenses</label>
+            <label for="expenses">Annual Expenses (exclude mortgate payment)</label>
             <button type="button" 
                     class="toggle-switch" 
                     :class="{ active: zeroNetWorthAtDeath }"

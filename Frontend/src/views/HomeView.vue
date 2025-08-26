@@ -328,7 +328,7 @@ watch(() => route.hash, () => {
 
 @media (max-width: 480px) {
   .dashboard {
-    padding: 0.25rem;
+    padding: 0;
   }
   
   .page-title {
@@ -346,7 +346,7 @@ watch(() => route.hash, () => {
 /* iPhone and narrow mobile screens */
 @media (max-width: 414px) {
   .dashboard {
-    padding: 0.5rem;
+    padding: 0;
     /* Center the entire dashboard content */
     align-items: center;
     /* Ensure container never exceeds viewport */
@@ -383,8 +383,8 @@ watch(() => route.hash, () => {
   }
   
   .dashboard-center {
-    /* Center charts and summary cards */
-    align-items: center;
+    /* Full width for mobile - remove centering */
+    align-items: stretch;
     width: 100%;
   }
   
