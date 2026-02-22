@@ -48,9 +48,24 @@
       />
     </FormSection>
 
+    <!-- Life Events Section -->
+    <FormSection
+      title="Life Events"
+      :is-open="sectionOpen.lifeEvents"
+      section-key="lifeEvents"
+      @toggle="toggleSection"
+    >
+      <LifeEventsForm
+        v-model="lifeEvents"
+        :current-age="personalProfile.currentAge"
+        :death-age="advancedOptions.deathAge"
+        @update:modelValue="autoSaveToStorage"
+      />
+    </FormSection>
+
     <!-- Advanced Options Section -->
-    <FormSection 
-      title="Advanced Options" 
+    <FormSection
+      title="Advanced Options"
       :is-open="sectionOpen.advanced"
       section-key="advanced"
       @toggle="toggleSection"
@@ -95,10 +110,12 @@ import PersonalProfileForm from './forms/PersonalProfileForm.vue';
 import AssetsForm from './forms/AssetsForm.vue';
 import IncomeExpensesForm from './forms/IncomeExpensesForm.vue';
 import AdvancedOptionsForm from './forms/AdvancedOptionsForm.vue';
+import LifeEventsForm from './forms/LifeEventsForm.vue';
 import { formStorageService, type StoredFinancialData } from '../services/formStorageService';
 import { calculateDisposableIncome, calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
 import { formatCurrency } from '../utils/formatters';
 import type { FinancialProfile } from '../utils/financialPlan';
+import type { LifeEvent } from '../utils/models/FinancialTypes';
 
 // Props interface for URL parameters
 interface Props {
@@ -115,6 +132,7 @@ const sectionOpen = ref({
   profile: true,
   assets: false,
   income: false,
+  lifeEvents: false,
   advanced: false
 });
 
@@ -156,6 +174,8 @@ const advancedOptions = ref({
   retireAge: 65 // Needed for death age validation
 });
 
+const lifeEvents = ref<LifeEvent[]>([]);
+
 // Share functionality state
 const shareSuccess = ref(false);
 
@@ -194,7 +214,8 @@ const currentFinancialProfile = computed((): FinancialProfile => {
     partnerAge: personalProfile.value.partnerAge,
     partnerRetireAge: personalProfile.value.partnerRetireAge,
     relationshipStatus: personalProfile.value.relationshipStatus,
-    isHomeowner: personalProfile.value.isHomeowner
+    isHomeowner: personalProfile.value.isHomeowner,
+    lifeEvents: lifeEvents.value
   };
 });
 
@@ -264,7 +285,8 @@ const collectAllFormData = (): StoredFinancialData => {
     partnerAge: personalProfile.value.partnerAge,
     partnerRetireAge: personalProfile.value.partnerRetireAge,
     relationshipStatus: personalProfile.value.relationshipStatus,
-    isHomeowner: personalProfile.value.isHomeowner
+    isHomeowner: personalProfile.value.isHomeowner,
+    lifeEvents: lifeEvents.value
   };
 };
 
@@ -330,6 +352,8 @@ const populateFormsFromData = (data: StoredFinancialData) => {
     cpiGrowthRate: data.cpiGrowthRate,
     retireAge: data.retireAge
   };
+
+  lifeEvents.value = data.lifeEvents ?? [];
 };
 
 // Share functionality

@@ -1,6 +1,7 @@
 import { setSecureItem, getSecureItem } from '../utils/encryption';
 import { generateShareableUrl } from '../utils/formatters';
 import type { FinancialProfile } from '../utils/financialPlan';
+import type { LifeEvent } from '../utils/models/FinancialTypes';
 
 // Storage keys
 const LOCAL_STORAGE_KEY = 'financialPlannerData';
@@ -32,6 +33,7 @@ export interface StoredFinancialData {
   partnerRetireAge: number;
   relationshipStatus: 'single' | 'couple';
   isHomeowner: boolean;
+  lifeEvents?: LifeEvent[];
 }
 
 export class FormStorageService {
@@ -105,7 +107,8 @@ export class FormStorageService {
       partnerAge: fields.partnerAge || 30,
       partnerRetireAge: fields.partnerRetireAge || 65,
       relationshipStatus: fields.relationshipStatus || 'single',
-      isHomeowner: fields.isHomeowner || false
+      isHomeowner: fields.isHomeowner || false,
+      lifeEvents: fields.lifeEvents || []
     };
   }
   
@@ -137,10 +140,11 @@ export class FormStorageService {
       partnerAge: data.partnerAge,
       partnerRetireAge: data.partnerRetireAge,
       relationshipStatus: data.relationshipStatus,
-      isHomeowner: data.isHomeowner
+      isHomeowner: data.isHomeowner,
+      lifeEvents: data.lifeEvents ?? []
     };
   }
-  
+
   /**
    * Convert storage data to FinancialProfile for calculations
    */
@@ -169,10 +173,11 @@ export class FormStorageService {
       partnerAge: data.partnerAge,
       partnerRetireAge: data.partnerRetireAge,
       relationshipStatus: data.relationshipStatus,
-      isHomeowner: data.isHomeowner
+      isHomeowner: data.isHomeowner,
+      lifeEvents: data.lifeEvents ?? []
     };
   }
-  
+
   /**
    * Generate shareable URL from current data
    */
@@ -246,7 +251,8 @@ export class FormStorageService {
       partnerAge: 30,
       partnerRetireAge: 65,
       relationshipStatus: 'single',
-      isHomeowner: false
+      isHomeowner: false,
+      lifeEvents: []
     };
   }
   

@@ -3,6 +3,15 @@
  * Extracted from financialPlan.ts for better organization
  */
 
+// Life event (lump sum income or expense at a specific age)
+export interface LifeEvent {
+  id: string;
+  label: string;
+  age: number;
+  amount: number;
+  type: 'expense' | 'income';
+}
+
 // Core financial profile interface
 export interface FinancialProfile {
   // Assets
@@ -38,6 +47,7 @@ export interface FinancialProfile {
   pensionStartAge: number;
   partnerPensionAmount: number;
   partnerPensionStartAge: number;
+  lifeEvents?: LifeEvent[];
 }
 
 // Yearly wealth projection data
@@ -55,6 +65,7 @@ export interface YearlyWealth {
   pensionIncome: number;
   totalIncome: number; // This will show gross income in the table
   expenses: number;
+  lifeEventImpact?: number; // net lump sum impact this year (positive=income, negative=expense)
   
   // Internal tax tracking fields (not displayed in table)
   grossIncome?: number;
@@ -193,4 +204,5 @@ export interface StoredFinancialData {
   partnerRetireAge: number;
   relationshipStatus: 'single' | 'couple';
   isHomeowner: boolean;
+  lifeEvents?: LifeEvent[];
 }

@@ -81,7 +81,8 @@ import {
   TooltipComponent,
   LegendComponent,
   GridComponent,
-  MarkLineComponent
+  MarkLineComponent,
+  MarkPointComponent
 } from 'echarts/components';
 import { LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -92,10 +93,12 @@ echarts.use([
   LegendComponent,
   GridComponent,
   MarkLineComponent,
+  MarkPointComponent,
   LineChart,
   CanvasRenderer
 ]);
 import { formatCurrency } from '../utils/formatters';
+import type { LifeEvent } from '../utils/models/FinancialTypes';
 
 const props = defineProps<{
   projection: Array<{
@@ -117,6 +120,7 @@ const props = defineProps<{
   retirementAge?: number;
   cpiGrowthRate?: number;
   showInflationAdjusted: boolean;
+  lifeEvents?: LifeEvent[];
 }>();
 const emit = defineEmits<{ 'update:showInflationAdjusted': [value: boolean] }>();
 const chart = ref<HTMLDivElement | null>(null);
@@ -183,6 +187,23 @@ function renderChart() {
   // Savings minus pension portion (for stacking, ensure non-negative)
   const nonPensionSavings = props.projection.map((_, i) => Math.max(0, savingsData[i] - pensionIncome[i]));
 
+  // Build life event mark points for the Financial Assets series
+  const lifeEventMarkPoints = (props.lifeEvents || []).map(event => {
+    const projPoint = props.projection.find(p => p.age === event.age);
+    if (!projPoint) return null;
+    const yValue = Math.max(0, useInflationAdjusted && projPoint.inflationAdjustedSavings !== undefined
+      ? projPoint.inflationAdjustedSavings
+      : projPoint.savings);
+    return {
+      name: event.label || (event.type === 'income' ? 'Income' : 'Expense'),
+      coord: [event.age, yValue],
+      symbol: 'circle',
+      symbolSize: 12,
+      itemStyle: { color: event.type === 'income' ? '#10b981' : '#ef4444' },
+      label: { show: false }
+    };
+  }).filter(Boolean);
+
   // Create milestone markers
   const milestones = [];
   if (props.retirementAge) {
@@ -247,13 +268,19 @@ function renderChart() {
           }
           
           const valueType = useInflationAdjusted ? ' (Real Value)' : ' (Nominal)';
-          
+
+          const ageInt = parseInt(age);
+          const eventsAtAge = (props.lifeEvents || []).filter(e => e.age === ageInt);
+          const eventsHtml = eventsAtAge.map(e =>
+            `<br/><span style="color:${e.type === 'income' ? '#10b981' : '#ef4444'}">${e.type === 'income' ? '▲' : '▼'} ${e.label || (e.type === 'income' ? 'Income' : 'Expense')}: ${formatCurrency(e.amount)}</span>`
+          ).join('');
+
           return `
             Age: ${age}<br/>
             Property Assets${valueType}: ${formatCurrency(propertyValue)}<br/>
             Net Financial Asset${valueType}: ${formatCurrency(Math.max(0, savingsValue))}<br/>
             Superannuation${valueType}: ${formatCurrency(superValue)}<br/>
-            Pension Income${valueType}: ${formatCurrency(pensionValue)}
+            Pension Income${valueType}: ${formatCurrency(pensionValue)}${eventsHtml}
           `;
         }
         return `Age: ${age}<br/>Net Wealth: ${formatCurrency(dataPoint.value)}`;
@@ -314,7 +341,11 @@ function renderChart() {
         smooth: true,
         areaStyle: {},
         stack: 'assets',
-        color: '#06b6d4'
+        color: '#06b6d4',
+        markPoint: {
+          data: lifeEventMarkPoints,
+          tooltip: { show: false }
+        }
       }
     ]
   });

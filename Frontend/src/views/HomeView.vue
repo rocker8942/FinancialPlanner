@@ -20,6 +20,7 @@
           :current-age="currentProfile?.currentAge"
           :retirement-age="currentProfile?.retireAge"
           :cpi-growth-rate="currentProfile?.cpiGrowthRate"
+          :life-events="currentProfile?.lifeEvents || []"
           v-model:showInflationAdjusted="showInflationAdjusted"
         />
       </div>
@@ -60,7 +61,7 @@ interface ProjectionData {
 
 const projection = ref<ProjectionData[]>([]);
 const currentProfile = ref<FinancialProfile | null>(null);
-const showInflationAdjusted = ref(false);
+const showInflationAdjusted = ref(true);
 const route = useRoute();
 const urlParams = ref<Partial<FinancialProfile>>({});
 // const finalWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].wealth : 0);
