@@ -1,20 +1,19 @@
 import CryptoJS from 'crypto-js';
 import LZString from 'lz-string';
 
-// Generate a session-based key for client-side encryption (localStorage only)
+// Generate a stable device-based key for client-side encryption (localStorage only)
 // This provides protection against casual browsing but is not cryptographically secure
 function generateSessionKey(): string {
   const userAgent = navigator.userAgent;
-  const timestamp = new Date().toDateString(); // Changes daily to rotate keys
-  const sessionId = sessionStorage.getItem('sessionId') || Math.random().toString(36);
-  
-  // Store session ID for consistency within the session
-  if (!sessionStorage.getItem('sessionId')) {
-    sessionStorage.setItem('sessionId', sessionId);
+  const deviceId = localStorage.getItem('deviceId') || Math.random().toString(36);
+
+  // Store device ID in localStorage so it persists across browser sessions
+  if (!localStorage.getItem('deviceId')) {
+    localStorage.setItem('deviceId', deviceId);
   }
-  
-  // Create a deterministic but session-specific key
-  return CryptoJS.SHA256(userAgent + timestamp + sessionId).toString();
+
+  // Create a deterministic but device-specific key
+  return CryptoJS.SHA256(userAgent + deviceId).toString();
 }
 
 // Generate an application-wide key for cross-device URL sharing
@@ -121,8 +120,8 @@ export function removeSecureItem(key: string): void {
 export function clearAllSecureData(): void {
   // Remove known encrypted data keys
   removeSecureItem('financial-input');
-  // Clear session key to invalidate any remaining encrypted data
-  sessionStorage.removeItem('sessionId');
+  // Clear device key to invalidate any remaining encrypted data
+  localStorage.removeItem('deviceId');
 }
 
 // URL-specific encryption functions for shareable links

@@ -293,7 +293,7 @@ const collectAllFormData = (): StoredFinancialData => {
 // Load data from storage or URL params
 const loadData = () => {
   // Priority: URL params > Local storage > Defaults
-  if (props.urlParams) {
+  if (props.urlParams && Object.keys(props.urlParams).length > 0) {
     loadFromUrlParams(props.urlParams);
   } else {
     loadFromStorage();
