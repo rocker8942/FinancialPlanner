@@ -74,7 +74,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, onUnmounted } from 'vue';
+import { onMounted, ref, watch, onUnmounted, computed } from 'vue';
+import { useTheme } from '../composables/useTheme';
 // Tree-shaken ECharts imports - only load what we need
 import * as echarts from 'echarts/core';
 import {
@@ -123,6 +124,9 @@ const props = defineProps<{
   lifeEvents?: LifeEvent[];
 }>();
 const emit = defineEmits<{ 'update:showInflationAdjusted': [value: boolean] }>();
+const { isDark } = useTheme();
+const chartLegendColor = computed(() => isDark.value ? '#e0e3e8' : '#374151');
+const chartInactiveColor = computed(() => isDark.value ? '#6b7280' : '#94a3b8');
 const chart = ref<HTMLDivElement | null>(null);
 const chartContainer = ref<HTMLDivElement | null>(null);
 let chartInstance: echarts.ECharts | null = null;
@@ -291,9 +295,9 @@ function renderChart() {
       top: 10,
       selected: currentLegendSelection,
       textStyle: {
-        color: '#e0e3e8'
+        color: chartLegendColor.value
       },
-      inactiveColor: '#6b7280',
+      inactiveColor: chartInactiveColor.value,
       selectedMode: true
     },
     xAxis: { 
@@ -401,13 +405,14 @@ onUnmounted(() => {
 
 watch(() => props.projection, renderChart, { deep: true });
 watch(() => props.showInflationAdjusted, renderChart);
+watch(isDark, renderChart);
 </script>
 
 <style scoped>
 /* Chart Controls Styles */
 .chart-controls {
-  background: #232733;
-  border: 1px solid #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1rem;
   margin-bottom: 1rem;
@@ -425,15 +430,15 @@ watch(() => props.showInflationAdjusted, renderChart);
 .chart-title h3 {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #6ee7b7;
+  color: var(--accent-text);
   margin: 0;
 }
 
 .chart-toggle-group {
   display: flex;
-  background: #1f2937;
+  background: var(--bg-secondary);
   border-radius: 8px;
-  border: 1px solid #374151;
+  border: 1px solid var(--border-color);
   overflow: hidden;
 }
 
@@ -441,7 +446,7 @@ watch(() => props.showInflationAdjusted, renderChart);
   padding: 0.4rem 0.875rem;
   background: transparent;
   border: none;
-  color: #9ca3af;
+  color: var(--text-secondary);
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
@@ -450,18 +455,18 @@ watch(() => props.showInflationAdjusted, renderChart);
 }
 
 .chart-toggle:hover {
-  background: #374151;
-  color: #e0e3e8;
+  background: var(--hover-bg);
+  color: var(--text-primary);
 }
 
 .chart-toggle.active {
-  background: #6ee7b7;
-  color: #1f2937;
+  background: var(--accent-text);
+  color: #fff;
   font-weight: 600;
 }
 
 .chart-toggle:not(:last-child) {
-  border-right: 1px solid #374151;
+  border-right: 1px solid var(--border-color);
 }
 
 .chart-info {
@@ -478,7 +483,7 @@ watch(() => props.showInflationAdjusted, renderChart);
 
 .info-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-muted);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -486,7 +491,7 @@ watch(() => props.showInflationAdjusted, renderChart);
 
 .info-value {
   font-size: 0.875rem;
-  color: #e0e3e8;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -563,24 +568,24 @@ watch(() => props.showInflationAdjusted, renderChart);
   
   .chart-toggle:not(:last-child) {
     border-right: none;
-    border-bottom: 1px solid #374151;
+    border-bottom: 1px solid var(--border-color);
   }
 }
 
 .table-title {
   font-size: 1rem;
   font-weight: 700;
-  color: #6ee7b7;
+  color: var(--accent-text);
   margin-bottom: 1rem;
   letter-spacing: 0.02em;
 }
 
 .table-container {
-  background: #232733;
-  border: 1px solid #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow);
 }
 
 .data-table {
@@ -590,7 +595,7 @@ watch(() => props.showInflationAdjusted, renderChart);
 }
 
 .table-header {
-  background: #20232e;
+  background: var(--bg-card-alt);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -599,8 +604,8 @@ watch(() => props.showInflationAdjusted, renderChart);
 .table-cell-header {
   padding: 0.75rem 1rem;
   font-weight: 600;
-  color: #6ee7b7;
-  border-bottom: 1px solid #374151;
+  color: var(--accent-text);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .table-row {
@@ -608,21 +613,21 @@ watch(() => props.showInflationAdjusted, renderChart);
 }
 
 .table-row:hover {
-  background: #2a2d3a !important;
+  background: var(--hover-bg) !important;
 }
 
 .table-row-even {
-  background: #232733;
+  background: var(--bg-card);
 }
 
 .table-row-odd {
-  background: #20232e;
+  background: var(--bg-card-alt);
 }
 
 .table-cell {
   padding: 0.75rem 1rem;
-  color: #f3f4f6;
-  border-bottom: 1px solid #374151;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .table-container {
@@ -630,22 +635,22 @@ watch(() => props.showInflationAdjusted, renderChart);
   overflow-y: auto;
 }
 
-/* Custom scrollbar for dark theme */
+/* Custom scrollbar */
 .table-container::-webkit-scrollbar {
   width: 8px;
 }
 
 .table-container::-webkit-scrollbar-track {
-  background: #20232e;
+  background: var(--bg-card-alt);
 }
 
 .table-container::-webkit-scrollbar-thumb {
-  background: #374151;
+  background: var(--border-color);
   border-radius: 4px;
 }
 
 .table-container::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
+  background: var(--border-input);
 }
 
 /* Mobile table optimizations */

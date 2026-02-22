@@ -271,8 +271,8 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 }
 
 .rates-summary {
-  background: #1f2937;
-  border: 1px solid #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   padding: 1rem;
   margin-top: 0.5rem;
@@ -281,7 +281,7 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 .summary-title {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #d1d5db;
+  color: var(--text-label);
   margin: 0 0 0.75rem 0;
   text-align: center;
 }
@@ -302,7 +302,7 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 
 .rate-label {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 .rate-value {
@@ -318,7 +318,7 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 .help-text {
   display: block;
   font-size: 0.7rem;
-  color: #6b7280;
+  color: var(--text-muted);
   line-height: 1.4;
   text-align: center;
   font-style: italic;
@@ -329,13 +329,13 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
   justify-content: center;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #374151;
+  border-top: 1px solid var(--border-color);
 }
 
 .reset-defaults-btn {
-  background: #374151;
-  border: 1px solid #6b7280;
-  color: #d1d5db;
+  background: var(--hover-bg);
+  border: 1px solid var(--border-input);
+  color: var(--text-label);
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
@@ -344,13 +344,13 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 }
 
 .reset-defaults-btn:hover {
-  background: #4b5563;
-  border-color: #9ca3af;
-  color: #f3f4f6;
+  background: var(--border-input);
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .reset-defaults-btn:active {
-  background: #1f2937;
+  background: var(--bg-card);
   transform: translateY(1px);
 }
 

@@ -374,7 +374,7 @@ function startPlanning() {
 .hero-title {
   font-size: 3.5rem;
   font-weight: 800;
-  color: #14b8a6;
+  color: var(--accent-text);
   margin-bottom: 1rem;
   line-height: 1.1;
   display: flex;
@@ -411,14 +411,14 @@ function startPlanning() {
 
 .hero-subtitle {
   font-size: 1.5rem;
-  color: #d1d5db;
+  color: var(--text-label);
   margin-bottom: 1.5rem;
   font-weight: 300;
 }
 
 .hero-description {
   font-size: 1.125rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
   margin-bottom: 2.5rem;
   line-height: 1.6;
 }
@@ -459,7 +459,7 @@ function startPlanning() {
 }
 
 .nav-link {
-  color: #9ca3af;
+  color: var(--text-secondary);
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -483,7 +483,7 @@ function startPlanning() {
 .section-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #f3f4f6;
+  color: var(--text-primary);
   text-align: center;
   margin-bottom: 3rem;
 }
@@ -497,7 +497,8 @@ function startPlanning() {
 }
 
 .feature-card {
-  background: #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   padding: 2rem;
   border-radius: 1rem;
   text-align: center;
@@ -527,12 +528,12 @@ function startPlanning() {
 .feature-card h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f3f4f6;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
 .feature-card p {
-  color: #9ca3af;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -575,7 +576,8 @@ function startPlanning() {
 }
 
 .pension-detail-card {
-  background: #1f2937;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   padding: 2rem;
   border-radius: 1rem;
   border-left: 4px solid #22c55e;
@@ -594,7 +596,7 @@ function startPlanning() {
 }
 
 .pension-detail-card li {
-  color: #d1d5db;
+  color: var(--text-label);
   margin-bottom: 0.75rem;
   line-height: 1.6;
   position: relative;
@@ -609,11 +611,12 @@ function startPlanning() {
 }
 
 .pension-detail-card strong {
-  color: #f3f4f6;
+  color: var(--text-primary);
 }
 
 .pension-note {
-  background: #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   padding: 1.5rem;
   border-radius: 0.75rem;
   border-left: 4px solid #f59e0b;
@@ -654,12 +657,12 @@ function startPlanning() {
 .step-content h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f3f4f6;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .step-content p {
-  color: #9ca3af;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -671,16 +674,17 @@ function startPlanning() {
 }
 
 .methodology-card {
-  background: #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   padding: 2rem;
   border-radius: 1rem;
-  border-left: 4px solid #14b8a6;
+  border-left: 4px solid var(--accent-text);
 }
 
 .methodology-card h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #14b8a6;
+  color: var(--accent-text);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -708,7 +712,7 @@ function startPlanning() {
 }
 
 .methodology-card li {
-  color: #d1d5db;
+  color: var(--text-label);
   margin-bottom: 0.75rem;
   line-height: 1.6;
   position: relative;
@@ -723,7 +727,7 @@ function startPlanning() {
 }
 
 .methodology-card strong {
-  color: #f3f4f6;
+  color: var(--text-primary);
 }
 
 /* Privacy Section */
@@ -764,11 +768,11 @@ function startPlanning() {
 }
 
 .privacy-card {
-  background: #1f2937;
+  background: var(--bg-card);
   padding: 2rem;
   border-radius: 1rem;
   text-align: center;
-  border: 1px solid rgba(59, 130, 246, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .privacy-icon {
@@ -795,12 +799,13 @@ function startPlanning() {
 }
 
 .privacy-card p {
-  color: #d1d5db;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
 .privacy-note {
-  background: #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   padding: 1.5rem;
   border-radius: 0.75rem;
   border-left: 4px solid #3b82f6;
@@ -844,7 +849,7 @@ function startPlanning() {
 }
 
 .disclaimer-text {
-  color: #d1d5db;
+  color: var(--text-label);
   line-height: 1.7;
 }
 
@@ -862,7 +867,7 @@ function startPlanning() {
 }
 
 .disclaimer-text strong {
-  color: #f3f4f6;
+  color: var(--text-primary);
 }
 
 .beta-notice {
@@ -905,7 +910,8 @@ function startPlanning() {
 }
 
 .faq-item {
-  background: #1f2937;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 1rem;
   padding: 2rem;
   border-left: 4px solid #6366f1;
@@ -926,7 +932,7 @@ function startPlanning() {
 }
 
 .faq-answer p {
-  color: #d1d5db;
+  color: var(--text-label);
   line-height: 1.7;
   margin: 0;
   font-size: 1rem;
@@ -944,13 +950,13 @@ function startPlanning() {
 .final-cta-content h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: #f3f4f6;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
 .final-cta-content p {
   font-size: 1.125rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
   margin-bottom: 2rem;
 }
 

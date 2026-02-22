@@ -166,7 +166,7 @@ const stopContinuousAdjustment = () => {
 .form-group label {
   display: block;
   margin-bottom: 0.3rem;
-  color: #6ee7b7;
+  color: var(--accent-text);
   font-weight: 500;
   font-size: 0.75rem;
 }
@@ -181,11 +181,11 @@ const stopContinuousAdjustment = () => {
 .input-with-buttons input {
   flex: 1;
   padding: 0.5rem;
-  border: 1px solid #374151;
+  border: 1px solid var(--border-input);
   border-left: none;
   border-right: none;
-  background: #1f2937;
-  color: #e0e3e8;
+  background: var(--bg-input);
+  color: var(--text-primary);
   font-size: 0.85rem;
   box-sizing: border-box;
   transition: border-color 0.2s ease;
@@ -207,10 +207,10 @@ const stopContinuousAdjustment = () => {
 }
 
 .input-with-buttons input:disabled {
-  background: #2d3748;
-  color: #e0e3e8;
+  background: var(--hover-bg);
+  color: var(--text-secondary);
   cursor: not-allowed;
-  border-color: #4a5568;
+  border-color: var(--border-color);
 }
 
 .field-validation-icon {
@@ -233,9 +233,9 @@ const stopContinuousAdjustment = () => {
 .increment-btn {
   width: 32px;
   height: 38px;
-  background: #374151;
-  border: 1px solid #374151;
-  color: #e0e3e8;
+  background: var(--hover-bg);
+  border: 1px solid var(--border-input);
+  color: var(--text-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -258,18 +258,18 @@ const stopContinuousAdjustment = () => {
 }
 
 .increment-btn:hover {
-  background: #4b5563;
+  background: var(--border-input);
 }
 
 .increment-btn:active {
-  background: #6b7280;
+  background: var(--border-color);
 }
 
 .help-text {
   display: block;
   margin-top: 0.25rem;
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 

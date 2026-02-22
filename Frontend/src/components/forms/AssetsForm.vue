@@ -184,8 +184,8 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 }
 
 .wealth-summary {
-  background: #1f2937;
-  border: 1px solid #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   padding: 1rem;
   margin-top: 0.5rem;
@@ -201,12 +201,12 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 .summary-row:last-of-type {
   margin-bottom: 0;
   padding-top: 0.5rem;
-  border-top: 1px solid #374151;
+  border-top: 1px solid var(--border-color);
 }
 
 .label {
   font-size: 0.875rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 .value {
@@ -228,7 +228,7 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
   display: block;
   margin-top: 0.5rem;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-muted);
   line-height: 1.4;
   font-style: italic;
   text-align: center;

@@ -230,7 +230,7 @@ watch(() => route.hash, () => {
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #14b8a6;
+  color: var(--accent-text);
   margin: 0;
   line-height: 1.2;
   display: flex;

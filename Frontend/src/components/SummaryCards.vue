@@ -128,16 +128,16 @@ const firstPensionAge = computed(() => {
 }
 
 .summary-card {
-  background: #232733;
-  border: 1px solid #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1rem;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow);
 }
 
 .summary-card:hover {
-  border-color: #6ee7b7;
+  border-color: var(--accent-text);
   box-shadow: 0 4px 16px rgba(0,0,0,0.16);
 }
 
@@ -190,7 +190,7 @@ const firstPensionAge = computed(() => {
 .summary-title {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--text-secondary);
   margin: 0 0 0.4rem 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -199,14 +199,14 @@ const firstPensionAge = computed(() => {
 .summary-value {
   font-size: 1.375rem;
   font-weight: 700;
-  color: #e0e3e8;
+  color: var(--text-primary);
   margin: 0 0 0.2rem 0;
   line-height: 1.2;
 }
 
 .summary-subtitle {
   font-size: 0.7rem;
-  color: #6b7280;
+  color: var(--text-muted);
   margin: 0;
 }
 

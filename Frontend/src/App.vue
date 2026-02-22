@@ -1,92 +1,76 @@
 
 <template>
-  <div class="min-h-screen bg-gray-900 text-gray-100 font-sans flex max-w-full overflow-hidden">
+  <div :class="['min-h-screen font-sans flex max-w-full overflow-hidden', isDark ? 'bg-gray-900 text-gray-100' : 'bg-slate-50 text-slate-900']">
     <!-- Sidebar: left navigation -->
-    <aside :class="['bg-gray-800 flex flex-col justify-between min-h-screen shadow-lg transition-all duration-300', 'hidden md:flex', sidebarCollapsed ? 'w-16' : 'w-64']">
+    <aside :class="['flex flex-col justify-between min-h-screen shadow-lg transition-all duration-300', 'hidden md:flex', sidebarCollapsed ? 'w-16' : 'w-64', isDark ? 'bg-gray-800' : 'bg-white border-r border-slate-200']">
       <div>
         <!-- App Title & Menu -->
-        <div class="flex items-center gap-2 px-6 py-6 border-b border-gray-700">
-          <button @click="toggleSidebar" class="toggle-button material-icons" aria-label="Toggle sidebar">
-            {{ sidebarCollapsed ? 'menu' : 'menu_open' }}
-          </button>
-          <div v-show="!sidebarCollapsed" class="app-title-container">
-            <span class="text-2xl font-bold text-teal-300 transition-opacity duration-300">FP</span>
-            <span class="beta-badge-sidebar">β</span>
+        <div :class="['flex items-center gap-2 px-3 py-4 border-b', isDark ? 'border-gray-700' : 'border-slate-200', sidebarCollapsed ? 'justify-center' : 'justify-between']">
+          <div class="flex items-center gap-2">
+            <button @click="toggleSidebar" :class="['toggle-button material-icons', isDark ? '' : 'toggle-button-light']" aria-label="Toggle sidebar">
+              {{ sidebarCollapsed ? 'menu' : 'menu_open' }}
+            </button>
+            <div v-show="!sidebarCollapsed" class="app-title-container">
+              <span class="text-2xl font-bold text-teal-500 transition-opacity duration-300">FP</span>
+              <span class="beta-badge-sidebar">β</span>
+            </div>
           </div>
+          <button
+            @click="toggleTheme"
+            :class="['toggle-button material-icons', isDark ? '' : 'toggle-button-light']"
+            :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+          >{{ isDark ? 'light_mode' : 'dark_mode' }}</button>
         </div>
         <!-- Navigation -->
         <nav class="flex flex-col gap-1 mt-4 px-2">
-          <span v-show="!sidebarCollapsed" class="uppercase text-xs text-gray-500 px-4 mb-2 transition-opacity duration-300">Main</span>
-          <router-link to="/" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Home' : ''">
+          <span v-show="!sidebarCollapsed" :class="['uppercase text-xs px-4 mb-2 transition-opacity duration-300', isDark ? 'text-gray-500' : 'text-slate-400']">Main</span>
+          <router-link to="/" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Home' : ''">
             <span class="material-icons text-lg text-green-400">home</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Home</span>
           </router-link>
-          <router-link to="/retirementplanner" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Retirement Planner' : ''">
+          <router-link to="/retirementplanner" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Retirement Planner' : ''">
             <span class="material-icons text-lg text-blue-400">trending_up</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Retirement Planner</span>
           </router-link>
-          <!-- <router-link to="/progress" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Progress' : ''">
-            <span class="material-icons text-lg text-green-400">trending_up</span>
-            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Progress</span>
-          </router-link>
-          <router-link to="/plans" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Plans' : ''">
-            <span class="material-icons text-lg text-yellow-400">event_note</span>
-            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Plans</span>
-          </router-link>
-          <router-link to="/profile" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Profile' : ''">
-            <span class="material-icons text-lg text-purple-400">account_circle</span>
-            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Profile</span>
-          </router-link>
-          <router-link to="/settings" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100', 'hidden-on-iphone', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Settings' : ''">
-            <span class="material-icons text-lg">settings</span>
+          <router-link to="/settings" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors hidden-on-iphone', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Settings' : ''">
+            <span :class="['material-icons text-lg', isDark ? 'text-gray-100' : 'text-slate-500']">settings</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Settings</span>
           </router-link>
-          <router-link v-if="!auth.isAuthenticated" to="/login" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-blue-400', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Login' : ''">
-            <span class="material-icons text-lg">login</span>
-            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Login</span>
-          </router-link>
-          <router-link v-if="!auth.isAuthenticated" to="/register" :class="['flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-blue-400', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Register' : ''">
-            <span class="material-icons text-lg">person_add</span>
-            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Register</span>
-          </router-link> -->
         </nav>
       </div>
-      <!-- User Actions -->
-      <!-- <div :class="['flex flex-col gap-4 px-6 pb-6 border-t border-gray-700', sidebarCollapsed ? 'items-center' : '']">
-        <div :class="['flex gap-2', sidebarCollapsed ? 'flex-col items-center' : 'items-center']">
-          <span class="material-icons text-2xl text-gray-400 cursor-pointer hover:text-teal-300" :title="sidebarCollapsed ? 'Notifications' : ''">notifications</span>
-          <span class="material-icons text-2xl text-gray-400 cursor-pointer hover:text-teal-300" :title="sidebarCollapsed ? 'User' : ''">person</span>
-        </div>
-        <div v-show="!sidebarCollapsed" class="flex flex-col gap-1 text-xs text-gray-500 transition-opacity duration-300">
-          <span class="cursor-pointer hover:text-gray-300">Help Center</span>
-          <span class="cursor-pointer hover:text-gray-300">Support</span>
-        </div>
-      </div> -->
+
     </aside>
 
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col max-w-full overflow-hidden">
       <!-- Mobile menu toggle -->
-      <div class="md:hidden flex items-center justify-between bg-gray-800 px-4 py-3 border-b border-gray-700 max-w-full">
+      <div :class="['md:hidden flex items-center justify-between px-4 py-3 border-b max-w-full', isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-slate-200 shadow-sm']">
         <div class="flex items-center gap-2">
-          <span class="text-xl font-bold text-teal-300">FP</span>
+          <span class="text-xl font-bold text-teal-500">FP</span>
           <span class="beta-badge-mobile">β</span>
         </div>
-        <button @click="toggleMobileMenu" class="toggle-button material-icons" aria-label="Toggle menu">
-          menu
-        </button>
+        <div class="flex items-center gap-1">
+          <button
+            @click="toggleTheme"
+            :class="['toggle-button material-icons', isDark ? '' : 'toggle-button-light']"
+            :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+          >{{ isDark ? 'light_mode' : 'dark_mode' }}</button>
+          <button @click="toggleMobileMenu" :class="['toggle-button material-icons', isDark ? '' : 'toggle-button-light']" aria-label="Toggle menu">
+            menu
+          </button>
+        </div>
       </div>
-      
+
       <main class="flex-1 p-4 md:p-8 max-w-full overflow-hidden">
         <router-view />
       </main>
-      
+
       <!-- Footer -->
-      <footer class="bg-gray-800 border-t border-gray-700 py-4 px-4 md:px-8 max-w-full overflow-hidden">
+      <footer :class="['border-t py-4 px-4 md:px-8 max-w-full overflow-hidden', isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-slate-200']">
         <div class="flex justify-center">
-          <p class="text-gray-400 text-sm text-center">
-            Have questions or feedback? 
-            <a href="mailto:help@moneystock.net" class="text-teal-300 hover:text-teal-200 underline ml-1">
+          <p :class="['text-sm text-center', isDark ? 'text-gray-400' : 'text-slate-500']">
+            Have questions or feedback?
+            <a href="mailto:help@moneystock.net" class="text-teal-500 hover:text-teal-600 underline ml-1">
               Contact us
             </a>
           </p>
@@ -96,35 +80,36 @@
 
     <!-- Mobile menu overlay -->
     <div v-if="mobileMenuOpen" class="md:hidden fixed inset-0 z-50 bg-black bg-opacity-50" @click="closeMobileMenu">
-      <aside class="bg-gray-800 w-64 h-full shadow-lg flex flex-col justify-between" @click.stop>
+      <aside :class="['w-64 h-full shadow-lg flex flex-col justify-between', isDark ? 'bg-gray-800' : 'bg-white']" @click.stop>
         <div>
           <!-- Mobile App Title & Close -->
-          <div class="flex items-center justify-between px-6 py-6 border-b border-gray-700">
+          <div :class="['flex items-center justify-between px-6 py-6 border-b', isDark ? 'border-gray-700' : 'border-slate-200']">
             <div class="flex items-center gap-2">
-              <span class="text-2xl font-bold text-teal-300">FP</span>
+              <span class="text-2xl font-bold text-teal-500">FP</span>
               <span class="beta-badge-sidebar">β</span>
             </div>
-            <button @click="closeMobileMenu" class="toggle-button material-icons" aria-label="Close menu">
+            <button @click="closeMobileMenu" :class="['toggle-button material-icons', isDark ? '' : 'toggle-button-light']" aria-label="Close menu">
               close
             </button>
           </div>
           <!-- Mobile Navigation -->
           <nav class="flex flex-col gap-1 mt-4 px-2">
-            <span class="uppercase text-xs text-gray-500 px-4 mb-2">Main</span>
-            <router-link to="/" @click="closeMobileMenu" class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100">
+            <span :class="['uppercase text-xs px-4 mb-2', isDark ? 'text-gray-500' : 'text-slate-400']">Main</span>
+            <router-link to="/" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-green-400">home</span>
               <span>Home</span>
             </router-link>
-            <router-link to="/retirementplanner" @click="closeMobileMenu" class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100">
+            <router-link to="/retirementplanner" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-blue-400">trending_up</span>
               <span>Retirement Planner</span>
             </router-link>
-            <router-link to="/settings" @click="closeMobileMenu" class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700 hover:text-teal-300 text-gray-100 hidden-on-iphone">
-              <span class="material-icons text-lg">settings</span>
+            <router-link to="/settings" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors hidden-on-iphone', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
+              <span :class="['material-icons text-lg', isDark ? 'text-gray-100' : 'text-slate-500']">settings</span>
               <span>Settings</span>
             </router-link>
           </nav>
         </div>
+
       </aside>
     </div>
   </div>
@@ -132,6 +117,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useTheme } from './composables/useTheme';
+
+const { isDark, toggleTheme } = useTheme();
 
 const sidebarCollapsed = ref(true); // Start collapsed by default
 const mobileMenuOpen = ref(false);
@@ -153,7 +141,7 @@ function closeMobileMenu() {
 .toggle-button {
   background: transparent;
   border: none;
-  color: #9ca3af; /* text-gray-400 */
+  color: #9ca3af;
   font-size: 20px;
   width: 36px;
   height: 36px;
@@ -167,18 +155,36 @@ function closeMobileMenu() {
 }
 
 .toggle-button:hover {
-  color: #6ee7b7; /* text-teal-300 */
-  background-color: #374151; /* bg-gray-700 */
+  color: #6ee7b7;
+  background-color: #374151;
 }
 
 .toggle-button:active {
-  background-color: #4b5563; /* bg-gray-600 */
+  background-color: #4b5563;
   transform: scale(0.95);
 }
 
 .toggle-button:focus {
   outline: 2px solid #6ee7b7;
   outline-offset: 2px;
+}
+
+/* Light mode overrides for toggle button */
+.toggle-button-light {
+  color: #64748b;
+}
+
+.toggle-button-light:hover {
+  color: #0d9488;
+  background-color: #f1f5f9;
+}
+
+.toggle-button-light:active {
+  background-color: #e2e8f0;
+}
+
+.toggle-button-light:focus {
+  outline-color: #0d9488;
 }
 
 .app-title-container {
@@ -217,7 +223,7 @@ function closeMobileMenu() {
   .hidden-on-iphone {
     display: none !important;
   }
-  
+
   /* Center main content on iPhone */
   main {
     display: flex;
@@ -228,4 +234,3 @@ function closeMobileMenu() {
   }
 }
 </style>
-

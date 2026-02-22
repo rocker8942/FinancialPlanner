@@ -430,9 +430,9 @@ onMounted(() => {
   max-width: 600px;
   margin: 0 auto;
   padding: 1rem;
-  background: #1a2236;
+  background: var(--bg-secondary);
   border-radius: 0.5rem;
-  color: #d1d5db;
+  color: var(--text-label);
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
@@ -440,13 +440,13 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #1f2937;
-  border: 1px solid #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 0.375rem;
   padding: 0.75rem;
   margin-bottom: 1.5rem;
   font-size: 0.875rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 .privacy-icon {
@@ -457,8 +457,8 @@ onMounted(() => {
 }
 
 .auto-optimize-info {
-  background: #1f2937;
-  border: 1px solid #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   padding: 1rem;
   margin: 1rem 0;
@@ -468,7 +468,7 @@ onMounted(() => {
 .expense-info {
   display: block;
   font-weight: 600;
-  color: #14b8a6;
+  color: var(--accent-text);
   font-size: 1rem;
   margin-top: 0.5rem;
 }
@@ -476,7 +476,7 @@ onMounted(() => {
 .help-text {
   display: block;
   font-size: 0.875rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 
@@ -485,7 +485,7 @@ onMounted(() => {
   justify-content: center;
   margin-top: 2rem;
   padding-top: 1rem;
-  border-top: 1px solid #374151;
+  border-top: 1px solid var(--border-color);
 }
 
 .share-btn {

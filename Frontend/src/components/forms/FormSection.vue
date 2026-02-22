@@ -30,23 +30,23 @@ const toggleSection = () => {
 
 <style scoped>
 .form-section {
-  border: 1px solid #374151;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   margin-bottom: 1.5rem;
   padding: 1rem 1rem 0.5rem 1rem;
-  background: #20232e;
+  background: var(--bg-card-alt);
   transition: all 0.2s ease;
 }
 
 .form-section.section-active {
-  border-color: #6ee7b7;
+  border-color: var(--accent-text);
   box-shadow: 0 0 0 1px rgba(110, 231, 183, 0.1);
 }
 
 .form-section-title {
   font-size: 1rem;
   font-weight: 700;
-  color: #6ee7b7;
+  color: var(--accent-text);
   margin-bottom: 0.7rem;
   padding: 0 0.5rem;
   letter-spacing: 0.02em;
@@ -57,7 +57,7 @@ const toggleSection = () => {
 }
 
 .form-section-title.clickable:hover {
-  background: #232733;
+  background: var(--hover-bg);
 }
 
 .chevron {

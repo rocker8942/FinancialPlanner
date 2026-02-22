@@ -160,8 +160,8 @@ function onAmountBlur(id: string, value: string): void {
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  background: #1f2937;
-  border: 1px solid #374151;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 0.375rem;
   padding: 0.4rem 0.5rem;
   display: flex;
@@ -210,24 +210,24 @@ function onAmountBlur(id: string, value: string): void {
 .label-input {
   flex: 1;
   min-width: 0;
-  background: #111827;
-  border: 1px solid #4b5563;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
-  color: #f3f4f6;
+  color: var(--text-primary);
   padding: 0.3rem 0.4rem;
   font-size: 0.8rem;
 }
 
-.label-input::placeholder { color: #6b7280; }
-.label-input:focus { outline: none; border-color: #14b8a6; }
+.label-input::placeholder { color: var(--text-muted); }
+.label-input:focus { outline: none; border-color: var(--accent-text); }
 
 /* age: fixed narrow width; amount: grows to fill */
 .age-field {
   display: flex;
   align-items: center;
   gap: 0.2rem;
-  background: #111827;
-  border: 1px solid #4b5563;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
   padding: 0 0.3rem;
   flex-shrink: 0;
@@ -237,8 +237,8 @@ function onAmountBlur(id: string, value: string): void {
   display: flex;
   align-items: center;
   gap: 0.2rem;
-  background: #111827;
-  border: 1px solid #4b5563;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
   padding: 0 0.3rem;
   width: 7rem;
@@ -248,11 +248,11 @@ function onAmountBlur(id: string, value: string): void {
 }
 
 .age-field:focus-within,
-.amount-field:focus-within { border-color: #14b8a6; }
+.amount-field:focus-within { border-color: var(--accent-text); }
 
 .field-prefix {
   font-size: 0.7rem;
-  color: #6b7280;
+  color: var(--text-muted);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -261,7 +261,7 @@ function onAmountBlur(id: string, value: string): void {
   width: 2rem;
   background: transparent;
   border: none;
-  color: #f3f4f6;
+  color: var(--text-primary);
   padding: 0.3rem 0;
   font-size: 0.8rem;
   text-align: center;
@@ -276,7 +276,7 @@ function onAmountBlur(id: string, value: string): void {
   min-width: 0;
   background: transparent;
   border: none;
-  color: #f3f4f6;
+  color: var(--text-primary);
   padding: 0.3rem 0;
   font-size: 0.8rem;
   text-align: right;
@@ -289,9 +289,9 @@ function onAmountBlur(id: string, value: string): void {
   height: 1.5rem;
   flex-shrink: 0;
   background: transparent;
-  border: 1px solid #4b5563;
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   cursor: pointer;
   display: flex;
@@ -309,7 +309,7 @@ function onAmountBlur(id: string, value: string): void {
 
 .empty-state {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--text-muted);
   font-style: italic;
   text-align: center;
   padding: 0.4rem 0;
@@ -318,9 +318,9 @@ function onAmountBlur(id: string, value: string): void {
 
 .add-btn {
   align-self: flex-start;
-  background: #1f2937;
-  border: 1px dashed #4b5563;
-  color: #9ca3af;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-input);
+  color: var(--text-secondary);
   padding: 0.35rem 0.75rem;
   border-radius: 0.375rem;
   font-size: 0.8rem;
@@ -329,8 +329,8 @@ function onAmountBlur(id: string, value: string): void {
 }
 
 .add-btn:hover {
-  border-color: #14b8a6;
-  color: #14b8a6;
-  background: #0f2a2a;
+  border-color: var(--accent-text);
+  color: var(--accent-text);
+  background: var(--hover-bg);
 }
 </style>
