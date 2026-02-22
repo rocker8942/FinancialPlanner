@@ -1,5 +1,6 @@
 // Australian Age Pension calculation service
-// Based on 2025 rates and thresholds
+// Based on September 2025 – March 2026 rates and thresholds
+// Next update due: March 20, 2026 (deeming rates increase to 1.25% / 3.25%)
 
 export type RelationshipStatus = 'single' | 'couple';
 
@@ -35,39 +36,39 @@ export interface AgePensionResult {
   finalTest: 'asset' | 'income';
 }
 
-// 2025 Australian Age Pension rates and thresholds (base year)
+// Australian Age Pension rates effective 20 September 2025 (includes base rate + pension supplement + energy supplement)
 const PENSION_RATES = {
   single: {
-    fullPension: 29874, // Annual amount
-    maxPension: 29874
+    fullPension: 30646, // Annual amount ($1,178.70/fortnight * 26)
+    maxPension: 30646
   },
   couple: {
-    fullPensionCombined: 45037, // Annual amount for both partners
-    maxPensionCombined: 45037,
-    fullPensionEach: 22519 // Each partner gets this amount when both eligible
+    fullPensionCombined: 46202, // Annual amount for both partners ($1,777.00/fortnight * 26)
+    maxPensionCombined: 46202,
+    fullPensionEach: 23101 // Each partner gets this amount when both eligible ($888.50/fortnight * 26)
   }
 };
 
-// Base asset test thresholds for 2025 (will be adjusted for inflation)
+// Base asset test thresholds effective 20 September 2025 (will be adjusted for inflation in projections)
 const BASE_ASSET_TEST_THRESHOLDS = {
   single: {
     homeowner: {
       fullPension: 321500,
-      cutOff: 704500
+      cutOff: 714500
     },
     nonHomeowner: {
       fullPension: 579500,
-      cutOff: 962500
+      cutOff: 972500
     }
   },
   couple: {
     homeowner: {
       fullPension: 481500,
-      cutOff: 1059000
+      cutOff: 1074000
     },
     nonHomeowner: {
       fullPension: 739500,
-      cutOff: 1317000
+      cutOff: 1332000
     }
   }
 };
@@ -90,28 +91,30 @@ function getAdjustedAssetTestThresholds(cpiAdjustmentFactor: number = 1.0) {
   return adjusted;
 }
 
+// Income test thresholds effective 20 September 2025
 const INCOME_TEST_THRESHOLDS = {
   single: {
     freeArea: 5668, // Annual ($218 * 26 fortnights)
-    cutOff: 65416 // Annual ($2516 * 26 fortnights)
+    cutOff: 66960 // Annual ($2,575.40 * 26 fortnights)
   },
   couple: {
     freeAreaCombined: 9880, // Annual ($380 * 26 fortnights)
-    cutOffCombined: 99954 // Annual ($3844.40 * 26 fortnights)
+    cutOffCombined: 102284 // Annual ($3,934.00 * 26 fortnights)
   }
 };
 
-// Deeming rates for financial assets (2025)
+// Deeming rates effective 20 September 2025 (previously frozen at 0.25%/2.25% since May 2020)
+// Note: From 20 March 2026 these increase to 1.25% / 3.25%
 const DEEMING_RATES = {
   single: {
-    lowerThreshold: 62600,
-    lowerRate: 0.0225, // 2.25%
-    upperRate: 0.04 // 4.0%
+    lowerThreshold: 64200,
+    lowerRate: 0.0075, // 0.75%
+    upperRate: 0.0275 // 2.75%
   },
   couple: {
-    lowerThreshold: 103800,
-    lowerRate: 0.0225, // 2.25%
-    upperRate: 0.04 // 4.0%
+    lowerThreshold: 106200,
+    lowerRate: 0.0075, // 0.75%
+    upperRate: 0.0275 // 2.75%
   }
 };
 

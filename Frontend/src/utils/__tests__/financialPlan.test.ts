@@ -817,8 +817,8 @@ describe('calculateExpenseToZeroNetWorthModular', () => {
     
     // The algorithm now considers automatic age pension calculation
     // With significant pension income over lifetime, higher expenses are justified
-    // Verify the calculation is reasonable - final wealth should be positive due to pension income
-    expect(finalWealth).toBeGreaterThan(0)
+    // Verify the calculation is reasonable - final wealth should be near zero (within $1000)
+    expect(Math.abs(finalWealth)).toBeLessThan(1000)
     expect(optimalExpense).toBeGreaterThan(profile.salary) // Can spend more due to future pension
     
     // Ensure the optimization algorithm is working (returns a meaningful result)

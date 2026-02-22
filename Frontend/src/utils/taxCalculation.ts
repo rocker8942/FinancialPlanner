@@ -1,4 +1,4 @@
-// Australian Tax Calculation Utilities (2024-25 Financial Year)
+// Australian Tax Calculation Utilities (2024-25 and 2025-26 Financial Years — brackets unchanged)
 
 export interface TaxBreakdown {
   grossIncome: number;
@@ -8,7 +8,7 @@ export interface TaxBreakdown {
   superContributionsTax: number;
 }
 
-// Australian Income Tax Brackets for 2024-25 and 2025-26
+// Australian Income Tax Brackets for 2024-25 and 2025-26 (Stage 3 tax cuts — unchanged for both years)
 const TAX_BRACKETS = [
   { min: 0, max: 18200, rate: 0.00 },
   { min: 18201, max: 45000, rate: 0.16 },

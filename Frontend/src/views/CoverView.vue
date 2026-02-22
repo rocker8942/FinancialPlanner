@@ -134,12 +134,13 @@
           </div>
           
           <div class="pension-detail-card">
-            <h3>Asset & Income Tests (2025)</h3>
+            <h3>Asset & Income Tests (Sept 2025)</h3>
             <ul>
-              <li><strong>Asset Thresholds:</strong> $321,500 (single homeowner), $579,500 (single non-homeowner), $481,500/$739,500 (couple)</li>
+              <li><strong>Full Pension Thresholds:</strong> $321,500 (single homeowner), $579,500 (single non-homeowner), $481,500/$739,500 (couple)</li>
               <li><strong>Assessable Assets:</strong> Financial assets, superannuation (after 67), investment properties. Excludes family home</li>
-              <li><strong>Income Test:</strong> Employment income, investment returns, deemed income from financial assets</li>
-              <li><strong>Reduction Rate:</strong> Pension reduces $0.50 for every $1 over income threshold</li>
+              <li><strong>Deeming Rates:</strong> 0.75% on first $64,200 (single) / $106,200 (couple), then 2.75% above that</li>
+              <li><strong>Income Reduction:</strong> Singles: $0.50 per $1 over threshold. Couples: $0.25 per $1 per partner</li>
+              <li><strong>Asset Reduction:</strong> $3 per fortnight ($78/year) per $1,000 over full pension threshold</li>
             </ul>
           </div>
           
@@ -156,8 +157,9 @@
         
         <div class="pension-note">
           <p>
-            <strong>Note:</strong> This calculator uses current 2025 Age Pension rules and thresholds. 
-            Government policies may change over time, which could affect future pension entitlements.
+            <strong>Note:</strong> Rates reflect September 2025 – March 2026 Age Pension rules.
+            Current full rates: $30,646/yr (single), $46,202/yr (couple combined).
+            Government policies change periodically and could affect future entitlements.
           </p>
         </div>
       </div>
@@ -198,9 +200,10 @@
         <div class="methodology-card">
           <h3>Australian Age Pension</h3>
           <ul>
-            <li><strong>Dynamic Calculation:</strong> Automatically applies current Australian Government asset and income tests</li>
+            <li><strong>Dynamic Calculation:</strong> Automatically applies September 2025 Australian Government asset and income tests</li>
             <li><strong>Homeowner Status:</strong> Different asset test thresholds for homeowners ($321,500) vs non-homeowners ($579,500) for singles</li>
             <li><strong>Couple Assessment:</strong> Combined asset test limits ($481,500/$739,500) and shared pension entitlements</li>
+            <li><strong>Deeming:</strong> Financial assets deemed at 0.75% (first $64,200 single / $106,200 couple) then 2.75%</li>
             <li><strong>Age Requirements:</strong> Pension eligibility from age 67 (current retirement age in Australia)</li>
             <li><strong>Real-time Updates:</strong> Calculations update automatically as your projected assets and income change each year</li>
             <li><strong>CPI Growth Integration:</strong> Pension amounts automatically increase with Consumer Price Index over time, reflecting realistic government pension adjustments</li>
@@ -297,7 +300,7 @@
         <div class="faq-item">
           <h3 class="faq-question">How accurate are the Australian Age Pension calculations?</h3>
           <div class="faq-answer">
-            <p>Our Age Pension calculator uses current 2025 government thresholds and applies both asset and income tests automatically. However, government policies may change over time, so these are projections based on current rules.</p>
+            <p>Our Age Pension calculator uses September 2025 government thresholds and applies both asset and income tests automatically. However, government policies may change over time, so these are projections based on current rules.</p>
           </div>
         </div>
         <div class="faq-item">
