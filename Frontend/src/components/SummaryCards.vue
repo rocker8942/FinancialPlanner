@@ -32,20 +32,15 @@
 
     <div class="summary-card">
       <div class="summary-card-content">
-        <div class="summary-icon growth" :class="{ negative: totalGrowth < 0 }">
-          <svg v-if="totalGrowth >= 0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-          </svg>
-          <svg v-else fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+        <div class="summary-icon growth">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
           </svg>
         </div>
         <div class="summary-text">
-          <h3 class="summary-title">Total Growth</h3>
-          <p class="summary-value" :class="{ negative: totalGrowth < 0 }">
-            {{ totalGrowth >= 0 ? '+' : '' }}{{ formatCurrency(totalGrowth) }}
-          </p>
-          <p class="summary-subtitle">Over {{ yearsToRetirement }} years</p>
+          <h3 class="summary-title">Optimal Expense</h3>
+          <p class="summary-value">{{ formatCurrency(optimalExpense) }}</p>
+          <p class="summary-subtitle">Annual to reach zero at end</p>
         </div>
       </div>
     </div>
@@ -89,6 +84,7 @@ interface SummaryProps {
   currentAge: number;
   retirementAge: number;
   showInflationAdjusted: boolean;
+  optimalExpense: number;
 }
 
 const props = defineProps<SummaryProps>();
@@ -108,15 +104,6 @@ const retirementWealth = computed(() => {
   return props.showInflationAdjusted && retirementData.inflationAdjustedWealth !== undefined
     ? retirementData.inflationAdjustedWealth
     : retirementData.wealth;
-});
-
-const totalGrowth = computed(() => {
-  if (!props.projection.length) return 0;
-  return retirementWealth.value - currentNetWealth.value;
-});
-
-const yearsToRetirement = computed(() => {
-  return Math.max(0, props.retirementAge - props.currentAge);
 });
 
 const annualPension = computed(() => {
@@ -190,11 +177,6 @@ const firstPensionAge = computed(() => {
   color: #1f2937;
 }
 
-.summary-icon.growth.negative {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: white;
-}
-
 .summary-icon.pension {
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   color: #1f2937;
@@ -220,10 +202,6 @@ const firstPensionAge = computed(() => {
   color: #e0e3e8;
   margin: 0 0 0.2rem 0;
   line-height: 1.2;
-}
-
-.summary-value.negative {
-  color: #ef4444;
 }
 
 .summary-subtitle {

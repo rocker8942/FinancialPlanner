@@ -14,6 +14,7 @@
           :current-age="currentProfile?.currentAge || 30"
           :retirement-age="currentProfile?.retireAge || 65"
           :show-inflation-adjusted="showInflationAdjusted"
+          :optimal-expense="optimalExpense"
         />
         <NetWealthChart
           :projection="projection"
@@ -40,6 +41,7 @@ import AssetInputFormRefactored from '../components/AssetInputFormRefactored.vue
 import SummaryCards from '../components/SummaryCards.vue';
 // import SummaryCard from '../components/SummaryCard.vue';
 import { calculateFinancialPlanModular } from '../utils/calculations/financialPlanOrchestrator';
+import { optimizeExpenseToZeroNetWorth } from '../utils/calculations/expenseOptimizer';
 import type { FinancialProfile } from '../utils/financialPlan';
 import { parseSecureUrlFragment } from '../utils/encryption';
 
@@ -61,6 +63,7 @@ interface ProjectionData {
 
 const projection = ref<ProjectionData[]>([]);
 const currentProfile = ref<FinancialProfile | null>(null);
+const optimalExpense = ref(0);
 const showInflationAdjusted = ref(true);
 const route = useRoute();
 const urlParams = ref<Partial<FinancialProfile>>({});
@@ -129,8 +132,10 @@ function onProfileUpdate(profile: FinancialProfile) {
   if (profile) {
     const plan = calculateFinancialPlanModular(profile);
     projection.value = plan.projection;
+    optimalExpense.value = optimizeExpenseToZeroNetWorth(profile).optimalExpense;
   } else {
     projection.value = [];
+    optimalExpense.value = 0;
   }
 }
 
