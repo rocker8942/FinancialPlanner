@@ -10,7 +10,7 @@
         <div class="summary-text">
           <h3 class="summary-title">Current Net Wealth</h3>
           <p class="summary-value">{{ formatCurrency(currentNetWealth) }}</p>
-          <p class="summary-subtitle">Today's value</p>
+          <p class="summary-subtitle">{{ showInflationAdjusted ? 'Real value' : 'Nominal value' }}</p>
         </div>
       </div>
     </div>
@@ -80,25 +80,34 @@ interface ProjectionData {
   pensionIncome: number;
   totalIncome: number;
   expenses: number;
+  inflationAdjustedWealth?: number;
+  inflationAdjustedSavings?: number;
 }
 
 interface SummaryProps {
   projection: ProjectionData[];
   currentAge: number;
   retirementAge: number;
+  showInflationAdjusted: boolean;
 }
 
 const props = defineProps<SummaryProps>();
 
 const currentNetWealth = computed(() => {
   if (!props.projection.length) return 0;
-  return props.projection[0].wealth;
+  const first = props.projection[0];
+  return props.showInflationAdjusted && first.inflationAdjustedWealth !== undefined
+    ? first.inflationAdjustedWealth
+    : first.wealth;
 });
 
 const retirementWealth = computed(() => {
   if (!props.projection.length) return 0;
   const retirementData = props.projection.find(p => p.age === props.retirementAge);
-  return retirementData?.wealth || 0;
+  if (!retirementData) return 0;
+  return props.showInflationAdjusted && retirementData.inflationAdjustedWealth !== undefined
+    ? retirementData.inflationAdjustedWealth
+    : retirementData.wealth;
 });
 
 const totalGrowth = computed(() => {

@@ -5,17 +5,17 @@
       <div class="chart-title">
         <h3>Net Wealth Projection</h3>
         <div class="chart-toggle-group">
-          <button 
-            class="chart-toggle" 
+          <button
+            class="chart-toggle"
             :class="{ active: !showInflationAdjusted }"
-            @click="showInflationAdjusted = false"
+            @click="emit('update:showInflationAdjusted', false)"
           >
             Nominal Values
           </button>
-          <button 
-            class="chart-toggle" 
+          <button
+            class="chart-toggle"
             :class="{ active: showInflationAdjusted }"
-            @click="showInflationAdjusted = true"
+            @click="emit('update:showInflationAdjusted', true)"
           >
             Real Values (Today's Purchasing Power)
           </button>
@@ -97,11 +97,11 @@ echarts.use([
 ]);
 import { formatCurrency } from '../utils/formatters';
 
-const props = defineProps<{ 
-  projection: Array<{ 
-    age: number; 
-    wealth: number; 
-    propertyAssets: number; 
+const props = defineProps<{
+  projection: Array<{
+    age: number;
+    wealth: number;
+    propertyAssets: number;
     savings: number;
     rawSavings: number;
     superannuationBalance: number;
@@ -116,10 +116,11 @@ const props = defineProps<{
   currentAge?: number;
   retirementAge?: number;
   cpiGrowthRate?: number;
+  showInflationAdjusted: boolean;
 }>();
+const emit = defineEmits<{ 'update:showInflationAdjusted': [value: boolean] }>();
 const chart = ref<HTMLDivElement | null>(null);
 const chartContainer = ref<HTMLDivElement | null>(null);
-const showInflationAdjusted = ref(false);
 let chartInstance: echarts.ECharts | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let currentLegendSelection: Record<string, boolean> = {
@@ -129,7 +130,7 @@ let currentLegendSelection: Record<string, boolean> = {
 };
 
 function getDisplayValue(value: number, age: number): number {
-  if (!showInflationAdjusted.value || !props.currentAge || !props.cpiGrowthRate) {
+  if (!props.showInflationAdjusted || !props.currentAge || !props.cpiGrowthRate) {
     return value;
   }
   const yearsFromNow = age - props.currentAge;
@@ -149,7 +150,7 @@ function renderChart() {
   }
 
   // Prepare data based on inflation adjustment toggle
-  const useInflationAdjusted = showInflationAdjusted.value;
+  const useInflationAdjusted = props.showInflationAdjusted;
   
   // Get property assets data
   const propertyData = props.projection.map(p => 
@@ -368,7 +369,7 @@ onUnmounted(() => {
 });
 
 watch(() => props.projection, renderChart, { deep: true });
-watch(showInflationAdjusted, renderChart);
+watch(() => props.showInflationAdjusted, renderChart);
 </script>
 
 <style scoped>

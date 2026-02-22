@@ -8,17 +8,19 @@
     </div>
     <div class="dashboard-main">
       <div class="dashboard-center">
-        <SummaryCards 
+        <SummaryCards
           v-if="projection.length > 0"
-          :projection="projection" 
+          :projection="projection"
           :current-age="currentProfile?.currentAge || 30"
           :retirement-age="currentProfile?.retireAge || 65"
+          :show-inflation-adjusted="showInflationAdjusted"
         />
-        <NetWealthChart 
-          :projection="projection" 
+        <NetWealthChart
+          :projection="projection"
           :current-age="currentProfile?.currentAge"
           :retirement-age="currentProfile?.retireAge"
           :cpi-growth-rate="currentProfile?.cpiGrowthRate"
+          v-model:showInflationAdjusted="showInflationAdjusted"
         />
       </div>
       <div class="dashboard-right">
@@ -58,6 +60,7 @@ interface ProjectionData {
 
 const projection = ref<ProjectionData[]>([]);
 const currentProfile = ref<FinancialProfile | null>(null);
+const showInflationAdjusted = ref(false);
 const route = useRoute();
 const urlParams = ref<Partial<FinancialProfile>>({});
 // const finalWealth = computed(() => projection.value.length ? projection.value[projection.value.length - 1].wealth : 0);
