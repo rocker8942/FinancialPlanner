@@ -193,14 +193,15 @@ function renderChart() {
 
   // Build life event mark points for the Financial Assets series
   const lifeEventMarkPoints = (props.lifeEvents || []).map(event => {
-    const projPoint = props.projection.find(p => p.age === event.age);
-    if (!projPoint) return null;
-    const yValue = Math.max(0, useInflationAdjusted && projPoint.inflationAdjustedSavings !== undefined
-      ? projPoint.inflationAdjustedSavings
-      : projPoint.savings);
+    const projIndex = props.projection.findIndex(p => p.age === event.age);
+    if (projIndex === -1) return null;
+    // Use the same calculation as nonPensionSavings to match the series data
+    const pensionValue = pensionIncome[projIndex];
+    const savingsValue = savingsData[projIndex];
+    const yValue = Math.max(0, savingsValue - pensionValue);
     return {
       name: event.label || (event.type === 'income' ? 'Income' : 'Expense'),
-      coord: [event.age, yValue],
+      coord: [projIndex, yValue],
       symbol: 'circle',
       symbolSize: 12,
       itemStyle: { color: event.type === 'income' ? '#10b981' : '#ef4444' },
