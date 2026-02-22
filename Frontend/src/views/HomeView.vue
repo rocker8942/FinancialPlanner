@@ -3,7 +3,6 @@
     <div class="dashboard-header">
       <h1 class="page-title">
         Retirement Planner
-        <span class="beta-badge">BETA</span>
       </h1>
     </div>
     <div class="dashboard-main">
@@ -239,31 +238,6 @@ watch(() => route.hash, () => {
   gap: 1rem;
   flex-wrap: wrap;
 }
-
-.beta-badge {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
-  padding: 0.375rem 0.75rem;
-  border-radius: 1.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  animation: pulse-beta 2s infinite;
-}
-
-@keyframes pulse-beta {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
-  }
-}
 .dashboard-main {
   display: flex;
   gap: 1.5rem;
@@ -317,12 +291,7 @@ watch(() => route.hash, () => {
     font-size: 2rem;
     gap: 0.5rem;
   }
-  
-  .beta-badge {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.7rem;
-  }
-  
+
   .dashboard-main {
     gap: 0.75rem;
     flex: 1;
@@ -347,9 +316,6 @@ watch(() => route.hash, () => {
     gap: 0.5rem;
   }
   
-  .beta-badge {
-    align-self: flex-start;
-  }
 }
 
 /* iPhone and narrow mobile screens */
@@ -377,11 +343,6 @@ watch(() => route.hash, () => {
     /* Center the title and badge */
     justify-content: center;
     text-align: center;
-  }
-  
-  .beta-badge {
-    padding: 0.2rem 0.4rem;
-    font-size: 0.65rem;
   }
   
   .dashboard-main {

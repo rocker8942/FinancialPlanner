@@ -32,10 +32,6 @@
             <span class="material-icons text-lg text-blue-400">trending_up</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Retirement Planner</span>
           </router-link>
-          <router-link to="/settings" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors hidden-on-iphone', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Settings' : ''">
-            <span :class="['material-icons text-lg', isDark ? 'text-gray-100' : 'text-slate-500']">settings</span>
-            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Settings</span>
-          </router-link>
         </nav>
       </div>
 
@@ -102,10 +98,6 @@
             <router-link to="/retirementplanner" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-blue-400">trending_up</span>
               <span>Retirement Planner</span>
-            </router-link>
-            <router-link to="/settings" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors hidden-on-iphone', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
-              <span :class="['material-icons text-lg', isDark ? 'text-gray-100' : 'text-slate-500']">settings</span>
-              <span>Settings</span>
             </router-link>
           </nav>
         </div>

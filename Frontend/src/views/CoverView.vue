@@ -5,7 +5,6 @@
       <div class="hero-content">
         <h1 class="hero-title">
           Australian Retirement Planner & Financial Calculator
-          <span class="beta-badge">BETA</span>
         </h1>
         <p class="hero-subtitle">Plan your Australian retirement with confidence using our free calculator</p>
         <p class="hero-description">
@@ -384,30 +383,6 @@ function startPlanning() {
   flex-wrap: wrap;
 }
 
-.beta-badge {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  animation: pulse-beta 2s infinite;
-}
-
-@keyframes pulse-beta {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-  }
-}
 
 .hero-subtitle {
   font-size: 1.5rem;
