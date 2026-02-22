@@ -45,6 +45,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Frontend Architecture
 - **State Management**: Pinia store for authentication (`useAuthStore`) - **NOTE: Login/Auth is not currently in use. The app runs without authentication.**
 - **Routing**: Vue Router (no authenticated routes currently enforced)
+- **Hidden UI**: The Settings sidebar link is hidden since login/auth is not in use. Do not re-add it without re-enabling auth.
 - **Styling**: Tailwind CSS v4
 - **Charts**: ECharts for interactive net wealth visualization
 - **API Communication**: Axios with JWT token authentication (unused while auth is disabled)

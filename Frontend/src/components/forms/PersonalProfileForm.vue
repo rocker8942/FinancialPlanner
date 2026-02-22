@@ -268,7 +268,7 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 .help-text {
   display: block;
   margin-top: 0.25rem;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
   line-height: 1.4;
 }
@@ -276,11 +276,11 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .form-group label {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--accent-text);
 }
@@ -290,9 +290,9 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .help-text {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
   }
 }
 </style>

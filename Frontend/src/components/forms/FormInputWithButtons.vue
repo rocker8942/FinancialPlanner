@@ -165,10 +165,10 @@ const stopContinuousAdjustment = () => {
 
 .form-group label {
   display: block;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
   color: var(--accent-text);
   font-weight: 500;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
 }
 
 .input-with-buttons {
@@ -180,30 +180,50 @@ const stopContinuousAdjustment = () => {
 
 .input-with-buttons input {
   flex: 1;
-  padding: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
   border: 1px solid var(--border-input);
   border-left: none;
   border-right: none;
   background: var(--bg-input);
   color: var(--text-primary);
-  font-size: 0.85rem;
+  font-size: 0.9375rem;
   box-sizing: border-box;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
   min-width: 0;
+  height: 42px;
 }
 
 .input-with-buttons input:focus {
   border-color: #6ee7b7;
   box-shadow: 0 0 0 2px rgba(110, 231, 183, 0.2);
+  outline: none;
+}
+
+.input-with-buttons:focus-within .increment-btn {
+  border-color: #6ee7b7;
+  color: #6ee7b7;
+  background: rgba(110, 231, 183, 0.1);
 }
 
 .input-with-buttons.input-valid input {
   border-color: #34d399;
 }
 
+.input-with-buttons.input-valid .increment-btn {
+  border-color: #34d399;
+  color: #34d399;
+}
+
 .input-with-buttons.input-invalid input {
   border-color: #ef4444;
+}
+
+.input-with-buttons.input-invalid .increment-btn {
+  border-color: #ef4444;
+  color: #ef4444;
 }
 
 .input-with-buttons input:disabled {
@@ -232,7 +252,7 @@ const stopContinuousAdjustment = () => {
 
 .increment-btn {
   width: 32px;
-  height: 38px;
+  height: 42px;
   background: var(--hover-bg);
   border: 1px solid var(--border-input);
   color: var(--text-primary);
@@ -240,69 +260,98 @@ const stopContinuousAdjustment = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
-  font-weight: bold;
-  transition: background-color 0.2s;
+  font-size: 1.125rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
   user-select: none;
   flex-shrink: 0;
   border-radius: 0;
   padding: 0;
+  line-height: 1;
 }
 
 .increment-btn:first-child {
   border-radius: 6px 0 0 6px;
+  border-right: 1px solid var(--border-input);
 }
 
 .increment-btn:last-of-type {
   border-radius: 0 6px 6px 0;
+  border-left: 1px solid var(--border-input);
 }
 
 .increment-btn:hover {
-  background: var(--border-input);
+  background: #e5e7eb;
+  color: var(--accent-text);
+  transform: scale(1.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  .increment-btn:hover {
+    background: #374151;
+  }
+}
+
+[data-theme="dark"] .increment-btn:hover {
+  background: #374151;
 }
 
 .increment-btn:active {
-  background: var(--border-color);
+  background: #d1d5db;
+  color: var(--accent-text);
+  transform: scale(0.95);
+}
+
+@media (prefers-color-scheme: dark) {
+  .increment-btn:active {
+    background: #4b5563;
+  }
+}
+
+[data-theme="dark"] .increment-btn:active {
+  background: #4b5563;
 }
 
 .help-text {
   display: block;
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
+  margin-top: 0.375rem;
+  font-size: 0.8125rem;
   color: var(--text-secondary);
   line-height: 1.4;
 }
 
 .validation-error {
   display: block;
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
+  margin-top: 0.375rem;
+  font-size: 0.8125rem;
   color: #ef4444;
   line-height: 1.3;
+  font-weight: 500;
 }
 
 @media (max-width: 640px) {
   .increment-btn {
     width: 40px;
     height: 44px;
-    font-size: 1rem;
+    font-size: 1.25rem;
   }
 
   .input-with-buttons input {
     padding: 0.75rem 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.9375rem;
+    height: 44px;
   }
 
   .form-group label {
-    font-size: 0.8rem;
+    font-size: 0.875rem;
   }
 }
 
 @media (max-width: 480px) {
   .increment-btn {
-    width: 32px;
-    height: 36px;
-    font-size: 0.9rem;
+    width: 36px;
+    height: 40px;
+    font-size: 1.125rem;
     flex-shrink: 0;
   }
 
@@ -312,14 +361,14 @@ const stopContinuousAdjustment = () => {
   }
 
   .input-with-buttons input {
-    padding: 0.625rem 0.375rem;
-    font-size: 0.85rem;
+    padding: 0.625rem 0.5rem;
+    font-size: 0.875rem;
     flex: 1;
+    height: 40px;
   }
 
   .form-group label {
-    font-size: 0.75rem;
-    margin-bottom: 0.375rem;
+    font-size: 0.8125rem;
   }
 }
 </style>

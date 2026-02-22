@@ -123,8 +123,8 @@ const firstPensionAge = computed(() => {
 .summary-cards-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .summary-card {
@@ -188,10 +188,10 @@ const firstPensionAge = computed(() => {
 }
 
 .summary-title {
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--text-secondary);
-  margin: 0 0 0.4rem 0;
+  margin: 0 0 0.5rem 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -200,21 +200,22 @@ const firstPensionAge = computed(() => {
   font-size: 1.375rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin: 0 0 0.2rem 0;
+  margin: 0 0 0.25rem 0;
   line-height: 1.2;
 }
 
 .summary-subtitle {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
   margin: 0;
+  line-height: 1.3;
 }
 
 /* Tablet and small laptop - 3 columns */
 @media (max-width: 1024px) and (min-width: 769px) {
   .summary-cards-container {
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.6rem;
+    gap: 0.875rem;
   }
 }
 
@@ -222,8 +223,8 @@ const firstPensionAge = computed(() => {
 @media (max-width: 768px) and (min-width: 481px) {
   .summary-cards-container {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
   }
 }
 
@@ -231,42 +232,43 @@ const firstPensionAge = computed(() => {
 @media (max-width: 480px) {
   .summary-cards-container {
     grid-template-columns: 1fr;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
     width: 100%;
     max-width: none;
   }
-  
+
   .summary-card {
-    padding: 0.75rem;
+    padding: 1rem;
   }
-  
+
   .summary-card-content {
-    gap: 0.6rem;
+    gap: 0.75rem;
   }
-  
+
   .summary-icon {
     width: 2.25rem;
     height: 2.25rem;
   }
-  
+
   .summary-icon svg {
     width: 1.125rem;
     height: 1.125rem;
   }
-  
+
   .summary-title {
     font-size: 0.75rem;
-    margin: 0 0 0.3rem 0;
+    margin: 0 0 0.375rem 0;
   }
-  
+
   .summary-value {
     font-size: 1.25rem;
-    margin: 0 0 0.15rem 0;
+    margin: 0 0 0.25rem 0;
   }
-  
+
   .summary-subtitle {
-    font-size: 0.65rem;
+    font-size: 0.6875rem;
+    line-height: 1.2;
   }
 }
 </style>

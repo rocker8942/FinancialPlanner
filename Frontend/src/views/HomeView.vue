@@ -129,9 +129,9 @@ const urlParams = ref<Partial<FinancialProfile>>({});
 function onProfileUpdate(profile: FinancialProfile) {
   currentProfile.value = profile;
   if (profile) {
-    const plan = calculateFinancialPlanModular(profile);
-    projection.value = plan.projection;
-    optimalExpense.value = optimizeExpenseToZeroNetWorth(profile).optimalExpense;
+      const plan = calculateFinancialPlanModular(profile);
+      projection.value = plan.projection;
+      optimalExpense.value = optimizeExpenseToZeroNetWorth(profile).optimalExpense;
   } else {
     projection.value = [];
     optimalExpense.value = 0;
@@ -222,7 +222,7 @@ watch(() => route.hash, () => {
   overflow: auto;
 }
 .dashboard-header {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   text-align: left;
 }
 
@@ -252,6 +252,7 @@ watch(() => route.hash, () => {
   display: flex;
   flex-direction: column;
   overflow: auto;
+  gap: 1rem;
 }
 .dashboard-right {
   flex: 0 0 320px;
@@ -330,13 +331,13 @@ watch(() => route.hash, () => {
     box-sizing: border-box;
     overflow-x: hidden;
   }
-  
+
   .dashboard-header {
     /* Center the header content */
     text-align: center;
     width: 100%;
   }
-  
+
   .page-title {
     font-size: 1.5rem;
     gap: 0.375rem;
@@ -344,20 +345,20 @@ watch(() => route.hash, () => {
     justify-content: center;
     text-align: center;
   }
-  
+
   .dashboard-main {
     gap: 0.5rem;
     /* Center the main content sections */
     align-items: center;
     width: 100%;
   }
-  
+
   .dashboard-center {
     /* Full width for mobile - remove centering */
     align-items: stretch;
     width: 100%;
   }
-  
+
   .dashboard-right {
     /* Remove fixed width constraints for iPhone */
     min-width: unset;
@@ -368,7 +369,7 @@ watch(() => route.hash, () => {
     margin: 0;
     padding: 0;
   }
-  
+
   /* Ensure the form doesn't exceed viewport but stays centered */
   .dashboard-right > * {
     max-width: 100%;

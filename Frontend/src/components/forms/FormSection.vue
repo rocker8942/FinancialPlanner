@@ -33,7 +33,7 @@ const toggleSection = () => {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   margin-bottom: 1.5rem;
-  padding: 1rem 1rem 0.5rem 1rem;
+  padding: 1rem 1rem 0.75rem 1rem;
   background: var(--bg-card-alt);
   transition: all 0.2s ease;
 }
@@ -47,7 +47,7 @@ const toggleSection = () => {
   font-size: 1rem;
   font-weight: 700;
   color: var(--accent-text);
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.75rem;
   padding: 0 0.5rem;
   letter-spacing: 0.02em;
   display: flex;

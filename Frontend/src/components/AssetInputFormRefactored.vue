@@ -439,14 +439,15 @@ onMounted(() => {
 .privacy-notice {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 0.375rem;
-  padding: 0.75rem;
+  border-radius: 0.5rem;
+  padding: 1rem;
   margin-bottom: 1.5rem;
   font-size: 0.875rem;
   color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .privacy-icon {
@@ -470,21 +471,22 @@ onMounted(() => {
   font-weight: 600;
   color: var(--accent-text);
   font-size: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .help-text {
   display: block;
   font-size: 0.875rem;
   color: var(--text-secondary);
-  line-height: 1.4;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
 }
 
 .form-actions {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
-  padding-top: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
   border-top: 1px solid var(--border-color);
 }
 

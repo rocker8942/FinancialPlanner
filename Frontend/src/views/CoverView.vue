@@ -360,7 +360,7 @@ function startPlanning() {
 .hero-section {
   text-align: center;
   padding: 4rem 0 6rem;
-  background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.1) 0%, rgba(13, 148, 136, 0.05) 100%);
   border-radius: 1rem;
   margin-bottom: 4rem;
 }
@@ -411,12 +411,12 @@ function startPlanning() {
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
+  box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
 }
 
 .start-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
+  box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4);
 }
 
 .start-button.large {
@@ -444,9 +444,9 @@ function startPlanning() {
 }
 
 .nav-link:hover {
-  color: #14b8a6;
-  background-color: rgba(20, 184, 166, 0.1);
-  border-color: rgba(20, 184, 166, 0.3);
+  color: var(--accent-text);
+  background-color: rgba(13, 148, 136, 0.1);
+  border-color: rgba(13, 148, 136, 0.3);
   transform: translateY(-1px);
 }
 
@@ -521,10 +521,10 @@ function startPlanning() {
 
 /* Australian Age Pension Section */
 .pension-section {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(13, 148, 136, 0.04) 100%);
   border-radius: 1rem;
   padding: 3rem 2rem;
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(13, 148, 136, 0.2);
 }
 
 .pension-explanation {
@@ -539,7 +539,7 @@ function startPlanning() {
 
 .pension-intro p {
   font-size: 1.125rem;
-  color: #d1d5db;
+  color: var(--text-secondary);
   line-height: 1.7;
 }
 
@@ -555,13 +555,13 @@ function startPlanning() {
   border: 1px solid var(--border-color);
   padding: 2rem;
   border-radius: 1rem;
-  border-left: 4px solid #22c55e;
+  border-left: 4px solid var(--accent);
 }
 
 .pension-detail-card h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #22c55e;
+  color: var(--accent-text);
   margin-bottom: 1rem;
 }
 
@@ -580,7 +580,7 @@ function startPlanning() {
 
 .pension-detail-card li::before {
   content: '•';
-  color: #22c55e;
+  color: var(--accent);
   position: absolute;
   left: 0;
 }
@@ -594,19 +594,19 @@ function startPlanning() {
   border: 1px solid var(--border-color);
   padding: 1.5rem;
   border-radius: 0.75rem;
-  border-left: 4px solid #f59e0b;
+  border-left: 4px solid var(--accent);
   text-align: center;
 }
 
 .pension-note p {
-  color: #fbbf24;
+  color: var(--text-label);
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.6;
 }
 
 .pension-note strong {
-  color: #fef3c7;
+  color: var(--text-primary);
 }
 
 .step {
@@ -616,7 +616,7 @@ function startPlanning() {
 }
 
 .step-number {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
   color: white;
   width: 3rem;
   height: 3rem;
@@ -668,7 +668,7 @@ function startPlanning() {
 }
 
 .coming-soon-badge {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
@@ -676,7 +676,7 @@ function startPlanning() {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
   white-space: nowrap;
 }
@@ -707,10 +707,10 @@ function startPlanning() {
 
 /* Privacy Section */
 .privacy-section {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(13, 148, 136, 0.04) 100%);
   border-radius: 1rem;
   padding: 3rem 2rem;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(13, 148, 136, 0.2);
   margin: 3rem 0;
 }
 
@@ -725,13 +725,13 @@ function startPlanning() {
   gap: 0.75rem;
   font-size: 2rem;
   font-weight: 700;
-  color: #60a5fa;
+  color: var(--accent-text);
   margin-bottom: 2rem;
   justify-content: center;
 }
 
 .privacy-title .material-icons {
-  color: #3b82f6;
+  color: var(--accent);
   font-size: 2.5rem;
 }
 
@@ -751,7 +751,7 @@ function startPlanning() {
 }
 
 .privacy-icon {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
@@ -769,7 +769,7 @@ function startPlanning() {
 .privacy-card h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #60a5fa;
+  color: var(--accent-text);
   margin-bottom: 1rem;
 }
 
@@ -783,19 +783,19 @@ function startPlanning() {
   border: 1px solid var(--border-color);
   padding: 1.5rem;
   border-radius: 0.75rem;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid var(--accent);
   text-align: center;
 }
 
 .privacy-note p {
-  color: #93c5fd;
+  color: var(--text-secondary);
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.6;
 }
 
 .privacy-note strong {
-  color: #dbeafe;
+  color: var(--text-primary);
 }
 
 /* Disclaimer Section */
@@ -869,10 +869,10 @@ function startPlanning() {
 
 /* FAQ Section */
 .faq-section {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(13, 148, 136, 0.04) 100%);
   border-radius: 1rem;
   padding: 3rem 2rem;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(13, 148, 136, 0.2);
   margin: 3rem 0;
 }
 
@@ -889,19 +889,19 @@ function startPlanning() {
   border: 1px solid var(--border-color);
   border-radius: 1rem;
   padding: 2rem;
-  border-left: 4px solid #6366f1;
+  border-left: 4px solid var(--accent);
   transition: all 0.3s ease;
 }
 
 .faq-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 8px 25px rgba(13, 148, 136, 0.2);
 }
 
 .faq-question {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #6366f1;
+  color: var(--accent-text);
   margin-bottom: 1rem;
   line-height: 1.4;
 }
@@ -917,7 +917,7 @@ function startPlanning() {
 .final-cta-section {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.1) 0%, rgba(13, 148, 136, 0.05) 100%);
   border-radius: 1rem;
   margin-bottom: 2rem;
 }
