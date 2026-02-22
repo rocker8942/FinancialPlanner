@@ -132,40 +132,6 @@
       @adjust="handleFieldAdjust"
     />
 
-    <!-- Growth Rates Summary -->
-    <div class="rates-summary">
-      <h4 class="summary-title">Growth Assumptions Summary</h4>
-      <div class="rates-grid">
-        <div class="rate-item">
-          <span class="rate-label">Property:</span>
-          <span class="rate-value">{{ formatPercentage(propertyGrowthRate) }}</span>
-        </div>
-        <div class="rate-item">
-          <span class="rate-label">Investments:</span>
-          <span class="rate-value">{{ formatPercentage(savingsGrowthRate) }}</span>
-        </div>
-        <div class="rate-item">
-          <span class="rate-label">Super:</span>
-          <span class="rate-value">{{ formatPercentage(superannuationRate) }}</span>
-        </div>
-        <div class="rate-item">
-          <span class="rate-label">Mortgage:</span>
-          <span class="rate-value mortgage">{{ formatPercentage(mortgageRate) }}</span>
-        </div>
-        <div class="rate-item">
-          <span class="rate-label">Inflation:</span>
-          <span class="rate-value">{{ formatPercentage(cpiGrowthRate) }}</span>
-        </div>
-        <div class="rate-item">
-          <span class="rate-label">Rental Yield:</span>
-          <span class="rate-value">{{ formatPercentage(propertyRentalYield) }}</span>
-        </div>
-      </div>
-      <small class="help-text">
-        These assumptions significantly impact your projection. Consider conservative estimates for long-term planning.
-      </small>
-    </div>
-
     <!-- Reset to Defaults Button -->
     <div class="form-actions">
       <button 
@@ -185,7 +151,6 @@ import { computed } from 'vue';
 import FormInputWithButtons from './FormInputWithButtons.vue';
 import { useFormValidation } from '../../composables/useFormValidation';
 import { useFieldFormatting } from '../../composables/useFieldFormatting';
-import { formatPercentage } from '../../utils/formatters';
 
 interface AdvancedOptionsData {
   deathAge: number;
@@ -251,7 +216,7 @@ formatting.updateFormattingRule('propertyRentalYield', {
 
 // Default values for reset functionality
 const defaultValues = {
-  propertyGrowthRate: 0.04, // 4%
+  propertyGrowthRate: 0.03, // 3%
   propertyRentalYield: 0.033, // 3.3%
   savingsGrowthRate: 0.025, // 2.5%
   mortgageRate: 0.06, // 6%

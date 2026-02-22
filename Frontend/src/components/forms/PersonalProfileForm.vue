@@ -235,7 +235,7 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
   margin-top: 0.5rem;
 }
 
-.radio-label {
+.form-group .radio-label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -244,13 +244,13 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
   color: #d1d5db;
 }
 
-.radio-label input[type="radio"] {
+.form-group .radio-label input[type="radio"] {
   width: 1rem;
   height: 1rem;
   accent-color: #14b8a6;
 }
 
-.checkbox-label {
+.form-group .checkbox-label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -259,7 +259,7 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
   color: #d1d5db;
 }
 
-.checkbox-label input[type="checkbox"] {
+.form-group .checkbox-label input[type="checkbox"] {
   width: 1rem;
   height: 1rem;
   accent-color: #14b8a6;
@@ -268,7 +268,7 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 .help-text {
   display: block;
   margin-top: 0.25rem;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: #9ca3af;
   line-height: 1.4;
 }
@@ -280,9 +280,9 @@ const handleFieldAdjust = (_fieldName: string, _adjustment: number): void => {
 }
 
 .form-group label {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  color: #d1d5db;
+  color: #6ee7b7;
 }
 
 @media (max-width: 640px) {

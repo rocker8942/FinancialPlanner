@@ -43,11 +43,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Supports user and partner scenarios with separate pension calculations
 
 ### Frontend Architecture
-- **State Management**: Pinia store for authentication (`useAuthStore`)
-- **Routing**: Vue Router with authenticated routes
+- **State Management**: Pinia store for authentication (`useAuthStore`) - **NOTE: Login/Auth is not currently in use. The app runs without authentication.**
+- **Routing**: Vue Router (no authenticated routes currently enforced)
 - **Styling**: Tailwind CSS v4
 - **Charts**: ECharts for interactive net wealth visualization
-- **API Communication**: Axios with JWT token authentication
+- **API Communication**: Axios with JWT token authentication (unused while auth is disabled)
 - **Testing**: Vitest with Vue Test Utils
 
 ### Backend Architecture
@@ -67,7 +67,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Disposible income = growth income - super contribution - tax - mortgage interest (if there is a mortgage)
 
 ### Data Flow
-1. User inputs financial data via `AssetInputForm.vue`
+1. User inputs financial data via `AssetInputFormRefactored.vue` (composed of `PersonalProfileForm`, `AssetsForm`, `IncomeExpensesForm`, `AdvancedOptionsForm`)
 2. Data stored browser local storage
 3. `calculateFinancialPlanModular` processes projections
 4. Results displayed in `NetWealthChart.vue` using ECharts

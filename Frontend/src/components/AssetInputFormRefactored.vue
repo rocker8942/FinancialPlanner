@@ -147,7 +147,7 @@ const incomeExpenses = ref({
 
 const advancedOptions = ref({
   deathAge: 90,
-  propertyGrowthRate: 0.04, // 4%
+  propertyGrowthRate: 0.03, // 3%
   propertyRentalYield: 0.033, // 3.3%
   savingsGrowthRate: 0.025, // 2.5%
   mortgageRate: 0.06, // 6%
@@ -382,10 +382,16 @@ watch([
   incomeExpenses.value.currentDisposableIncome = currentDisposableIncome.value;
 }, { deep: true });
 
-// Auto-update expenses when zero net worth is enabled
+// Auto-update expenses when zero net worth is enabled or any input changes while enabled
 watch(() => incomeExpenses.value.zeroNetWorthAtDeath, (newValue) => {
   if (newValue) {
     incomeExpenses.value.expenses = calculatedOptimalExpense.value;
+  }
+});
+
+watch(calculatedOptimalExpense, (newExpense) => {
+  if (incomeExpenses.value.zeroNetWorthAtDeath) {
+    incomeExpenses.value.expenses = newExpense;
   }
 });
 
@@ -400,7 +406,7 @@ onMounted(() => {
   max-width: 600px;
   margin: 0 auto;
   padding: 1rem;
-  background: #111827;
+  background: #1a2236;
   border-radius: 0.5rem;
   color: #d1d5db;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

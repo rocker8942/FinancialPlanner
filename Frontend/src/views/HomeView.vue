@@ -23,7 +23,7 @@
       </div>
       <div class="dashboard-right">
         <!-- <SummaryCard :netWorth="finalWealth" :details="summaryDetailsFiltered" /> -->
-        <AssetInputForm @update="onProfileUpdate" :urlParams="urlParams" />
+        <AssetInputFormRefactored @update="onProfileUpdate" :urlParams="urlParams" />
       </div>
     </div>
   </div>
@@ -33,7 +33,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import NetWealthChart from '../components/NetWealthChart.vue';
-import AssetInputForm from '../components/AssetInputForm.vue';
+import AssetInputFormRefactored from '../components/AssetInputFormRefactored.vue';
 import SummaryCards from '../components/SummaryCards.vue';
 // import SummaryCard from '../components/SummaryCard.vue';
 import { calculateFinancialPlanModular } from '../utils/calculations/financialPlanOrchestrator';

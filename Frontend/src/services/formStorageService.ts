@@ -95,7 +95,7 @@ export class FormStorageService {
       retireAge: fields.retireAge || 65,
       deathAge: fields.deathAge || 90,
       savingsGrowthRate: fields.savingsGrowthRate || 0.025,
-      propertyGrowthRate: fields.propertyGrowthRate || 0.04,
+      propertyGrowthRate: fields.propertyGrowthRate || 0.03,
       propertyRentalYield: fields.propertyRentalYield || 0.033,
       cpiGrowthRate: fields.cpiGrowthRate || 0.03,
       pensionAmount: fields.pensionAmount || 0,
@@ -236,7 +236,7 @@ export class FormStorageService {
       retireAge: 65,
       deathAge: 90,
       savingsGrowthRate: 0.025, // 2.5%
-      propertyGrowthRate: 0.04, // 4%
+      propertyGrowthRate: 0.03, // 3%
       propertyRentalYield: 0.033, // 3.3%
       cpiGrowthRate: 0.03, // 3%
       pensionAmount: 0,
