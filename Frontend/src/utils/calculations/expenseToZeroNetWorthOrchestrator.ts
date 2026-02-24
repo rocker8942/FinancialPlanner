@@ -10,7 +10,6 @@ export function calculateExpenseToZeroNetWorthModular(profileInput: FinancialPro
   const years = profileInput.deathAge - profileInput.currentAge;
   
   // Handle edge cases
-  if (years <= 0) return profileInput.expenses;
   if (years < 1) return profileInput.expenses;
   
   // Get total available resources
@@ -60,13 +59,12 @@ function estimateRoughPensionIncome(profile: FinancialProfile): number {
     roughAnnualPension = 38000; // Rough combined couple pension amount
   }
   
-  // Reduce if significant assets (very rough asset test)
+  // Rough asset test reduction
   const roughAssets = profile.savings + profile.superannuationBalance + profile.propertyAssets - profile.mortgageBalance;
-  if (roughAssets > 100000) {
-    roughAnnualPension *= 0.5; // Rough reduction for asset test
-  }
   if (roughAssets > 500000) {
-    roughAnnualPension *= 0.1; // Major reduction for high assets
+    roughAnnualPension *= 0.05; // Major reduction for high assets (0.5 * 0.1)
+  } else if (roughAssets > 100000) {
+    roughAnnualPension *= 0.5; // Moderate reduction for asset test
   }
   
   return roughAnnualPension * pensionEligibleYears;

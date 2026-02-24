@@ -13,15 +13,6 @@ export function optimizeExpenseToZeroNetWorth(
   const years = profile.deathAge - profile.currentAge;
   
   // Handle edge cases
-  if (years <= 0) {
-    return {
-      optimalExpense: profile.expenses,
-      finalWealth: 0,
-      iterations: 0,
-      converged: false
-    };
-  }
-
   if (years < 1) {
     return {
       optimalExpense: profile.expenses,
@@ -112,11 +103,7 @@ function performBinarySearchOptimization(
 ): OptimizationResult {
   let low = initialLow;
   let high = initialHigh;
-  let bestExpense = 0;
-  let bestFinalWealth = Infinity;
   let iterations = 0;
-
-  // Find the expense that optimizes for zero net worth while maintaining cash flow sustainability
   let optimalExpense = 0;
   let optimalFinalWealth = Infinity;
   
@@ -180,38 +167,14 @@ function performBinarySearchOptimization(
     }
   }
   
-  bestExpense = optimalExpense;
-  bestFinalWealth = optimalFinalWealth;
-  
-  // Log the reasoning
-  const testProfile = { ...profile, expenses: optimalExpense };
-  const plan = calculateFinancialPlanModular(testProfile);
-  const workingYears = plan.projection.filter(y => y.age <= profile.retireAge);
-  let maxAnnualDeficit = 0;
-  let totalDeficit = 0;
-  
-  workingYears.forEach(year => {
-    const deficit = Math.max(0, year.expenses - year.totalIncome);
-    maxAnnualDeficit = Math.max(maxAnnualDeficit, deficit);
-    totalDeficit += deficit;
-  });
-  
-  console.log(`✅ Sustainable expense: ${optimalExpense.toFixed(0)} (final wealth: ${optimalFinalWealth.toFixed(0)})`);
-  console.log(`   Max annual deficit: $${maxAnnualDeficit.toFixed(0)}, Total deficit: $${totalDeficit.toFixed(0)}`);
-  console.log(`   Cash flow is sustainable during working years`);
-  
   // If we couldn't find a sustainable solution, use the best compromise
-  if (bestExpense === 0) {
-    console.log(`⚠️ No fully sustainable solution found. Using best compromise.`);
-    bestExpense = initialHigh * 0.8; // Use 80% of upper bound as fallback
-    bestFinalWealth = calculateFinancialPlanModular({ ...profile, expenses: bestExpense }).finalNetSavings;
+  if (optimalExpense === 0) {
+    optimalExpense = initialHigh * 0.8;
+    optimalFinalWealth = calculateFinancialPlanModular({ ...profile, expenses: optimalExpense }).finalNetSavings;
   }
 
   // Fallback validation and final safety check
-  const result = validateOptimizationResult(profile, bestExpense, bestFinalWealth);
-  
-  // No final income cap - trust the optimization algorithm
-  // The debt serviceability checks in the binary search provide appropriate constraints
+  const result = validateOptimizationResult(profile, optimalExpense, optimalFinalWealth);
   
   return {
     optimalExpense: result.expense,

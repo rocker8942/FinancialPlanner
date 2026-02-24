@@ -178,31 +178,3 @@ export interface FormFieldConfig {
   defaultValue?: any;
 }
 
-// Storage format for form data
-export interface StoredFinancialData {
-  propertyAssets: number;
-  savings: number;
-  mortgageBalance: number;
-  mortgageRate: number;
-  superannuationBalance: number;
-  superannuationRate: number;
-  salary: number;
-  partnerSalary: number;
-  expenses: number;
-  currentAge: number;
-  retireAge: number;
-  deathAge: number;
-  savingsGrowthRate: number;
-  propertyGrowthRate: number;
-  propertyRentalYield: number;
-  cpiGrowthRate: number;
-  pensionAmount: number;
-  pensionStartAge: number;
-  partnerPensionAmount: number;
-  partnerPensionStartAge: number;
-  partnerAge: number;
-  partnerRetireAge: number;
-  relationshipStatus: 'single' | 'couple';
-  isHomeowner: boolean;
-  lifeEvents?: LifeEvent[];
-}

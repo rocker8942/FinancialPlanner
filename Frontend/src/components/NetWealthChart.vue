@@ -137,13 +137,14 @@ let currentLegendSelection: Record<string, boolean> = {
   'Pension Income': true
 };
 
+function inflationFactor(age: number): number {
+  if (!props.currentAge || !props.cpiGrowthRate) return 1;
+  return Math.pow(1 + props.cpiGrowthRate, -(age - props.currentAge));
+}
+
 function getDisplayValue(value: number, age: number): number {
-  if (!props.showInflationAdjusted || !props.currentAge || !props.cpiGrowthRate) {
-    return value;
-  }
-  const yearsFromNow = age - props.currentAge;
-  const inflationAdjustmentFactor = Math.pow(1 + props.cpiGrowthRate, -yearsFromNow);
-  return value * inflationAdjustmentFactor;
+  if (!props.showInflationAdjusted) return value;
+  return value * inflationFactor(age);
 }
 
 function renderChart() {
@@ -170,14 +171,7 @@ function renderChart() {
   // Prepare pension income data (inflation-adjusted if toggled)
   const pensionIncome = props.projection.map((p) => {
     const basePension = p.pensionIncome ?? 0;
-    if (useInflationAdjusted && props.currentAge && props.cpiGrowthRate) {
-      // Calculate years from current age
-      const yearsFromNow = p.age - props.currentAge;
-      // Apply inflation adjustment factor to show real purchasing power
-      const inflationAdjustmentFactor = Math.pow(1 + props.cpiGrowthRate, -yearsFromNow);
-      return basePension * inflationAdjustmentFactor;
-    }
-    return basePension;
+    return useInflationAdjusted ? basePension * inflationFactor(p.age) : basePension;
   });
   
   // Use savings data (inflation-adjusted if toggled)
@@ -249,28 +243,15 @@ function renderChart() {
         const age = dataPoint.axisValue;
         const projectionData = props.projection.find(p => p.age === parseInt(age));
         if (projectionData) {
-          const propertyValue = useInflationAdjusted && projectionData.inflationAdjustedPropertyAssets !== undefined 
-            ? projectionData.inflationAdjustedPropertyAssets 
+          const factor = useInflationAdjusted ? inflationFactor(projectionData.age) : 1;
+          const propertyValue = useInflationAdjusted && projectionData.inflationAdjustedPropertyAssets !== undefined
+            ? projectionData.inflationAdjustedPropertyAssets
             : projectionData.propertyAssets;
-          const savingsValue = useInflationAdjusted && projectionData.inflationAdjustedSavings !== undefined 
-            ? projectionData.inflationAdjustedSavings 
+          const savingsValue = useInflationAdjusted && projectionData.inflationAdjustedSavings !== undefined
+            ? projectionData.inflationAdjustedSavings
             : projectionData.savings;
-          
-          // Calculate inflation-adjusted superannuation value for tooltip
-          let superValue = projectionData.superannuationBalance;
-          if (useInflationAdjusted && props.currentAge && props.cpiGrowthRate) {
-            const yearsFromNow = projectionData.age - props.currentAge;
-            const inflationAdjustmentFactor = Math.pow(1 + props.cpiGrowthRate, -yearsFromNow);
-            superValue = projectionData.superannuationBalance * inflationAdjustmentFactor;
-          }
-          
-          // Calculate inflation-adjusted pension income value for tooltip
-          let pensionValue = projectionData.pensionIncome ?? 0;
-          if (useInflationAdjusted && props.currentAge && props.cpiGrowthRate) {
-            const yearsFromNow = projectionData.age - props.currentAge;
-            const inflationAdjustmentFactor = Math.pow(1 + props.cpiGrowthRate, -yearsFromNow);
-            pensionValue = (projectionData.pensionIncome ?? 0) * inflationAdjustmentFactor;
-          }
+          const superValue = projectionData.superannuationBalance * factor;
+          const pensionValue = (projectionData.pensionIncome ?? 0) * factor;
           
           const valueType = useInflationAdjusted ? ' (Real Value)' : ' (Nominal)';
 

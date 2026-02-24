@@ -32,8 +32,7 @@ export function calculateIncomeComponents(
   // Calculate employment income
   const employmentIncome = calculateEmploymentIncome(
     currentUserSalary,
-    currentPartnerSalary,
-    isFirstYear
+    currentPartnerSalary
   );
   
   // Update super balance with contributions (but not in first year to preserve starting point)
@@ -91,12 +90,25 @@ export function calculateIncomeComponents(
 }
 
 /**
+ * Break down a total salary package into taxable income, super contributions, and net super
+ */
+function processSalaryPackage(totalPackage: number): {
+  taxableIncome: number;
+  superContributions: number;
+  netSuperContributions: number;
+} {
+  const superContributions = totalPackage * 0.12;
+  const taxableIncome = totalPackage - superContributions;
+  const netSuper = calculateNetSuperContributions(superContributions, taxableIncome);
+  return { taxableIncome, superContributions, netSuperContributions: netSuper };
+}
+
+/**
  * Calculate employment income components
  */
 function calculateEmploymentIncome(
   currentUserSalary: number,
-  currentPartnerSalary: number,
-  _isFirstYear: boolean
+  currentPartnerSalary: number
 ): {
   grossEmploymentIncome: number;
   netEmploymentIncome: number;
@@ -108,48 +120,19 @@ function calculateEmploymentIncome(
   let totalSuperContributions = 0;
   let totalPackageAmount = 0;
   let netSuperContributions = 0;
-  
-  // Process user salary
-  if (currentUserSalary > 0) {
-    const userTotalPackage = currentUserSalary;
-    // Calculate super contributions as 12% of total package
-    const userSuperContributions = userTotalPackage * 0.12;
-    // Taxable income = total package - super contribution
-    const userTaxableIncome = userTotalPackage - userSuperContributions;
-    
-    grossEmploymentIncome += userTaxableIncome;
-    totalSuperContributions += userSuperContributions;
-    totalPackageAmount += userTotalPackage;
-    
-    // Calculate net super contributions for balance update
-    netSuperContributions += calculateNetSuperContributions(
-      userSuperContributions,
-      userTaxableIncome
-    );
+
+  for (const salary of [currentUserSalary, currentPartnerSalary]) {
+    if (salary > 0) {
+      const breakdown = processSalaryPackage(salary);
+      grossEmploymentIncome += breakdown.taxableIncome;
+      totalSuperContributions += breakdown.superContributions;
+      totalPackageAmount += salary;
+      netSuperContributions += breakdown.netSuperContributions;
+    }
   }
-  
-  // Process partner salary
-  if (currentPartnerSalary > 0) {
-    const partnerTotalPackage = currentPartnerSalary;
-    // Calculate super contributions as 12% of total package
-    const partnerSuperContributions = partnerTotalPackage * 0.12;
-    // Taxable income = total package - super contribution
-    const partnerTaxableIncome = partnerTotalPackage - partnerSuperContributions;
-    
-    grossEmploymentIncome += partnerTaxableIncome;
-    totalSuperContributions += partnerSuperContributions;
-    totalPackageAmount += partnerTotalPackage;
-    
-    // Calculate net super contributions for balance update
-    netSuperContributions += calculateNetSuperContributions(
-      partnerSuperContributions,
-      partnerTaxableIncome
-    );
-  }
-  
-  // Calculate net employment income after tax (for actual spending)
+
   const netEmploymentIncome = grossEmploymentIncome > 0 ? calculateNetIncome(grossEmploymentIncome) : 0;
-  
+
   return {
     grossEmploymentIncome,
     netEmploymentIncome,
@@ -175,10 +158,9 @@ function calculatePensionIncome(
   partnerPension: number;
   totalPensionIncome: number;
 } {
-  // Calculate CPI adjustment factor for asset test thresholds (compound growth from base year 2025)
+  // CPI adjustment factor for both asset test thresholds and pension amounts
   const cpiAdjustmentFactor = Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
-  
-  // Get pension amounts for this year
+
   const pensionAmounts = getAgePensionAmounts(
     profile.relationshipStatus,
     profile.isHomeowner,
@@ -192,10 +174,10 @@ function calculatePensionIncome(
     currentPartnerAge,
     cpiAdjustmentFactor
   );
-  
+
   // Apply CPI adjustment to pension amounts (age pension typically increases with CPI)
-  const userPension = pensionAmounts.userPension * Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
-  const partnerPension = pensionAmounts.partnerPension * Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
+  const userPension = pensionAmounts.userPension * cpiAdjustmentFactor;
+  const partnerPension = pensionAmounts.partnerPension * cpiAdjustmentFactor;
   const totalPensionIncome = userPension + partnerPension;
   
   return {
