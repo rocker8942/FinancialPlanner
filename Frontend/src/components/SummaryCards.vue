@@ -163,23 +163,23 @@ const firstPensionAge = computed(() => {
 }
 
 .summary-icon.wealth {
-  background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
-  color: #1f2937;
+  background: rgba(13, 148, 136, 0.1);
+  color: var(--accent-text);
 }
 
 .summary-icon.retirement {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-  color: #1f2937;
+  background: rgba(100, 116, 139, 0.1);
+  color: var(--text-secondary);
 }
 
 .summary-icon.growth {
-  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  color: #1f2937;
+  background: rgba(13, 148, 136, 0.08);
+  color: var(--accent-text);
 }
 
 .summary-icon.pension {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: #1f2937;
+  background: rgba(100, 116, 139, 0.1);
+  color: var(--text-secondary);
 }
 
 .summary-text {

@@ -1,13 +1,15 @@
 <template>
-  <fieldset class="form-section" :class="{ 'section-active': isOpen }">
-    <legend class="form-section-title clickable" @click="toggleSection">
-      <span class="chevron" :class="{ open: isOpen }">&#9660;</span>
-      {{ title }}
-    </legend>
-    <div v-show="isOpen">
+  <div class="form-section" :class="{ 'section-active': isOpen }">
+    <button type="button" class="form-section-header" :aria-expanded="isOpen" @click="toggleSection">
+      <span class="section-title">{{ title }}</span>
+      <svg class="chevron-icon" :class="{ open: isOpen }" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <div v-show="isOpen" class="section-content">
       <slot />
     </div>
-  </fieldset>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -32,42 +34,73 @@ const toggleSection = () => {
 .form-section {
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  margin-bottom: 1.5rem;
-  padding: 1rem 1rem 0.75rem 1rem;
-  background: var(--bg-card-alt);
-  transition: all 0.2s ease;
+  margin-bottom: 0.625rem;
+  padding: 0;
+  background: var(--bg-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-section.section-active {
   border-color: var(--accent-text);
-  box-shadow: 0 0 0 1px rgba(110, 231, 183, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
-.form-section-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--accent-text);
-  margin-bottom: 0.75rem;
-  padding: 0 0.5rem;
-  letter-spacing: 0.02em;
+.form-section-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem 1rem;
   cursor: pointer;
   user-select: none;
+  color: var(--text-secondary);
+  transition: color 0.15s ease, background-color 0.15s ease;
+  border-radius: 6px 6px 0 0;
+  border-bottom: 1px solid transparent;
+  /* button reset */
+  background: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font: inherit;
+  text-align: left;
 }
 
-.form-section-title.clickable:hover {
-  background: var(--hover-bg);
+.form-section.section-active .form-section-header {
+  color: var(--accent-text);
+  border-bottom-color: var(--border-color);
 }
 
-.chevron {
-  display: inline-block;
-  margin-right: 0.5em;
-  transition: transform 0.2s;
-  transform: rotate(-90deg);
+.form-section-header:hover {
+  background-color: var(--hover-bg);
+  color: var(--accent-text);
 }
 
-.chevron.open {
-  transform: rotate(0deg);
+.section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chevron-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease;
+}
+
+.form-section.section-active .chevron-icon,
+.form-section-header:hover .chevron-icon {
+  opacity: 1;
+}
+
+.chevron-icon.open {
+  transform: rotate(180deg);
+}
+
+.section-content {
+  padding: 1rem;
 }
 </style>
