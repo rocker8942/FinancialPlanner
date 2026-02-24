@@ -286,6 +286,7 @@ const collectAllFormData = (): StoredFinancialData => {
     partnerRetireAge: personalProfile.value.partnerRetireAge,
     relationshipStatus: personalProfile.value.relationshipStatus,
     isHomeowner: personalProfile.value.isHomeowner,
+    zeroNetWorthAtDeath: incomeExpenses.value.zeroNetWorthAtDeath,
     lifeEvents: lifeEvents.value
   };
 };
@@ -336,7 +337,7 @@ const populateFormsFromData = (data: StoredFinancialData) => {
     salary: data.salary,
     partnerSalary: data.partnerSalary,
     expenses: data.expenses,
-    zeroNetWorthAtDeath: false, // Reset this as it's not stored
+    zeroNetWorthAtDeath: data.zeroNetWorthAtDeath ?? false,
     relationshipStatus: data.relationshipStatus,
     currentDisposableIncome: 0, // Will be calculated
     expensesAutoCapped: false // Reset this

@@ -33,6 +33,7 @@ export interface StoredFinancialData {
   partnerRetireAge: number;
   relationshipStatus: 'single' | 'couple';
   isHomeowner: boolean;
+  zeroNetWorthAtDeath?: boolean;
   lifeEvents?: LifeEvent[];
 }
 
@@ -252,6 +253,7 @@ export class FormStorageService {
       partnerRetireAge: 65,
       relationshipStatus: 'single',
       isHomeowner: false,
+      zeroNetWorthAtDeath: false,
       lifeEvents: []
     };
   }
