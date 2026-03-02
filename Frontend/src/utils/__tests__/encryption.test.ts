@@ -12,12 +12,13 @@ import {
   parseSecureUrlFragment
 } from '../encryption';
 
-// Mock localStorage
+// Mock localStorage with stateful store so generateSessionKey() returns consistent keys
+const localStorageStore: Record<string, string> = {};
 const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
+  getItem: vi.fn((key: string) => localStorageStore[key] ?? null),
+  setItem: vi.fn((key: string, value: string) => { localStorageStore[key] = value; }),
+  removeItem: vi.fn((key: string) => { delete localStorageStore[key]; }),
+  clear: vi.fn(() => { Object.keys(localStorageStore).forEach(k => delete localStorageStore[k]); }),
 };
 
 // Mock sessionStorage
@@ -45,6 +46,12 @@ Object.defineProperty(window, 'sessionStorage', {
 describe('Encryption Utilities', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Clear stateful localStorage store between tests
+    Object.keys(localStorageStore).forEach(k => delete localStorageStore[k]);
+    // Re-install stateful implementations (mockReturnValue in tests can override them)
+    localStorageMock.getItem.mockImplementation((key: string) => localStorageStore[key] ?? null);
+    localStorageMock.setItem.mockImplementation((key: string, value: string) => { localStorageStore[key] = value; });
+    localStorageMock.removeItem.mockImplementation((key: string) => { delete localStorageStore[key]; });
     // Mock consistent session ID for testing
     sessionStorageMock.getItem.mockReturnValue('test-session-id');
   });
@@ -109,10 +116,7 @@ describe('Encryption Utilities', () => {
         expect.stringContaining('encrypted:')
       );
 
-      // Mock the localStorage.getItem return value
-      const encryptedValue = localStorageMock.setItem.mock.calls[0][1];
-      localStorageMock.getItem.mockReturnValue(encryptedValue);
-
+      // Stateful mock already stores the encrypted value via setItem implementation
       const retrieved = getSecureItem(key);
       expect(retrieved).toEqual(testData);
     });
@@ -132,7 +136,7 @@ describe('Encryption Utilities', () => {
     it('should clear all secure data', () => {
       clearAllSecureData();
       expect(localStorageMock.removeItem).toHaveBeenCalledWith('financial-input');
-      expect(sessionStorageMock.removeItem).toHaveBeenCalledWith('sessionId');
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith('deviceId');
     });
   });
 
