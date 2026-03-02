@@ -48,6 +48,21 @@
       />
     </FormSection>
 
+    <!-- House Purchase Plan Section -->
+    <FormSection
+      title="House Purchase Plan"
+      :is-open="sectionOpen.housePurchase"
+      section-key="housePurchase"
+      @toggle="toggleSection"
+    >
+      <HousePurchaseForm
+        v-model="housePurchasePlan"
+        :current-age="personalProfile.currentAge"
+        :death-age="advancedOptions.deathAge"
+        @field-change="handleFieldChange"
+      />
+    </FormSection>
+
     <!-- Life Events Section -->
     <FormSection
       title="Life Events"
@@ -111,11 +126,12 @@ import AssetsForm from './forms/AssetsForm.vue';
 import IncomeExpensesForm from './forms/IncomeExpensesForm.vue';
 import AdvancedOptionsForm from './forms/AdvancedOptionsForm.vue';
 import LifeEventsForm from './forms/LifeEventsForm.vue';
+import HousePurchaseForm from './forms/HousePurchaseForm.vue';
 import { formStorageService, type StoredFinancialData } from '../services/formStorageService';
 import { calculateDisposableIncome, calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
 import { formatCurrency } from '../utils/formatters';
 import type { FinancialProfile } from '../utils/financialPlan';
-import type { LifeEvent } from '../utils/models/FinancialTypes';
+import type { LifeEvent, HousePurchasePlan } from '../utils/models/FinancialTypes';
 
 // Props interface for URL parameters
 interface Props {
@@ -132,6 +148,7 @@ const sectionOpen = ref({
   profile: true,
   assets: false,
   income: false,
+  housePurchase: false,
   lifeEvents: false,
   advanced: false
 });
@@ -176,6 +193,13 @@ const advancedOptions = ref({
 
 const lifeEvents = ref<LifeEvent[]>([]);
 
+const housePurchasePlan = ref<HousePurchasePlan>({
+  enabled: false,
+  purchaseAge: 35,
+  purchasePrice: 0,
+  downPaymentPercent: 20
+});
+
 // Share functionality state
 const shareSuccess = ref(false);
 
@@ -215,7 +239,8 @@ const currentFinancialProfile = computed((): FinancialProfile => {
     partnerRetireAge: personalProfile.value.partnerRetireAge,
     relationshipStatus: personalProfile.value.relationshipStatus,
     isHomeowner: personalProfile.value.isHomeowner,
-    lifeEvents: lifeEvents.value
+    lifeEvents: lifeEvents.value,
+    housePurchasePlan: housePurchasePlan.value
   };
 });
 
@@ -287,7 +312,8 @@ const collectAllFormData = (): StoredFinancialData => {
     relationshipStatus: personalProfile.value.relationshipStatus,
     isHomeowner: personalProfile.value.isHomeowner,
     zeroNetWorthAtDeath: incomeExpenses.value.zeroNetWorthAtDeath,
-    lifeEvents: lifeEvents.value
+    lifeEvents: lifeEvents.value,
+    housePurchasePlan: housePurchasePlan.value
   };
 };
 
@@ -355,6 +381,10 @@ const populateFormsFromData = (data: StoredFinancialData) => {
   };
 
   lifeEvents.value = data.lifeEvents ?? [];
+
+  if (data.housePurchasePlan) {
+    housePurchasePlan.value = data.housePurchasePlan;
+  }
 };
 
 // Share functionality

@@ -64,7 +64,7 @@
               <td class="table-cell text-right hidden-mobile">{{ formatCurrency(getDisplayValue(item.mortgageBalance, item.age)) }}</td>
               <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.superannuationBalance, item.age)) }}</td>
               <td class="table-cell text-right hidden-mobile">{{ formatCurrency(getDisplayValue(item.rawSavings, item.age)) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(Math.max(0, showInflationAdjusted && item.inflationAdjustedSavings !== undefined ? item.inflationAdjustedSavings : item.savings)) }}</td>
+              <td class="table-cell text-right">{{ formatCurrency(showInflationAdjusted && item.inflationAdjustedSavings !== undefined ? item.inflationAdjustedSavings : item.savings) }}</td>
             </tr>
           </tbody>
         </table>
@@ -99,7 +99,7 @@ echarts.use([
   CanvasRenderer
 ]);
 import { formatCurrency } from '../utils/formatters';
-import type { LifeEvent } from '../utils/models/FinancialTypes';
+import type { LifeEvent, HousePurchasePlan } from '../utils/models/FinancialTypes';
 
 const props = defineProps<{
   projection: Array<{
@@ -122,6 +122,7 @@ const props = defineProps<{
   cpiGrowthRate?: number;
   showInflationAdjusted: boolean;
   lifeEvents?: LifeEvent[];
+  housePurchasePlan?: HousePurchasePlan;
 }>();
 const emit = defineEmits<{ 'update:showInflationAdjusted': [value: boolean] }>();
 const { isDark } = useTheme();
@@ -175,24 +176,18 @@ function renderChart() {
   });
   
   // Use savings data (inflation-adjusted if toggled)
-  const savingsData = props.projection.map(p => 
-    Math.max(0, useInflationAdjusted && p.inflationAdjustedSavings !== undefined 
-      ? p.inflationAdjustedSavings 
+  const savingsData = props.projection.map(p =>
+    useInflationAdjusted && p.inflationAdjustedSavings !== undefined
+      ? p.inflationAdjustedSavings
       : p.savings
-    )
   );
   
-  // Savings minus pension portion (for stacking, ensure non-negative)
-  const nonPensionSavings = props.projection.map((_, i) => Math.max(0, savingsData[i] - pensionIncome[i]));
-
   // Build life event mark points for the Financial Assets series
   const lifeEventMarkPoints = (props.lifeEvents || []).map(event => {
     const projIndex = props.projection.findIndex(p => p.age === event.age);
     if (projIndex === -1) return null;
-    // Use the same calculation as nonPensionSavings to match the series data
-    const pensionValue = pensionIncome[projIndex];
     const savingsValue = savingsData[projIndex];
-    const yValue = Math.max(0, savingsValue - pensionValue);
+    const yValue = savingsValue;
     return {
       name: event.label || (event.type === 'income' ? 'Income' : 'Expense'),
       coord: [projIndex, yValue],
@@ -225,8 +220,8 @@ function renderChart() {
     name: 'Age Pension Eligibility',
     xAxis: 67,
     lineStyle: { color: '#34d399', width: 2, type: 'dashed' },
-    label: { 
-      show: true, 
+    label: {
+      show: true,
       position: 'insideEndTop',
       formatter: 'Age Pension\nEligible (67)',
       color: '#34d399',
@@ -234,6 +229,25 @@ function renderChart() {
       fontWeight: 'bold'
     }
   });
+
+  if (props.housePurchasePlan?.enabled) {
+    const purchaseAge = props.housePurchasePlan.purchaseAge;
+    if (props.projection.some(p => p.age === purchaseAge)) {
+      milestones.push({
+        name: 'House Purchase',
+        xAxis: purchaseAge,
+        lineStyle: { color: '#f59e0b', width: 2, type: 'dashed' },
+        label: {
+          show: true,
+          position: 'insideEndTop',
+          formatter: `Buy House\n(Age ${purchaseAge})`,
+          color: '#f59e0b',
+          fontSize: 12,
+          fontWeight: 'bold'
+        }
+      });
+    }
+  }
 
   chartInstance.setOption({
     tooltip: { 
@@ -264,7 +278,7 @@ function renderChart() {
           return `
             Age: ${age}<br/>
             Property Assets${valueType}: ${formatCurrency(propertyValue)}<br/>
-            Net Financial Asset${valueType}: ${formatCurrency(Math.max(0, savingsValue))}<br/>
+            Net Financial Asset${valueType}: ${formatCurrency(savingsValue)}<br/>
             Superannuation${valueType}: ${formatCurrency(superValue)}<br/>
             Pension Income${valueType}: ${formatCurrency(pensionValue)}${eventsHtml}
           `;
@@ -300,6 +314,7 @@ function renderChart() {
         data: propertyData,
         type: 'line',
         smooth: true,
+        showSymbol: false,
         areaStyle: {},
         stack: 'assets',
         color: '#8b5cf6',
@@ -313,18 +328,17 @@ function renderChart() {
         data: pensionIncome,
         type: 'line',
         smooth: true,
+        showSymbol: false,
         areaStyle: {},
-        stack: 'assets',
         color: '#fde68a',
         emphasis: { focus: 'series' },
-        // Only show when Savings is selected
-        // (handled by stacking and legend selection)
       },
       {
         name: 'Financial Assets',
-        data: nonPensionSavings,
+        data: savingsData,
         type: 'line',
         smooth: true,
+        showSymbol: false,
         areaStyle: {},
         stack: 'assets',
         color: '#06b6d4',

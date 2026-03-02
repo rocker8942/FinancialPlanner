@@ -3,6 +3,14 @@
  * Extracted from financialPlan.ts for better organization
  */
 
+// House purchase plan (for renters planning a future property purchase)
+export interface HousePurchasePlan {
+  enabled: boolean;
+  purchaseAge: number;        // Age at which to buy
+  purchasePrice: number;      // Total purchase price
+  downPaymentPercent: number; // e.g., 20 for 20%
+}
+
 // Life event (lump sum income or expense at a specific age)
 export interface LifeEvent {
   id: string;
@@ -48,6 +56,7 @@ export interface FinancialProfile {
   partnerPensionAmount: number;
   partnerPensionStartAge: number;
   lifeEvents?: LifeEvent[];
+  housePurchasePlan?: HousePurchasePlan;
 }
 
 // Yearly wealth projection data
@@ -66,6 +75,7 @@ export interface YearlyWealth {
   totalIncome: number; // This will show gross income in the table
   expenses: number;
   lifeEventImpact?: number; // net lump sum impact this year (positive=income, negative=expense)
+  housePurchaseOccurred?: boolean; // true in the year the house was purchased
   
   // Internal tax tracking fields (not displayed in table)
   grossIncome?: number;

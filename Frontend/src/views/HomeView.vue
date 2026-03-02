@@ -21,6 +21,7 @@
           :retirement-age="currentProfile?.retireAge"
           :cpi-growth-rate="currentProfile?.cpiGrowthRate"
           :life-events="currentProfile?.lifeEvents || []"
+          :house-purchase-plan="currentProfile?.housePurchasePlan"
           v-model:showInflationAdjusted="showInflationAdjusted"
         />
       </div>

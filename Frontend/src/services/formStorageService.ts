@@ -1,7 +1,7 @@
 import { setSecureItem, getSecureItem } from '../utils/encryption';
 import { generateShareableUrl } from '../utils/formatters';
 import type { FinancialProfile } from '../utils/financialPlan';
-import type { LifeEvent } from '../utils/models/FinancialTypes';
+import type { LifeEvent, HousePurchasePlan } from '../utils/models/FinancialTypes';
 
 // Storage keys
 const LOCAL_STORAGE_KEY = 'financialPlannerData';
@@ -35,6 +35,7 @@ export interface StoredFinancialData {
   isHomeowner: boolean;
   zeroNetWorthAtDeath?: boolean;
   lifeEvents?: LifeEvent[];
+  housePurchasePlan?: HousePurchasePlan;
 }
 
 export class FormStorageService {

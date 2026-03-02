@@ -9,7 +9,7 @@ import { processExpensesAndCashFlow, calculateCpiAdjustedExpenses } from './expe
  */
 export function calculateFinancialPlanModular(profile: FinancialProfile): FinancialPlanResult {
   const projection: YearlyWealth[] = [];
-  
+
   // Initialize asset state
   let assetState = {
     propertyAssets: profile.propertyAssets,
@@ -18,32 +18,69 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
     superannuationBalance: profile.superannuationBalance
   };
 
+  // Track homeowner status (may change mid-plan if house purchase is planned)
+  let effectiveIsHomeowner = profile.isHomeowner;
+  // Fraction of propertyAssets that is the primary home (no rental income, exempt from pension assets test).
+  // Using a ratio means it stays correct as all property grows at the same rate.
+  let primaryHomeRatio = 0;
+
   // Process each year from current age to death age
   for (let age = profile.currentAge; age <= profile.deathAge; age++) {
     const isFirstYear = age === profile.currentAge;
     const yearsFromStart = age - profile.currentAge;
-    
+
     // Apply asset growth (except for first year)
     assetState = applyAssetGrowth(assetState, profile, isFirstYear);
-    
+
+    // Apply house purchase at the specified age
+    let housePurchaseOccurred = false;
+    const plan = profile.housePurchasePlan;
+    if (plan?.enabled && age === plan.purchaseAge) {
+      const downPayment = plan.purchasePrice * (plan.downPaymentPercent / 100);
+      assetState = {
+        ...assetState,
+        savings: assetState.savings - downPayment,
+        propertyAssets: assetState.propertyAssets + plan.purchasePrice,
+        mortgageBalance: assetState.mortgageBalance + (plan.purchasePrice - downPayment)
+      };
+      effectiveIsHomeowner = true;
+      // Compute ratio: primary home as fraction of total property after purchase.
+      // For a renter (propertyAssets was 0), this is always 1.0.
+      primaryHomeRatio = plan.purchasePrice / assetState.propertyAssets;
+      housePurchaseOccurred = true;
+    }
+
+    // Build effective profile for this year (isHomeowner may have changed)
+    const effectiveProfile = effectiveIsHomeowner !== profile.isHomeowner
+      ? { ...profile, isHomeowner: effectiveIsHomeowner }
+      : profile;
+
+    // For income calculation, exclude primary home from investment property assets:
+    // - Primary home earns no rental income
+    // - Primary home is exempt from age pension assets test
+    const investmentPropertyAssets = Math.round(assetState.propertyAssets * (1 - primaryHomeRatio));
+    const assetStateForIncome = primaryHomeRatio > 0
+      ? { ...assetState, propertyAssets: investmentPropertyAssets }
+      : assetState;
+
     // Calculate CPI-adjusted expenses for this year
     const cpiAdjustedExpenses = calculateCpiAdjustedExpenses(
-      profile.expenses, 
-      profile.cpiGrowthRate, 
+      profile.expenses,
+      profile.cpiGrowthRate,
       yearsFromStart
     );
-    
+
     // Calculate income components and update super balance
     const incomeResult = calculateIncomeComponents(
-      profile,
+      effectiveProfile,
       age,
-      assetState,
+      assetStateForIncome,
       isFirstYear
     );
-    
+
     // Update superannuation balance with contributions
     assetState.superannuationBalance = incomeResult.updatedSuperBalance;
-    
+
     // Process expenses and cash flow (except for first year)
     const cashFlowResult = processExpensesAndCashFlow(
       profile,
@@ -53,7 +90,7 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
       cpiAdjustedExpenses,
       isFirstYear
     );
-    
+
     // Update asset state with cash flow changes
     assetState = cashFlowResult.updatedAssets;
 
@@ -68,14 +105,14 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
     // Calculate wealth metrics
     const netFinancialAsset = calculateNetFinancialAssets(assetState);
     const totalWealth = calculateTotalNetWealth(assetState);
-    
+
     // Calculate inflation adjustments
     const inflationData = calculateInflationAdjustedValues(
       assetState,
       profile.cpiGrowthRate,
       yearsFromStart
     );
-    
+
     // Create yearly wealth record
     const yearlyWealth: YearlyWealth = {
       age,
@@ -92,6 +129,7 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
       totalIncome: incomeResult.incomeComponents.displayTotalIncome,
       expenses: cpiAdjustedExpenses,
       lifeEventImpact,
+      housePurchaseOccurred: housePurchaseOccurred || undefined,
       // Internal tax tracking (not displayed in table)
       grossIncome: incomeResult.incomeComponents.displayTotalIncome,
       incomeTax: incomeResult.incomeComponents.taxBreakdown.incomeTax,
@@ -99,7 +137,7 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
       netIncome: incomeResult.incomeComponents.taxBreakdown.netIncome,
       superContributionsTax: incomeResult.incomeComponents.taxBreakdown.superContributionsTax
     };
-    
+
     projection.push(yearlyWealth);
   }
 
