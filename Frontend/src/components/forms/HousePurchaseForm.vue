@@ -132,7 +132,8 @@ function onFocus(field: string, amount: number): void {
   rawText.value = amount ? String(amount) : '';
 }
 
-function onBlur(field: string, value: string): void {
+
+function onBlur(_field: string, value: string): void {
   isFocused.value = null;
   update('purchasePrice', parseAmount(value));
 }

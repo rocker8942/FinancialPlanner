@@ -122,7 +122,7 @@ describe('Encryption Utilities', () => {
     });
 
     it('should return null for non-existent keys', () => {
-      localStorageMock.getItem.mockReturnValue(null);
+      localStorageMock.getItem.mockReturnValue(null as unknown as string);
       
       const result = getSecureItem('non-existent-key');
       expect(result).toBeNull();

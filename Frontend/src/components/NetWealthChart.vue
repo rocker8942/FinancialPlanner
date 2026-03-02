@@ -135,7 +135,8 @@ let resizeObserver: ResizeObserver | null = null;
 let currentLegendSelection: Record<string, boolean> = {
   'Property Assets': false,
   'Financial Assets': true,
-  'Pension Income': true
+  'Pension Income': true,
+  'Life Events': false
 };
 
 function inflationFactor(age: number): number {
@@ -203,7 +204,7 @@ function renderChart() {
   if (props.retirementAge) {
     milestones.push({
       name: 'Retirement',
-      xAxis: props.retirementAge,
+      xAxis: String(props.retirementAge),
       lineStyle: { color: '#fbbf24', width: 2, type: 'dashed' },
       label: { 
         show: true, 
@@ -218,7 +219,7 @@ function renderChart() {
   
   milestones.push({
     name: 'Age Pension Eligibility',
-    xAxis: 67,
+    xAxis: '67',
     lineStyle: { color: '#34d399', width: 2, type: 'dashed' },
     label: {
       show: true,
@@ -235,7 +236,7 @@ function renderChart() {
     if (props.projection.some(p => p.age === purchaseAge)) {
       milestones.push({
         name: 'House Purchase',
-        xAxis: purchaseAge,
+        xAxis: String(purchaseAge),
         lineStyle: { color: '#f59e0b', width: 2, type: 'dashed' },
         label: {
           show: true,
@@ -287,7 +288,7 @@ function renderChart() {
       }
     },
     legend: {
-      data: ['Property Assets', 'Financial Assets', 'Pension Income'],
+      data: ['Property Assets', 'Financial Assets', 'Pension Income', 'Life Events'],
       top: 10,
       selected: currentLegendSelection,
       textStyle: {
@@ -298,7 +299,7 @@ function renderChart() {
     },
     xAxis: { 
       type: 'category', 
-      data: props.projection.map(p => p.age),
+      data: props.projection.map(p => String(p.age)),
       name: 'Age'
     },
     yAxis: { 
@@ -317,11 +318,7 @@ function renderChart() {
         showSymbol: false,
         areaStyle: {},
         stack: 'assets',
-        color: '#8b5cf6',
-        markLine: {
-          silent: true,
-          data: milestones
-        }
+        color: '#8b5cf6'
       },
       {
         name: 'Pension Income',
@@ -345,6 +342,17 @@ function renderChart() {
         markPoint: {
           data: lifeEventMarkPoints,
           tooltip: { show: false }
+        }
+      },
+      {
+        name: 'Life Events',
+        data: props.projection.map(() => null),
+        type: 'line',
+        showSymbol: false,
+        color: '#f59e0b',
+        markLine: {
+          silent: true,
+          data: milestones
         }
       }
     ]
