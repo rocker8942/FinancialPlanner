@@ -136,7 +136,7 @@
             <h3>Asset & Income Tests (Sept 2025)</h3>
             <ul>
               <li><strong>Full Pension Thresholds:</strong> $321,500 (single homeowner), $579,500 (single non-homeowner), $481,500/$739,500 (couple)</li>
-              <li><strong>Assessable Assets:</strong> Financial assets, superannuation (after 67), investment properties. Excludes family home</li>
+              <li><strong>Assessable Assets:</strong> Financial assets, superannuation (after 67), investment properties. Excludes family home. For couples, partner's superannuation is excluded from the assets test while the partner is under 67 (accumulation phase)</li>
               <li><strong>Deeming Rates:</strong> 0.75% on first $64,200 (single) / $106,200 (couple), then 2.75% above that</li>
               <li><strong>Income Reduction:</strong> Singles: $0.50 per $1 over threshold. Couples: $0.25 per $1 per partner</li>
               <li><strong>Asset Reduction:</strong> $3 per fortnight ($78/year) per $1,000 over full pension threshold</li>
@@ -201,7 +201,7 @@
           <ul>
             <li><strong>Dynamic Calculation:</strong> Automatically applies September 2025 Australian Government asset and income tests</li>
             <li><strong>Homeowner Status:</strong> Different asset test thresholds for homeowners ($321,500) vs non-homeowners ($579,500) for singles</li>
-            <li><strong>Couple Assessment:</strong> Combined asset test limits ($481,500/$739,500) and shared pension entitlements</li>
+            <li><strong>Couple Assessment:</strong> Combined asset test limits ($481,500/$739,500) and shared pension entitlements. When only one partner reaches 67, couple thresholds apply and that partner receives half the couple pension rate</li>
             <li><strong>Deeming:</strong> Financial assets deemed at 0.75% (first $64,200 single / $106,200 couple) then 2.75%</li>
             <li><strong>Age Requirements:</strong> Pension eligibility from age 67 (current retirement age in Australia)</li>
             <li><strong>Real-time Updates:</strong> Calculations update automatically as your projected assets and income change each year</li>

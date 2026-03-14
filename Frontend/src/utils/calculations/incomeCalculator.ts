@@ -13,6 +13,7 @@ export function calculateIncomeComponents(
 ): {
   incomeComponents: IncomeComponents;
   updatedSuperBalance: number;
+  updatedPartnerSuperBalance: number;
 } {
 
   const yearsFromStart = age - profile.currentAge;
@@ -28,16 +29,25 @@ export function calculateIncomeComponents(
   const currentPartnerSalary = age <= partnerRetireAgeInUserTimeline ? cpiAdjustedPartnerSalary : 0;
   
   let updatedSuperBalance = assetState.superannuationBalance;
-  
-  // Calculate employment income
+  let updatedPartnerSuperBalance = assetState.partnerSuperBalance;
+
+  // Calculate employment income (user and partner separately for super tracking)
+  const userEmploymentIncome = currentUserSalary > 0
+    ? processSalaryPackage(currentUserSalary)
+    : { taxableIncome: 0, superContributions: 0, netSuperContributions: 0 };
+  const partnerEmploymentIncome = currentPartnerSalary > 0
+    ? processSalaryPackage(currentPartnerSalary)
+    : { taxableIncome: 0, superContributions: 0, netSuperContributions: 0 };
+
   const employmentIncome = calculateEmploymentIncome(
     currentUserSalary,
     currentPartnerSalary
   );
-  
-  // Update super balance with contributions (but not in first year to preserve starting point)
+
+  // Update super balances with contributions (but not in first year to preserve starting point)
   if (!isFirstYear) {
-    updatedSuperBalance += employmentIncome.netSuperContributions;
+    updatedSuperBalance += userEmploymentIncome.netSuperContributions;
+    updatedPartnerSuperBalance += partnerEmploymentIncome.netSuperContributions;
   }
   
   // Calculate pension income
@@ -85,7 +95,8 @@ export function calculateIncomeComponents(
   
   return {
     incomeComponents,
-    updatedSuperBalance
+    updatedSuperBalance,
+    updatedPartnerSuperBalance
   };
 }
 
@@ -172,7 +183,8 @@ function calculatePensionIncome(
     currentPartnerSalary,
     age,
     currentPartnerAge,
-    cpiAdjustmentFactor
+    cpiAdjustmentFactor,
+    assetState.partnerSuperBalance
   );
 
   // Apply CPI adjustment to pension amounts (age pension typically increases with CPI)

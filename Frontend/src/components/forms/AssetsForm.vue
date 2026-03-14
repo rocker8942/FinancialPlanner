@@ -59,7 +59,7 @@
 
     <FormInputWithButtons
       field-id="superannuationBalance"
-      label="Superannuation Balance"
+      label="Your Superannuation Balance"
       :value="superannuationBalance"
       placeholder="Superannuation Balance ($)"
       help-text="Current superannuation fund balance"
@@ -70,6 +70,26 @@
       :format-value="formatting.formatField.bind(null, 'superannuationBalance')"
       :parse-value="formatting.parseField.bind(null, 'superannuationBalance')"
       @update:value="updateField('superannuationBalance', $event)"
+      @focus="handleFieldFocus"
+      @blur="handleFieldBlur"
+      @enter="handleFieldEnter"
+      @adjust="handleFieldAdjust"
+    />
+
+    <FormInputWithButtons
+      v-if="relationshipStatus === 'couple'"
+      field-id="partnerSuperBalance"
+      label="Partner's Superannuation Balance"
+      :value="partnerSuperBalance"
+      placeholder="Partner Superannuation Balance ($)"
+      help-text="Partner's current superannuation fund balance"
+      :increment-step="1000"
+      :is-valid="validation.isFieldValid('partnerSuperBalance', partnerSuperBalance)"
+      :is-touched="validation.isFieldTouched('partnerSuperBalance')"
+      :error-message="validation.getFieldErrorMessage('partnerSuperBalance')"
+      :format-value="formatting.formatField.bind(null, 'partnerSuperBalance')"
+      :parse-value="formatting.parseField.bind(null, 'partnerSuperBalance')"
+      @update:value="updateField('partnerSuperBalance', $event)"
       @focus="handleFieldFocus"
       @blur="handleFieldBlur"
       @enter="handleFieldEnter"
@@ -109,10 +129,12 @@ interface AssetsData {
   savings: number;
   mortgageBalance: number;
   superannuationBalance: number;
+  partnerSuperBalance: number;
 }
 
 interface Props {
   modelValue: AssetsData;
+  relationshipStatus?: 'single' | 'couple';
 }
 
 const props = defineProps<Props>();
@@ -126,11 +148,13 @@ const propertyAssets = computed(() => props.modelValue.propertyAssets);
 const savings = computed(() => props.modelValue.savings);
 const mortgageBalance = computed(() => props.modelValue.mortgageBalance);
 const superannuationBalance = computed(() => props.modelValue.superannuationBalance);
+const partnerSuperBalance = computed(() => props.modelValue.partnerSuperBalance);
+const relationshipStatus = computed(() => props.relationshipStatus ?? 'single');
 
 // Calculate wealth summaries
 const netPropertyWealth = computed(() => propertyAssets.value - mortgageBalance.value);
-const totalNetWealth = computed(() => 
-  propertyAssets.value + savings.value + superannuationBalance.value - mortgageBalance.value
+const totalNetWealth = computed(() =>
+  propertyAssets.value + savings.value + superannuationBalance.value + partnerSuperBalance.value - mortgageBalance.value
 );
 
 // Setup validation

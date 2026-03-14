@@ -24,8 +24,9 @@ export function applyAssetGrowth(
     newState.savings = currentState.savings + (netSavings * profile.savingsGrowthRate);
   }
 
-  // Apply superannuation growth
+  // Apply superannuation growth (user and partner)
   newState.superannuationBalance = applyGrowthRate(currentState.superannuationBalance, profile.superannuationRate);
+  newState.partnerSuperBalance = applyGrowthRate(currentState.partnerSuperBalance, profile.superannuationRate);
 
   return newState;
 }
@@ -38,10 +39,10 @@ function applyGrowthRate(currentValue: number, growthRate: number): number {
 }
 
 /**
- * Calculate net financial assets (savings - mortgage + super)
+ * Calculate net financial assets (savings - mortgage + super + partner super)
  */
 export function calculateNetFinancialAssets(state: AssetState): number {
-  return state.savings - state.mortgageBalance + state.superannuationBalance;
+  return state.savings - state.mortgageBalance + state.superannuationBalance + state.partnerSuperBalance;
 }
 
 /**

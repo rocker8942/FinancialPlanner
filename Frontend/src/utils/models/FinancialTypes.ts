@@ -27,6 +27,7 @@ export interface FinancialProfile {
   savings: number;
   mortgageBalance: number;
   superannuationBalance: number;
+  partnerSuperBalance?: number;
   
   // Rates
   mortgageRate: number;
@@ -99,6 +100,7 @@ export interface AssetState {
   savings: number;
   mortgageBalance: number;
   superannuationBalance: number;
+  partnerSuperBalance: number;
 }
 
 // Income calculation components

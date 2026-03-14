@@ -9,6 +9,7 @@ describe('calculateDisposableIncome', () => {
     mortgageBalance: 0,
     mortgageRate: 0.06,
     superannuationBalance: 50000,
+    partnerSuperBalance: 0,
     superannuationRate: 0.07,
     salary: 90000, // $90k total package including super
     partnerSalary: 0,

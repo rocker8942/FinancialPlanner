@@ -15,7 +15,8 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
     propertyAssets: profile.propertyAssets,
     savings: profile.savings,
     mortgageBalance: profile.mortgageBalance,
-    superannuationBalance: profile.superannuationBalance
+    superannuationBalance: profile.superannuationBalance,
+    partnerSuperBalance: profile.partnerSuperBalance ?? 0
   };
 
   // Track homeowner status (may change mid-plan if house purchase is planned)
@@ -78,8 +79,9 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
       isFirstYear
     );
 
-    // Update superannuation balance with contributions
+    // Update superannuation balances with contributions
     assetState.superannuationBalance = incomeResult.updatedSuperBalance;
+    assetState.partnerSuperBalance = incomeResult.updatedPartnerSuperBalance;
 
     // Process expenses and cash flow (except for first year)
     const cashFlowResult = processExpensesAndCashFlow(
@@ -120,7 +122,7 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
       propertyAssets: assetState.propertyAssets,
       savings: netFinancialAsset,
       rawSavings: assetState.savings,
-      superannuationBalance: assetState.superannuationBalance,
+      superannuationBalance: assetState.superannuationBalance + assetState.partnerSuperBalance,
       mortgageBalance: assetState.mortgageBalance,
       inflationAdjustedWealth: inflationData.inflationAdjustedWealth,
       inflationAdjustedPropertyAssets: inflationData.inflationAdjustedPropertyAssets,

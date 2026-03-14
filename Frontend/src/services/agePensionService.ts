@@ -280,17 +280,13 @@ export function calculateAgePension(params: AgePensionParams): AgePensionResult 
       userPensionAmount = finalPensionAmount / 2;
       partnerPensionAmount = finalPensionAmount / 2;
     } else if (userEligible) {
-      // Only user eligible - they get single pension rate instead
-      const singleParams = { ...params, relationshipStatus: 'single' as RelationshipStatus };
-      const singleResult = calculateAgePension(singleParams);
-      userPensionAmount = singleResult.userPensionAmount;
+      // Only user eligible - use couple thresholds, user gets half the couple pension
+      userPensionAmount = finalPensionAmount / 2;
       partnerPensionAmount = 0;
     } else if (partnerEligible) {
-      // Only partner eligible - they get single pension rate instead
-      const singleParams = { ...params, relationshipStatus: 'single' as RelationshipStatus };
-      const singleResult = calculateAgePension(singleParams);
+      // Only partner eligible - use couple thresholds, partner gets half the couple pension
       userPensionAmount = 0;
-      partnerPensionAmount = singleResult.userPensionAmount;
+      partnerPensionAmount = finalPensionAmount / 2;
     }
   }
   
@@ -316,11 +312,15 @@ export function getAgePensionAmounts(
   partnerSalary: number,
   userAge: number,
   partnerAge: number,
-  cpiAdjustmentFactor: number = 1.0
+  cpiAdjustmentFactor: number = 1.0,
+  partnerSuperBalance: number = 0
 ): { userPension: number; partnerPension: number } {
-  
-  const financialAssets = savings + superannuation - mortgageBalance;
-  
+
+  // Exclude partner super from assets test if partner is under pension age (67)
+  // In accumulation phase, partner super is not assessable
+  const assessablePartnerSuper = partnerAge >= 67 ? partnerSuperBalance : 0;
+  const financialAssets = savings + superannuation + assessablePartnerSuper - mortgageBalance;
+
   const result = calculateAgePension({
     relationshipStatus,
     isHomeowner,
@@ -332,7 +332,7 @@ export function getAgePensionAmounts(
     partnerAge,
     cpiAdjustmentFactor
   });
-  
+
   return {
     userPension: result.userPensionAmount,
     partnerPension: result.partnerPensionAmount

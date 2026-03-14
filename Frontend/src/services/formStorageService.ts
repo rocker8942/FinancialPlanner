@@ -14,6 +14,7 @@ export interface StoredFinancialData {
   mortgageBalance: number;
   mortgageRate: number;
   superannuationBalance: number;
+  partnerSuperBalance?: number;
   superannuationRate: number;
   salary: number;
   partnerSalary: number;
@@ -91,6 +92,7 @@ export class FormStorageService {
       mortgageBalance: fields.mortgageBalance || 0,
       mortgageRate: fields.mortgageRate || 0.06,
       superannuationBalance: fields.superannuationBalance || 0,
+      partnerSuperBalance: fields.partnerSuperBalance || 0,
       superannuationRate: fields.superannuationRate || 0.07,
       salary: fields.salary || 0,
       partnerSalary: fields.partnerSalary || 0,
@@ -124,6 +126,7 @@ export class FormStorageService {
       mortgageBalance: data.mortgageBalance,
       mortgageRate: data.mortgageRate,
       superannuationBalance: data.superannuationBalance,
+      partnerSuperBalance: data.partnerSuperBalance ?? 0,
       superannuationRate: data.superannuationRate,
       salary: data.salary,
       partnerSalary: data.partnerSalary,
@@ -157,6 +160,7 @@ export class FormStorageService {
       mortgageBalance: data.mortgageBalance,
       mortgageRate: data.mortgageRate,
       superannuationBalance: data.superannuationBalance,
+      partnerSuperBalance: data.partnerSuperBalance ?? 0,
       superannuationRate: data.superannuationRate,
       salary: data.salary,
       partnerSalary: data.partnerSalary,
@@ -235,6 +239,7 @@ export class FormStorageService {
       mortgageBalance: 0,
       mortgageRate: 0.06, // 6%
       superannuationBalance: 0,
+      partnerSuperBalance: 0,
       superannuationRate: 0.07, // 7%
       salary: 0,
       partnerSalary: 0,

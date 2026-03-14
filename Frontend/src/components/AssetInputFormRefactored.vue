@@ -31,6 +31,7 @@
     >
       <AssetsForm
         v-model="assets"
+        :relationship-status="personalProfile.relationshipStatus"
         @field-change="handleFieldChange"
       />
     </FormSection>
@@ -167,7 +168,8 @@ const assets = ref({
   propertyAssets: 0,
   savings: 0,
   mortgageBalance: 0,
-  superannuationBalance: 0
+  superannuationBalance: 0,
+  partnerSuperBalance: 0
 });
 
 const incomeExpenses = ref({
@@ -220,6 +222,7 @@ const currentFinancialProfile = computed((): FinancialProfile => {
     mortgageBalance: assets.value.mortgageBalance,
     mortgageRate: advancedOptions.value.mortgageRate,
     superannuationBalance: assets.value.superannuationBalance,
+    partnerSuperBalance: assets.value.partnerSuperBalance,
     superannuationRate: advancedOptions.value.superannuationRate,
     salary: incomeExpenses.value.salary,
     partnerSalary: incomeExpenses.value.partnerSalary,
@@ -292,6 +295,7 @@ const collectAllFormData = (): StoredFinancialData => {
     mortgageBalance: assets.value.mortgageBalance,
     mortgageRate: advancedOptions.value.mortgageRate,
     superannuationBalance: assets.value.superannuationBalance,
+    partnerSuperBalance: assets.value.partnerSuperBalance,
     superannuationRate: advancedOptions.value.superannuationRate,
     salary: incomeExpenses.value.salary,
     partnerSalary: incomeExpenses.value.partnerSalary,
@@ -356,7 +360,8 @@ const populateFormsFromData = (data: StoredFinancialData) => {
     propertyAssets: data.propertyAssets,
     savings: data.savings,
     mortgageBalance: data.mortgageBalance,
-    superannuationBalance: data.superannuationBalance
+    superannuationBalance: data.superannuationBalance,
+    partnerSuperBalance: data.partnerSuperBalance ?? 0
   };
 
   incomeExpenses.value = {
