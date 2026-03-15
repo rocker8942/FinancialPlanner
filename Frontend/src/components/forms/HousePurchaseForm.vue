@@ -40,7 +40,7 @@
             type="text"
             :value="isFocused === 'purchasePrice' ? rawText : formatAmount(modelValue.purchasePrice)"
             @focus="onFocus('purchasePrice', modelValue.purchasePrice)"
-            @blur="onBlur('purchasePrice', ($event.target as HTMLInputElement).value)"
+            @blur="onBlur(($event.target as HTMLInputElement).value)"
             @input="rawText = ($event.target as HTMLInputElement).value"
           />
         </div>
@@ -133,7 +133,7 @@ function onFocus(field: string, amount: number): void {
 }
 
 
-function onBlur(_field: string, value: string): void {
+function onBlur(value: string): void {
   isFocused.value = null;
   update('purchasePrice', parseAmount(value));
 }

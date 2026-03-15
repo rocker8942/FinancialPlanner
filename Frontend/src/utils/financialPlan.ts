@@ -39,18 +39,18 @@ export function calculateDisposableIncome(profile: FinancialProfile): number {
   }
   
   // Add pension income (generally tax-free due to low amounts)
-  const pensionAmounts = getAgePensionAmounts(
-    profile.relationshipStatus,
-    profile.isHomeowner,
-    profile.propertyAssets,
-    profile.savings,
-    profile.superannuationBalance,
-    profile.mortgageBalance,
-    profile.salary,
-    profile.partnerSalary,
-    profile.currentAge,
-    profile.partnerAge
-  );
+  const pensionAmounts = getAgePensionAmounts({
+    relationshipStatus: profile.relationshipStatus,
+    isHomeowner: profile.isHomeowner,
+    propertyAssets: profile.propertyAssets,
+    savings: profile.savings,
+    superannuation: profile.superannuationBalance,
+    mortgageBalance: profile.mortgageBalance,
+    userSalary: profile.salary,
+    partnerSalary: profile.partnerSalary,
+    userAge: profile.currentAge,
+    partnerAge: profile.partnerAge
+  });
   
   totalDisposableIncome += pensionAmounts.userPension + pensionAmounts.partnerPension;
   

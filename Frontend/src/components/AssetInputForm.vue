@@ -513,37 +513,37 @@ const isHomeowner = ref(true);
 const calculatedUserPension = computed(() => {
   if (!isLoaded.value) return 0;
   
-  const pensionAmounts = getAgePensionAmounts(
-    relationshipStatus.value,
-    isHomeowner.value,
-    propertyAssets.value,
-    savings.value,
-    superannuationBalance.value,
-    mortgageBalance.value,
-    salary.value,
-    partnerSalary.value,
-    currentAge.value,
-    partnerAge.value
-  );
-  
+  const pensionAmounts = getAgePensionAmounts({
+    relationshipStatus: relationshipStatus.value,
+    isHomeowner: isHomeowner.value,
+    propertyAssets: propertyAssets.value,
+    savings: savings.value,
+    superannuation: superannuationBalance.value,
+    mortgageBalance: mortgageBalance.value,
+    userSalary: salary.value,
+    partnerSalary: partnerSalary.value,
+    userAge: currentAge.value,
+    partnerAge: partnerAge.value
+  });
+
   return pensionAmounts.userPension;
 });
 
 const calculatedPartnerPension = computed(() => {
   if (!isLoaded.value) return 0;
-  
-  const pensionAmounts = getAgePensionAmounts(
-    relationshipStatus.value,
-    isHomeowner.value,
-    propertyAssets.value,
-    savings.value,
-    superannuationBalance.value,
-    mortgageBalance.value,
-    salary.value,
-    partnerSalary.value,
-    currentAge.value,
-    partnerAge.value
-  );
+
+  const pensionAmounts = getAgePensionAmounts({
+    relationshipStatus: relationshipStatus.value,
+    isHomeowner: isHomeowner.value,
+    propertyAssets: propertyAssets.value,
+    savings: savings.value,
+    superannuation: superannuationBalance.value,
+    mortgageBalance: mortgageBalance.value,
+    userSalary: salary.value,
+    partnerSalary: partnerSalary.value,
+    userAge: currentAge.value,
+    partnerAge: partnerAge.value
+  });
   
   return pensionAmounts.partnerPension;
 });

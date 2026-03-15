@@ -67,14 +67,19 @@ export function processExpensesAndCashFlow(
   // If disposable income was insufficient to cover expenses, deduct shortfall from savings/super
   const expenseShortfall =   cpiAdjustedExpenses + remainingMortgageInterest - spendableIncome;
   if (expenseShortfall > 0) {
+    const partnerCurrentAge = profile.partnerAge !== undefined
+      ? profile.partnerAge + (age - profile.currentAge)
+      : undefined;
     const assetDrawdown = processExpenseShortfall(
       updatedAssets,
       expenseShortfall,
-      age
+      age,
+      partnerCurrentAge
     );
-    
+
     updatedAssets.savings = assetDrawdown.updatedAssets.savings;
     updatedAssets.superannuationBalance = assetDrawdown.updatedAssets.superannuationBalance;
+    updatedAssets.partnerSuperBalance = assetDrawdown.updatedAssets.partnerSuperBalance;
     shortfall = assetDrawdown.remainingShortfall;
     expensesFromAssets = assetDrawdown.expensesFromAssets;
   }
@@ -98,6 +103,7 @@ function processExpenseShortfall(
   assetState: AssetState,
   expenseShortfall: number,
   age: number,
+  partnerAge?: number,
   superAccessAge: number = 60
 ): {
   updatedAssets: AssetState;
@@ -113,9 +119,9 @@ function processExpenseShortfall(
   updatedAssets.savings -= expenseFromSavings;
   remainingShortfall -= expenseFromSavings;
   expensesFromAssets += expenseFromSavings;
-  
-  // If there are remaining expenses and superannuation is available, deduct from super
-  // Note: In Australia, super can only be accessed at preservation age (60+) 
+
+  // Draw from user super if accessible (preservation age 60+)
+  // Note: In Australia, super can only be accessed at preservation age (60+)
   // Early access for hardship requires special circumstances and APRA approval
   if (remainingShortfall > 0 && updatedAssets.superannuationBalance > 0 && age >= superAccessAge) {
     const expenseFromSuper = Math.min(remainingShortfall, updatedAssets.superannuationBalance);
@@ -131,6 +137,15 @@ function processExpenseShortfall(
       expensesFromAssets += additionalFromSuper;
       remainingShortfall -= additionalFromSuper;
     }
+  }
+
+  // Draw from partner super if partner has reached preservation age
+  if (remainingShortfall > 0 && updatedAssets.partnerSuperBalance > 0 &&
+      partnerAge !== undefined && partnerAge >= superAccessAge) {
+    const expenseFromPartnerSuper = Math.min(remainingShortfall, updatedAssets.partnerSuperBalance);
+    updatedAssets.partnerSuperBalance -= expenseFromPartnerSuper;
+    remainingShortfall -= expenseFromPartnerSuper;
+    expensesFromAssets += expenseFromPartnerSuper;
   }
 
   // Allow savings to go negative for the remaining shortfall (tracking debt)

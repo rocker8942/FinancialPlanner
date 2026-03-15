@@ -172,20 +172,20 @@ function calculatePensionIncome(
   // CPI adjustment factor for both asset test thresholds and pension amounts
   const cpiAdjustmentFactor = Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
 
-  const pensionAmounts = getAgePensionAmounts(
-    profile.relationshipStatus,
-    profile.isHomeowner,
-    assetState.propertyAssets,
-    assetState.savings,
-    assetState.superannuationBalance,
-    assetState.mortgageBalance,
-    currentUserSalary,
-    currentPartnerSalary,
-    age,
-    currentPartnerAge,
+  const pensionAmounts = getAgePensionAmounts({
+    relationshipStatus: profile.relationshipStatus,
+    isHomeowner: profile.isHomeowner,
+    propertyAssets: assetState.propertyAssets,
+    savings: assetState.savings,
+    superannuation: assetState.superannuationBalance,
+    mortgageBalance: assetState.mortgageBalance,
+    userSalary: currentUserSalary,
+    partnerSalary: currentPartnerSalary,
+    userAge: age,
+    partnerAge: currentPartnerAge,
     cpiAdjustmentFactor,
-    assetState.partnerSuperBalance
-  );
+    partnerSuperBalance: assetState.partnerSuperBalance
+  });
 
   // Apply CPI adjustment to pension amounts (age pension typically increases with CPI)
   const userPension = pensionAmounts.userPension * cpiAdjustmentFactor;

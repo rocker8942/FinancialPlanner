@@ -300,21 +300,37 @@ export function calculateAgePension(params: AgePensionParams): AgePensionResult 
   };
 }
 
+export interface AgePensionAmountsInput {
+  relationshipStatus: RelationshipStatus;
+  isHomeowner: boolean;
+  propertyAssets: number;
+  savings: number;
+  superannuation: number;
+  mortgageBalance: number;
+  userSalary: number;
+  partnerSalary: number;
+  userAge: number;
+  partnerAge: number;
+  cpiAdjustmentFactor?: number;  // default 1.0
+  partnerSuperBalance?: number;  // default 0
+}
+
 // Helper function for easy integration with existing code
-export function getAgePensionAmounts(
-  relationshipStatus: RelationshipStatus,
-  isHomeowner: boolean,
-  propertyAssets: number,
-  savings: number,
-  superannuation: number,
-  mortgageBalance: number,
-  userSalary: number,
-  partnerSalary: number,
-  userAge: number,
-  partnerAge: number,
-  cpiAdjustmentFactor: number = 1.0,
-  partnerSuperBalance: number = 0
-): { userPension: number; partnerPension: number } {
+export function getAgePensionAmounts(input: AgePensionAmountsInput): { userPension: number; partnerPension: number } {
+  const {
+    relationshipStatus,
+    isHomeowner,
+    propertyAssets,
+    savings,
+    superannuation,
+    mortgageBalance,
+    userSalary,
+    partnerSalary,
+    userAge,
+    partnerAge,
+    cpiAdjustmentFactor = 1.0,
+    partnerSuperBalance = 0
+  } = input;
 
   // Exclude partner super from assets test if partner is under pension age (67)
   // In accumulation phase, partner super is not assessable

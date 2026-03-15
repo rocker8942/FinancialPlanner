@@ -80,28 +80,36 @@ describe('agePensionService', () => {
     it('should include partner super in assets when partner is 67+ (pension age)', () => {
       // Both partners 67+: partner super is assessable
       // Use high partner super (700k) to push above couple homeowner threshold (481500)
-      const result = getAgePensionAmounts(
-        'couple',
-        true,    // homeowner
-        0,       // propertyAssets
-        0,       // savings
-        0,       // user superannuation
-        0,       // mortgageBalance
-        0,       // userSalary
-        0,       // partnerSalary
-        68,      // userAge (eligible)
-        67,      // partnerAge (eligible)
-        1.0,     // cpiAdjustmentFactor
-        700000   // partnerSuperBalance - assessable since partnerAge >= 67
-      );
+      const result = getAgePensionAmounts({
+        relationshipStatus: 'couple',
+        isHomeowner: true,
+        propertyAssets: 0,
+        savings: 0,
+        superannuation: 0,
+        mortgageBalance: 0,
+        userSalary: 0,
+        partnerSalary: 0,
+        userAge: 68,
+        partnerAge: 67,
+        cpiAdjustmentFactor: 1.0,
+        partnerSuperBalance: 700000  // assessable since partnerAge >= 67
+      });
 
       // With $700k in partner super (above threshold), assets test should reduce pension
-      const resultNoPartnerSuper = getAgePensionAmounts(
-        'couple',
-        true,
-        0, 0, 0, 0, 0, 0, 68, 67, 1.0,
-        0  // no partner super -> full pension
-      );
+      const resultNoPartnerSuper = getAgePensionAmounts({
+        relationshipStatus: 'couple',
+        isHomeowner: true,
+        propertyAssets: 0,
+        savings: 0,
+        superannuation: 0,
+        mortgageBalance: 0,
+        userSalary: 0,
+        partnerSalary: 0,
+        userAge: 68,
+        partnerAge: 67,
+        cpiAdjustmentFactor: 1.0,
+        partnerSuperBalance: 0  // no partner super -> full pension
+      });
 
       // More assets -> lower pension
       expect(result.userPension + result.partnerPension)
@@ -111,27 +119,35 @@ describe('agePensionService', () => {
     it('should exclude partner super from assets when partner is under 67 (accumulation phase)', () => {
       // User is 67+, partner is 60 (under pension age)
       // Partner super is in accumulation: NOT assessable
-      const resultWithPartnerSuper = getAgePensionAmounts(
-        'couple',
-        true,    // homeowner
-        0,       // propertyAssets
-        0,       // savings
-        0,       // user superannuation
-        0,       // mortgageBalance
-        0,       // userSalary
-        0,       // partnerSalary
-        68,      // userAge
-        60,      // partnerAge (under 67, accumulation phase)
-        1.0,
-        500000   // partnerSuperBalance - should NOT be assessed
-      );
+      const resultWithPartnerSuper = getAgePensionAmounts({
+        relationshipStatus: 'couple',
+        isHomeowner: true,
+        propertyAssets: 0,
+        savings: 0,
+        superannuation: 0,
+        mortgageBalance: 0,
+        userSalary: 0,
+        partnerSalary: 0,
+        userAge: 68,
+        partnerAge: 60,  // under 67, accumulation phase
+        cpiAdjustmentFactor: 1.0,
+        partnerSuperBalance: 500000  // should NOT be assessed
+      });
 
-      const resultNoPartnerSuper = getAgePensionAmounts(
-        'couple',
-        true,
-        0, 0, 0, 0, 0, 0, 68, 60, 1.0,
-        0  // no partner super
-      );
+      const resultNoPartnerSuper = getAgePensionAmounts({
+        relationshipStatus: 'couple',
+        isHomeowner: true,
+        propertyAssets: 0,
+        savings: 0,
+        superannuation: 0,
+        mortgageBalance: 0,
+        userSalary: 0,
+        partnerSalary: 0,
+        userAge: 68,
+        partnerAge: 60,
+        cpiAdjustmentFactor: 1.0,
+        partnerSuperBalance: 0  // no partner super
+      });
 
       // Partner super under 67 should NOT reduce pension -> same as no partner super
       expect(resultWithPartnerSuper.userPension)
@@ -151,24 +167,32 @@ describe('agePensionService', () => {
 
       // Scenario: user=68, partner=66 (not eligible)
       // With large partner super: should give SAME pension as without (super excluded at 66)
-      const withPartnerSuper = getAgePensionAmounts(
-        'couple', true, 0, 0, 0, 0, 0, 0, 68, 66, 1.0, 800000
-      );
-      const withoutPartnerSuper = getAgePensionAmounts(
-        'couple', true, 0, 0, 0, 0, 0, 0, 68, 66, 1.0, 0
-      );
+      const withPartnerSuper = getAgePensionAmounts({
+        relationshipStatus: 'couple', isHomeowner: true, propertyAssets: 0, savings: 0,
+        superannuation: 0, mortgageBalance: 0, userSalary: 0, partnerSalary: 0,
+        userAge: 68, partnerAge: 66, cpiAdjustmentFactor: 1.0, partnerSuperBalance: 800000
+      });
+      const withoutPartnerSuper = getAgePensionAmounts({
+        relationshipStatus: 'couple', isHomeowner: true, propertyAssets: 0, savings: 0,
+        superannuation: 0, mortgageBalance: 0, userSalary: 0, partnerSalary: 0,
+        userAge: 68, partnerAge: 66, cpiAdjustmentFactor: 1.0, partnerSuperBalance: 0
+      });
 
       // Partner age 66: super NOT assessed, so pension should be identical regardless of partner super
       expect(withPartnerSuper.userPension).toBeCloseTo(withoutPartnerSuper.userPension, 0);
       expect(withPartnerSuper.partnerPension).toBeCloseTo(withoutPartnerSuper.partnerPension, 0);
 
       // Scenario: user=68, partner=67 (eligible), large user super to test asset assessment
-      const withUserSuperAtAge67 = getAgePensionAmounts(
-        'couple', true, 0, 0, 800000, 0, 0, 0, 68, 67, 1.0, 0
-      );
-      const withoutUserSuperAtAge67 = getAgePensionAmounts(
-        'couple', true, 0, 0, 0, 0, 0, 0, 68, 67, 1.0, 0
-      );
+      const withUserSuperAtAge67 = getAgePensionAmounts({
+        relationshipStatus: 'couple', isHomeowner: true, propertyAssets: 0, savings: 0,
+        superannuation: 800000, mortgageBalance: 0, userSalary: 0, partnerSalary: 0,
+        userAge: 68, partnerAge: 67, cpiAdjustmentFactor: 1.0, partnerSuperBalance: 0
+      });
+      const withoutUserSuperAtAge67 = getAgePensionAmounts({
+        relationshipStatus: 'couple', isHomeowner: true, propertyAssets: 0, savings: 0,
+        superannuation: 0, mortgageBalance: 0, userSalary: 0, partnerSalary: 0,
+        userAge: 68, partnerAge: 67, cpiAdjustmentFactor: 1.0, partnerSuperBalance: 0
+      });
 
       // User super IS always assessed -> more assets -> lower pension
       expect(withUserSuperAtAge67.userPension + withUserSuperAtAge67.partnerPension)
