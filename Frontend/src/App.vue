@@ -66,8 +66,8 @@
         <div class="flex justify-center">
           <p :class="['text-sm text-center', isDark ? 'text-gray-400' : 'text-slate-500']">
             Have questions or feedback?
-            <a href="mailto:help@moneystock.net" class="text-teal-500 hover:text-teal-600 underline ml-1">
-              Contact us
+            <a href="https://github.com/rocker8942/FinancialPlanner/issues" class="text-teal-500 hover:text-teal-600 underline ml-1">
+              Submit an issue
             </a>
           </p>
         </div>

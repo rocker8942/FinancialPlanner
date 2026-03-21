@@ -1,0 +1,79 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pr:
+  branches:
+    include:
+      - master
+
+variables:
+  nodeVersion: '20.x'
+
+stages:
+  - stage: CI
+    displayName: 'Build Frontend'
+    jobs:
+      - job: Build
+        displayName: 'npm ci + build'
+        pool:
+          vmImage: 'windows-latest'
+        steps:
+          - checkout: self
+
+          - task: NodeTool@0
+            displayName: 'Use Node.js $(nodeVersion)'
+            inputs:
+              versionSpec: $(nodeVersion)
+
+          - script: npm ci
+            displayName: 'Install dependencies'
+            workingDirectory: Frontend
+
+          - script: npm run build
+            displayName: 'Build (type-check + Vite)'
+            workingDirectory: Frontend
+
+          - publish: Frontend/dist
+            artifact: frontend-dist
+            displayName: 'Publish dist artifact'
+
+  - stage: CD
+    displayName: 'Deploy to IIS'
+    dependsOn: CI
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+      - deployment: Deploy
+        displayName: 'Copy dist to IIS'
+        pool:
+          name: Default          # self-hosted agent on the IIS server
+        environment: production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: frontend-dist
+                  displayName: 'Download frontend-dist artifact'
+
+                - task: PowerShell@2
+                  displayName: 'Deploy frontend to IIS webroot'
+                  inputs:
+                    targetType: inline
+                    script: |
+                      $src  = "$(Pipeline.Workspace)\frontend-dist"
+                      $dest = "$(IIS_FRONTEND_PATH)"
+
+                      if (-not (Test-Path $dest)) {
+                        New-Item -ItemType Directory -Path $dest | Out-Null
+                      }
+
+                      Write-Host "Copying from $src to $dest"
+                      robocopy $src $dest /MIR /NJH /NJS /NFL /NDL
+                      # robocopy exit codes 0-7 are success
+                      if ($LASTEXITCODE -gt 7) {
+                        Write-Error "robocopy failed with exit code $LASTEXITCODE"
+                        exit 1
+                      }
+                      Write-Host "Deploy complete."
