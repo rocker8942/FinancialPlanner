@@ -77,3 +77,4 @@ stages:
                         exit 1
                       }
                       Write-Host "Deploy complete."
+                      exit 0
