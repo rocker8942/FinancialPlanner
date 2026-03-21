@@ -1,341 +1,132 @@
 <template>
   <div class="cover-page">
-    <!-- Hero Section -->
-    <header class="hero-section">
-      <div class="hero-content">
-        <h1 class="hero-title">
-          Australian Retirement Planner & Financial Calculator
-        </h1>
-        <p class="hero-subtitle">Plan your Australian retirement with confidence using our free calculator</p>
-        <p class="hero-description">
-          A comprehensive Australian retirement planning tool with automatic Age Pension calculations, CPI-adjusted projections, 
-          superannuation tracking, and Australian tax integration that helps you visualize your financial journey 
-          and make informed decisions about your retirement future.
-        </p>
-        <button @click="startPlanning" class="start-button" aria-label="Start planning your Australian retirement">
-          Start Your Free Retirement Plan
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-inner">
+        <p class="hero-eyebrow">Australian Retirement Planner</p>
+        <h1 class="hero-headline">See if you can retire<br>comfortably.</h1>
+        <p class="hero-sub">Enter your assets, income, and expenses. Get a year-by-year picture of your financial future — including Age Pension.</p>
+        <button @click="startPlanning" class="cta-btn" aria-label="Open the retirement simulator">
+          Try the Simulation
           <span class="material-icons" aria-hidden="true">arrow_forward</span>
         </button>
-        <nav class="hero-nav" aria-label="Quick navigation">
-          <a href="#features" class="nav-link">Features</a>
-          <a href="#age-pension" class="nav-link">Age Pension</a>
-          <a href="#methodology" class="nav-link">How It Works</a>
-          <a href="#faq" class="nav-link">FAQ</a>
-        </nav>
       </div>
     </header>
 
-    <!-- What This App Does -->
     <main>
-    <section class="section" id="features">
-      <h2 class="section-title">Australian Retirement Planning Features</h2>
-      <div class="features-grid">
-        <article class="feature-card">
-          <div class="feature-icon">
-            <span class="material-icons" aria-hidden="true">trending_up</span>
-          </div>
-          <h3>Australian Wealth Projection</h3>
-          <p>Calculate your net worth growth over time, including property assets, savings, and superannuation with Australian market conditions.</p>
-        </article>
-        <article class="feature-card">
-          <div class="feature-icon">
-            <span class="material-icons" aria-hidden="true">account_balance</span>
-          </div>
-          <h3>Australian Age Pension Calculator</h3>
-          <p>Automatically calculates your Australian Age Pension entitlements using current government asset and income test thresholds, updated for your specific circumstances.</p>
-        </article>
-        <article class="feature-card">
-          <div class="feature-icon">
-            <span class="material-icons" aria-hidden="true">timeline</span>
-          </div>
-          <h3>CPI-Adjusted Australian Inflation Planning</h3>
-          <p>Expenses and pensions automatically increase with Australian Consumer Price Index, providing realistic long-term projections that account for economic inflation over time.</p>
-        </article>
-        <article class="feature-card">
-          <div class="feature-icon">
-            <span class="material-icons" aria-hidden="true">tune</span>
-          </div>
-          <h3>Auto-Optimize Retirement Expenses</h3>
-          <p>Automatically calculate the optimal annual expense amount to maximize your Australian retirement lifestyle while ensuring your wealth lasts until your target age.</p>
-        </article>
-        <article class="feature-card">
-          <div class="feature-icon">
-            <span class="material-icons" aria-hidden="true">calculate</span>
-          </div>
-          <h3>Australian Tax & Superannuation Integration</h3>
-          <p>Automatically calculates income tax, Medicare levy, and superannuation taxes using current 2025-26 Australian tax brackets and thresholds.</p>
-        </article>
-        <article class="feature-card">
-          <div class="feature-icon">
-            <span class="material-icons" aria-hidden="true">security</span>
-          </div>
-          <h3>Private & Secure Financial Data</h3>
-          <p>Your Australian financial data is stored locally in your browser only. Nothing is saved on our servers - complete privacy guaranteed for your retirement planning.</p>
-        </article>
-      </div>
-    </section>
 
-    <!-- How It Works -->
-    <section class="section" id="how-it-works">
-      <h2 class="section-title">How Australian Retirement Planning Works</h2>
-      <div class="steps-container">
-        <div class="step">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h3>Input Your Details</h3>
-            <p>Enter your personal profile, current assets, income, expenses, and financial goals.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h3>Calculate Projections</h3>
-            <p>Our algorithm calculates year-by-year wealth projections using your growth assumptions.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h3>Visualize Results</h3>
-            <p>View interactive charts showing your financial trajectory and key milestones.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-number">4</div>
-          <div class="step-content">
-            <h3>Adjust & Plan</h3>
-            <p>Modify assumptions and scenarios to optimize your retirement strategy.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Australian Age Pension Explanation -->
-    <section class="section pension-section" id="age-pension">
-      <h2 class="section-title">Australian Age Pension Calculator & Eligibility</h2>
-      <div class="pension-explanation">
-        <div class="pension-intro">
-          <p>
-            This financial planner includes an <strong>automatic Australian Age Pension calculator</strong> that 
-            determines your pension entitlement based on current government rules and thresholds.
-          </p>
-        </div>
-        
-        <div class="pension-details-grid">
-          <div class="pension-detail-card">
-            <h3>How It Works</h3>
-            <ul>
-              <li>Calculates pension entitlement for each year of your projection</li>
-              <li>Applies both asset test and income test (you receive the lower amount)</li>
-              <li>Updates automatically as your wealth and income change over time</li>
-              <li>Considers your relationship status and homeowner status</li>
-            </ul>
-          </div>
-          
-          <div class="pension-detail-card">
-            <h3>Asset & Income Tests (Sept 2025)</h3>
-            <ul>
-              <li><strong>Full Pension Thresholds:</strong> $321,500 (single homeowner), $579,500 (single non-homeowner), $481,500/$739,500 (couple)</li>
-              <li><strong>Assessable Assets:</strong> Financial assets, superannuation (after 67), investment properties. Excludes family home. For couples, partner's superannuation is excluded from the assets test while the partner is under 67 (accumulation phase)</li>
-              <li><strong>Deeming Rates:</strong> 0.75% on first $64,200 (single) / $106,200 (couple), then 2.75% above that</li>
-              <li><strong>Income Reduction:</strong> Singles: $0.50 per $1 over threshold. Couples: $0.25 per $1 per partner</li>
-              <li><strong>Asset Reduction:</strong> $3 per fortnight ($78/year) per $1,000 over full pension threshold</li>
-            </ul>
-          </div>
-          
-          <div class="pension-detail-card">
-            <h3>Automatic Integration</h3>
-            <ul>
-              <li>Real-time calculations update as your projected assets change each year</li>
-              <li>Seamlessly integrates with your wealth projections and expense optimization</li>
-              <li>Accounts for different homeowner status and relationship scenarios</li>
-              <li>Provides year-by-year pension entitlement throughout your retirement</li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="pension-note">
-          <p>
-            <strong>Note:</strong> Rates reflect September 2025 – March 2026 Age Pension rules.
-            Current full rates: $30,646/yr (single), $46,202/yr (couple combined).
-            Government policies change periodically and could affect future entitlements.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Calculation Logic -->
-    <section class="section" id="methodology">
-      <h2 class="section-title">Australian Retirement Calculation Methodology</h2>
-      <div class="methodology-grid">
-        <div class="methodology-card">
-          <h3>Asset Growth</h3>
-          <ul>
-            <li><strong>Property:</strong> 4% annual growth (default, adjustable)</li>
-            <li><strong>Financial Assets:</strong> User-defined growth rate</li>
-            <li><strong>Superannuation:</strong> Separate growth rate with contributions</li>
-          </ul>
-        </div>
-        <div class="methodology-card">
-          <h3>Income & Tax Calculations</h3>
-          <ul>
-            <li><strong>Australian Income Tax:</strong> Uses current 2025-26 tax brackets with progressive rates (0%, 16%, 30%, 37%, 45%)</li>
-            <li><strong>Medicare Levy:</strong> 2% levy with low-income thresholds and phase-in calculations</li>
-            <li><strong>Superannuation Tax:</strong> 15% contributions tax plus Division 293 additional tax for high earners</li>
-            <li><strong>Net Income:</strong> Gross salary minus income tax and Medicare levy</li>
-            <li><strong>Net Financial Asset:</strong> Net savings - Mortgage + After-tax superannuation</li>
-          </ul>
-        </div>
-        <div class="methodology-card">
-          <h3>Consumer Price Index (CPI) Adjustments</h3>
-          <ul>
-            <li><strong>CPI-Adjusted Expenses:</strong> Annual expenses automatically increase with Consumer Price Index for realistic long-term planning</li>
-            <li><strong>CPI-Adjusted Pensions:</strong> Age pension amounts grow with CPI over time, reflecting real-world increases</li>
-            <li><strong>Real vs Nominal Values:</strong> All projections show both current and inflation-adjusted values</li>
-            <li><strong>Purchasing Power:</strong> See exactly what your future wealth will be worth in today's dollars</li>
-            <li><strong>Customizable Rate:</strong> Default 3% CPI growth rate, fully adjustable based on your expectations</li>
-          </ul>
-        </div>
-        <div class="methodology-card">
-          <h3>Australian Age Pension</h3>
-          <ul>
-            <li><strong>Dynamic Calculation:</strong> Automatically applies September 2025 Australian Government asset and income tests</li>
-            <li><strong>Homeowner Status:</strong> Different asset test thresholds for homeowners ($321,500) vs non-homeowners ($579,500) for singles</li>
-            <li><strong>Couple Assessment:</strong> Combined asset test limits ($481,500/$739,500) and shared pension entitlements. When only one partner reaches 67, couple thresholds apply and that partner receives half the couple pension rate</li>
-            <li><strong>Deeming:</strong> Financial assets deemed at 0.75% (first $64,200 single / $106,200 couple) then 2.75%</li>
-            <li><strong>Age Requirements:</strong> Pension eligibility from age 67 (current retirement age in Australia)</li>
-            <li><strong>Real-time Updates:</strong> Calculations update automatically as your projected assets and income change each year</li>
-            <li><strong>CPI Growth Integration:</strong> Pension amounts automatically increase with Consumer Price Index over time, reflecting realistic government pension adjustments</li>
-          </ul>
-        </div>
-        <div class="methodology-card">
-          <h3>Expense Optimization</h3>
-          <ul>
-            <li><strong>Binary Search Algorithm:</strong> Uses advanced optimization to find the maximum sustainable expense level</li>
-            <li><strong>Wealth Preservation:</strong> Ensures your net financial assets never go negative during retirement</li>
-            <li><strong>Target Age Planning:</strong> Calculates expenses to last until your specified end age</li>
-            <li><strong>Income Integration:</strong> Factors in salary, pension, and investment returns for accurate projections</li>
-            <li><strong>Real-time Adjustment:</strong> Automatically recalculates when you change any financial parameters</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Privacy & Data Storage -->
-    <section class="section privacy-section">
-      <div class="privacy-content">
-        <h2 class="privacy-title">
-          <span class="material-icons">lock</span>
-          Your Data Stays Private
-        </h2>
-        <div class="privacy-grid">
-          <div class="privacy-card">
-            <div class="privacy-icon">
-              <span class="material-icons">storage</span>
+      <!-- Benefits -->
+      <section class="section benefits-section" aria-labelledby="benefits-heading">
+        <h2 id="benefits-heading" class="section-label">What you get</h2>
+        <div class="benefits-grid">
+          <div class="benefit-tile">
+            <div class="benefit-icon" aria-hidden="true">
+              <span class="material-icons">show_chart</span>
             </div>
-            <h3>Local Browser Storage</h3>
-            <p>All your financial data is stored directly in your web browser's local storage. This means your sensitive information never leaves your device.</p>
+            <h3>A clear retirement timeline</h3>
+            <p>Watch your wealth grow (and draw down) year by year, so you know exactly when you can stop working.</p>
           </div>
-          <div class="privacy-card">
-            <div class="privacy-icon">
-              <span class="material-icons">cloud_off</span>
+          <div class="benefit-tile">
+            <div class="benefit-icon" aria-hidden="true">
+              <span class="material-icons">tune</span>
             </div>
-            <h3>No Server Storage</h3>
-            <p>We don't save, store, or transmit any of your personal financial information to our servers. Your privacy is completely protected.</p>
+            <h3>An optimised spending plan</h3>
+            <p>The calculator finds the highest sustainable annual expense that keeps your money lasting until your target age.</p>
           </div>
-          <div class="privacy-card">
-            <div class="privacy-icon">
-              <span class="material-icons">devices</span>
+          <div class="benefit-tile">
+            <div class="benefit-icon" aria-hidden="true">
+              <span class="material-icons">account_balance</span>
             </div>
-            <h3>Device Specific</h3>
-            <p>Your data is available only on the device and browser where you entered it. Access from a different device will start fresh.</p>
+            <h3>Automatic Age Pension</h3>
+            <p>Asset and income tests run every year of your projection, so your pension entitlement is always accurate.</p>
           </div>
         </div>
-        <div class="privacy-note">
-          <p>
-            <strong>Important:</strong> Since data is stored locally, clearing your browser data or using incognito/private mode 
-            will remove your saved information. Consider bookmarking your calculations or taking screenshots for reference.
-          </p>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Disclaimer -->
-    <section class="section disclaimer-section">
-      <div class="disclaimer-content">
-        <h2 class="disclaimer-title">
-          <span class="material-icons">warning</span>
-          Important Disclaimer
-        </h2>
-        <div class="disclaimer-text">
-          <p>
-            <strong>This is a financial modeling tool based on assumptions and projections.</strong> 
-            The results are estimates only and should not be considered as financial advice.
-          </p>
-          <ul>
-            <li>Asset growth rates, inflation, and market conditions are unpredictable</li>
-            <li>Government policies (including age pension rules) may change over time</li>
-            <li>Individual circumstances and life events can significantly impact outcomes</li>
-            <li>Tax calculations are based on current 2025-26 Australian tax law which may change</li>
-          </ul>
-          <p>
-            <strong>Always consult with qualified financial advisors</strong> before making important 
-            financial or retirement planning decisions.
-          </p>
-        </div>
-      </div>
-    </section>
+      <!-- How It Works -->
+      <section class="section steps-section" id="how-it-works" aria-labelledby="steps-heading">
+        <h2 id="steps-heading" class="section-label">How it works</h2>
+        <ol class="steps-list" role="list">
+          <li class="step">
+            <span class="step-num" aria-hidden="true">1</span>
+            <div class="step-body">
+              <h3>Enter your details</h3>
+              <p>Your age, assets, income, and expenses — takes about two minutes.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">2</span>
+            <div class="step-body">
+              <h3>Run the projection</h3>
+              <p>Year-by-year calculations including super, tax, inflation, and Age Pension.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">3</span>
+            <div class="step-body">
+              <h3>Read the chart</h3>
+              <p>An interactive chart shows your net wealth trajectory at a glance.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">4</span>
+            <div class="step-body">
+              <h3>Tweak the assumptions</h3>
+              <p>Adjust growth rates, retirement age, or expenses and re-run instantly.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
 
-    <!-- FAQ Section -->
-    <section class="section faq-section" id="faq">
-      <h2 class="section-title">Frequently Asked Questions - Australian Retirement Planning</h2>
-      <div class="faq-container">
-        <div class="faq-item">
-          <h3 class="faq-question">Is my financial data secure and private?</h3>
-          <div class="faq-answer">
-            <p>Yes, absolutely. All your financial information is stored locally in your browser only. We don't transmit, store, or save any of your personal data on our servers. Your privacy is completely protected.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <h3 class="faq-question">How accurate are the Australian Age Pension calculations?</h3>
-          <div class="faq-answer">
-            <p>Our Age Pension calculator uses September 2025 government thresholds and applies both asset and income tests automatically. However, government policies may change over time, so these are projections based on current rules.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <h3 class="faq-question">Can I use this planner if I'm not Australian?</h3>
-          <div class="faq-answer">
-            <p>This tool is specifically designed for Australian retirement planning, including Australian tax rates, superannuation rules, and Age Pension calculations. It may not be accurate for other countries' retirement systems.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <h3 class="faq-question">How does the CPI inflation adjustment work?</h3>
-          <div class="faq-answer">
-            <p>The calculator automatically increases your expenses and pension amounts each year based on the Consumer Price Index (default 3%). This shows you what your money will be worth in both today's purchasing power and future dollars.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <h3 class="faq-question">What growth rates should I use for my investments?</h3>
-          <div class="faq-answer">
-            <p>Default rates are 4% for property and user-defined for financial assets. Historical Australian market returns suggest 7-8% for diversified portfolios, but past performance doesn't guarantee future results. Consult a financial advisor for personalized advice.</p>
-          </div>
-        </div>
+      <!-- Age Pension callout -->
+      <div class="pension-callout" role="note">
+        <span class="material-icons callout-icon" aria-hidden="true">verified</span>
+        <p>Includes automatic Age Pension calculations using current Australian Government asset and income test thresholds (Sept 2025 – Mar 2026).</p>
       </div>
-    </section>
 
-    <!-- Final CTA -->
-    <section class="final-cta-section">
-      <div class="final-cta-content">
-        <h2>Ready to Plan Your Australian Retirement Future?</h2>
-        <p>Start building your personalized Australian retirement projection with Age Pension calculations today.</p>
-        <button @click="startPlanning" class="start-button large" aria-label="Get started with Australian retirement planning">
-          Get Started With Free Calculator
+      <!-- Privacy strip -->
+      <div class="privacy-strip" role="note">
+        <span class="material-icons" aria-hidden="true">lock</span>
+        <span>Your data never leaves your browser — nothing is stored on our servers.</span>
+      </div>
+
+      <!-- FAQ -->
+      <section class="section faq-section" id="faq" aria-labelledby="faq-heading">
+        <h2 id="faq-heading" class="section-label">Common questions</h2>
+        <dl class="faq-list">
+          <div class="faq-item">
+            <dt>Is my financial data private?</dt>
+            <dd>Yes. Everything is saved in your browser only. We never see or store your numbers.</dd>
+          </div>
+          <div class="faq-item">
+            <dt>Is this specific to Australia?</dt>
+            <dd>Yes — it uses Australian tax brackets, superannuation rules, and Age Pension thresholds. It is not suitable for other countries.</dd>
+          </div>
+          <div class="faq-item">
+            <dt>How accurate are the projections?</dt>
+            <dd>They reflect current rules and your chosen assumptions. Real markets are unpredictable — treat results as a planning guide, not a guarantee.</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- Final CTA -->
+      <section class="final-cta" aria-labelledby="final-cta-heading">
+        <h2 id="final-cta-heading">Ready to see your number?</h2>
+        <p>It's free, private, and takes two minutes.</p>
+        <button @click="startPlanning" class="cta-btn large" aria-label="Open the retirement simulator">
+          Try the Simulation
           <span class="material-icons" aria-hidden="true">arrow_forward</span>
         </button>
-      </div>
-    </section>
+      </section>
 
     </main>
+
+    <!-- Footer disclaimer -->
+    <footer class="page-footer">
+      <p>This tool provides estimates only and is not financial advice. Always consult a qualified financial adviser before making retirement decisions.</p>
+    </footer>
+
   </div>
 </template>
 
@@ -350,263 +141,151 @@ function startPlanning() {
 </script>
 
 <style scoped>
+/* ── Layout ────────────────────────────────────────────────── */
 .cover-page {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem 4rem;
 }
 
-/* Hero Section */
-.hero-section {
+/* ── Hero ──────────────────────────────────────────────────── */
+.hero {
+  padding: 6rem 0 5rem;
   text-align: center;
-  padding: 4rem 0 6rem;
-  background: linear-gradient(135deg, rgba(13, 148, 136, 0.1) 0%, rgba(13, 148, 136, 0.05) 100%);
-  border-radius: 1rem;
-  margin-bottom: 4rem;
 }
 
-.hero-content {
-  max-width: 600px;
+.hero-inner {
+  max-width: 620px;
   margin: 0 auto;
 }
 
-.hero-title {
-  font-size: 3.5rem;
+.hero-eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin: 0 0 1.25rem;
+}
+
+.hero-headline {
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 800;
-  color: var(--accent-text);
-  margin-bottom: 1rem;
-  line-height: 1.1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-
-.hero-subtitle {
-  font-size: 1.5rem;
-  color: var(--text-label);
-  margin-bottom: 1.5rem;
-  font-weight: 300;
-}
-
-.hero-description {
-  font-size: 1.125rem;
-  color: var(--text-secondary);
-  margin-bottom: 2.5rem;
-  line-height: 1.6;
-}
-
-.start-button {
-  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
-  border: none;
-  color: white;
-  padding: 1rem 2rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
-}
-
-.start-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4);
-}
-
-.start-button.large {
-  padding: 1.25rem 2.5rem;
-  font-size: 1.25rem;
-}
-
-/* Hero Navigation */
-.hero-nav {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.nav-link {
-  color: var(--text-secondary);
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  border: 1px solid transparent;
-}
-
-.nav-link:hover {
-  color: var(--accent-text);
-  background-color: rgba(13, 148, 136, 0.1);
-  border-color: rgba(13, 148, 136, 0.3);
-  transform: translateY(-1px);
-}
-
-/* Sections */
-.section {
-  margin-bottom: 4rem;
-}
-
-.section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  line-height: 1.08;
   color: var(--text-primary);
-  text-align: center;
-  margin-bottom: 3rem;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.02em;
 }
 
-/* Features Grid */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.feature-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 2rem;
-  border-radius: 1rem;
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
-}
-
-.feature-icon {
-  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-}
-
-.feature-icon .material-icons {
-  font-size: 2rem;
-  color: white;
-}
-
-.feature-card h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-}
-
-.feature-card p {
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-/* Steps */
-.steps-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-}
-
-/* Australian Age Pension Section */
-.pension-section {
-  background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(13, 148, 136, 0.04) 100%);
-  border-radius: 1rem;
-  padding: 3rem 2rem;
-  border: 1px solid rgba(13, 148, 136, 0.2);
-}
-
-.pension-explanation {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.pension-intro {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.pension-intro p {
+.hero-sub {
   font-size: 1.125rem;
   color: var(--text-secondary);
   line-height: 1.7;
+  margin: 0 0 2.5rem;
 }
 
-.pension-details-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
+/* ── CTA Button ────────────────────────────────────────────── */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
+  color: #fff;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  padding: 0.9rem 2rem;
+  border: none;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 18px rgba(13, 148, 136, 0.35);
+  letter-spacing: 0.01em;
 }
 
-.pension-detail-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 2rem;
-  border-radius: 1rem;
-  border-left: 4px solid var(--accent);
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(13, 148, 136, 0.45);
 }
 
-.pension-detail-card h3 {
-  font-size: 1.25rem;
+.cta-btn.large {
+  font-size: 1.125rem;
+  padding: 1.1rem 2.5rem;
+}
+
+/* ── Shared Section Styles ─────────────────────────────────── */
+.section {
+  margin-bottom: 5rem;
+}
+
+.section-label {
+  font-size: 0.8125rem;
   font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--accent-text);
-  margin-bottom: 1rem;
-}
-
-.pension-detail-card ul {
-  list-style: none;
-  padding: 0;
-}
-
-.pension-detail-card li {
-  color: var(--text-label);
-  margin-bottom: 0.75rem;
-  line-height: 1.6;
-  position: relative;
-  padding-left: 1rem;
-}
-
-.pension-detail-card li::before {
-  content: '•';
-  color: var(--accent);
-  position: absolute;
-  left: 0;
-}
-
-.pension-detail-card strong {
-  color: var(--text-primary);
-}
-
-.pension-note {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  border-left: 4px solid var(--accent);
+  margin: 0 0 2.5rem;
   text-align: center;
 }
 
-.pension-note p {
-  color: var(--text-label);
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.6;
+/* ── Benefits ──────────────────────────────────────────────── */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
 }
 
-.pension-note strong {
+.benefit-tile {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 2rem 1.75rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.benefit-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(13, 148, 136, 0.15);
+}
+
+.benefit-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.benefit-icon .material-icons {
+  font-size: 1.5rem;
+  color: var(--accent-text);
+}
+
+.benefit-tile h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
   color: var(--text-primary);
+  margin: 0 0 0.75rem;
+  line-height: 1.3;
+}
+
+.benefit-tile p {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Steps ─────────────────────────────────────────────────── */
+.steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
 }
 
 .step {
@@ -615,424 +294,187 @@ function startPlanning() {
   gap: 1rem;
 }
 
-.step-number {
-  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
-  color: white;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  font-weight: 700;
+.step-num {
   flex-shrink: 0;
-}
-
-.step-content h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-}
-
-.step-content p {
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-/* Methodology Grid */
-.methodology-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
-.methodology-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 2rem;
-  border-radius: 1rem;
-  border-left: 4px solid var(--accent-text);
-}
-
-.methodology-card h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--accent-text);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.coming-soon-badge {
-  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  white-space: nowrap;
-}
-
-.methodology-card ul {
-  list-style: none;
-  padding: 0;
-}
-
-.methodology-card li {
-  color: var(--text-label);
-  margin-bottom: 0.75rem;
-  line-height: 1.6;
-  position: relative;
-  padding-left: 1rem;
-}
-
-.methodology-card li::before {
-  content: '•';
-  color: #14b8a6;
-  position: absolute;
-  left: 0;
-}
-
-.methodology-card strong {
-  color: var(--text-primary);
-}
-
-/* Privacy Section */
-.privacy-section {
-  background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(13, 148, 136, 0.04) 100%);
-  border-radius: 1rem;
-  padding: 3rem 2rem;
-  border: 1px solid rgba(13, 148, 136, 0.2);
-  margin: 3rem 0;
-}
-
-.privacy-content {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.privacy-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--accent-text);
-  margin-bottom: 2rem;
-  justify-content: center;
-}
-
-.privacy-title .material-icons {
-  color: var(--accent);
-  font-size: 2.5rem;
-}
-
-.privacy-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.privacy-card {
-  background: var(--bg-card);
-  padding: 2rem;
-  border-radius: 1rem;
-  text-align: center;
-  border: 1px solid var(--border-color);
-}
-
-.privacy-icon {
-  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
-  width: 4rem;
-  height: 4rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-}
-
-.privacy-icon .material-icons {
-  font-size: 2rem;
-  color: white;
-}
-
-.privacy-card h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--accent-text);
-  margin-bottom: 1rem;
-}
-
-.privacy-card p {
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.privacy-note {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  border-left: 4px solid var(--accent);
-  text-align: center;
-}
-
-.privacy-note p {
-  color: var(--text-secondary);
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-.privacy-note strong {
-  color: var(--text-primary);
-}
-
-/* Disclaimer Section */
-.disclaimer-section {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(217, 119, 6, 0.05) 100%);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  border-radius: 1rem;
-  padding: 2rem;
-  margin: 3rem 0;
-}
-
-.disclaimer-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #fbbf24;
-  margin-bottom: 1.5rem;
-  justify-content: center;
-}
-
-.disclaimer-title .material-icons {
-  color: #f59e0b;
-  font-size: 2rem;
-}
-
-.disclaimer-text {
-  color: var(--text-label);
-  line-height: 1.7;
-}
-
-.disclaimer-text p {
-  margin-bottom: 1rem;
-}
-
-.disclaimer-text ul {
-  margin: 1rem 0;
-  padding-left: 1.5rem;
-}
-
-.disclaimer-text li {
-  margin-bottom: 0.5rem;
-}
-
-.disclaimer-text strong {
-  color: var(--text-primary);
-}
-
-.beta-notice {
-  background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%);
-  border: 2px solid #f59e0b;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.beta-notice p {
-  color: #fbbf24;
+  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
+  color: #fff;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-body h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.4rem;
+}
+
+.step-body p {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
   margin: 0;
-  line-height: 1.6;
 }
 
-.beta-notice strong {
-  color: #fef3c7;
-  font-size: 1.1rem;
-}
-
-/* FAQ Section */
-.faq-section {
+/* ── Age Pension Callout ───────────────────────────────────── */
+.pension-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
   background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(13, 148, 136, 0.04) 100%);
-  border-radius: 1rem;
-  padding: 3rem 2rem;
-  border: 1px solid rgba(13, 148, 136, 0.2);
-  margin: 3rem 0;
+  border: 1px solid rgba(13, 148, 136, 0.25);
+  border-radius: 0.875rem;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 5rem;
 }
 
-.faq-container {
-  max-width: 800px;
+.callout-icon {
+  font-size: 1.5rem;
+  color: var(--accent-text);
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.pension-callout p {
+  font-size: 0.9375rem;
+  color: var(--text-label);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Privacy Strip ─────────────────────────────────────────── */
+.privacy-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 5rem;
+  padding: 0.875rem 1.25rem;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.privacy-strip .material-icons {
+  font-size: 1.1rem;
+  color: var(--accent-text);
+}
+
+/* ── FAQ ───────────────────────────────────────────────────── */
+.faq-list {
+  max-width: 680px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0;
 }
 
 .faq-item {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 1rem;
-  padding: 2rem;
-  border-left: 4px solid var(--accent);
-  transition: all 0.3s ease;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.faq-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(13, 148, 136, 0.2);
+.faq-item:first-child {
+  border-top: 1px solid var(--border-color);
 }
 
-.faq-question {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--accent-text);
-  margin-bottom: 1rem;
-  line-height: 1.4;
-}
-
-.faq-answer p {
-  color: var(--text-label);
-  line-height: 1.7;
-  margin: 0;
+.faq-item dt {
   font-size: 1rem;
-}
-
-/* Final CTA */
-.final-cta-section {
-  text-align: center;
-  padding: 4rem 2rem;
-  background: linear-gradient(135deg, rgba(13, 148, 136, 0.1) 0%, rgba(13, 148, 136, 0.05) 100%);
-  border-radius: 1rem;
-  margin-bottom: 2rem;
-}
-
-.final-cta-content h2 {
-  font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.final-cta-content p {
-  font-size: 1.125rem;
+.faq-item dd {
+  font-size: 0.9375rem;
   color: var(--text-secondary);
-  margin-bottom: 2rem;
+  line-height: 1.65;
+  margin: 0;
 }
 
-/* Responsive Design */
+/* ── Final CTA ─────────────────────────────────────────────── */
+.final-cta {
+  text-align: center;
+  padding: 4.5rem 2rem;
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.07) 0%, rgba(13, 148, 136, 0.03) 100%);
+  border-radius: 1.25rem;
+  border: 1px solid rgba(13, 148, 136, 0.18);
+  margin-bottom: 3rem;
+}
+
+.final-cta h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.final-cta p {
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
+  margin: 0 0 2rem;
+}
+
+/* ── Footer ────────────────────────────────────────────────── */
+.page-footer {
+  text-align: center;
+  padding-bottom: 1.5rem;
+}
+
+.page-footer p {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.5rem;
+  .hero {
+    padding: 4rem 0 3.5rem;
   }
-  
-  .hero-subtitle {
-    font-size: 1.25rem;
-  }
-  
-  .section-title {
-    font-size: 2rem;
-  }
-  
-  .features-grid,
-  .methodology-grid {
+
+  .benefits-grid {
     grid-template-columns: 1fr;
   }
-  
-  .steps-container {
+
+  .steps-list {
     grid-template-columns: 1fr;
-  }
-  
-  .step {
-    flex-direction: column;
-    text-align: center;
   }
 }
 
-/* iPhone and narrow mobile screens */
-@media (max-width: 414px) {
+@media (max-width: 480px) {
   .cover-page {
-    max-width: 100%;
+    padding: 0 1rem 3rem;
+  }
+
+  .hero {
+    padding: 3rem 0 2.5rem;
+  }
+
+  .cta-btn {
     width: 100%;
-    padding: 0 0.5rem;
-    box-sizing: border-box;
-    overflow-x: hidden;
+    justify-content: center;
   }
-  
-  .hero-section {
-    padding: 2rem 0.5rem;
-  }
-  
-  .hero-title {
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.125rem;
-  }
-  
-  .hero-description {
-    font-size: 1rem;
-  }
-  
-  .section-title {
-    font-size: 1.75rem;
-  }
-  
-  .section {
-    margin-bottom: 2.5rem;
-    padding: 0 0.5rem;
-  }
-  
-  .hero-nav {
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
-  
-  .nav-link {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.9rem;
-  }
-  
-  .start-button {
-    padding: 0.875rem 1.5rem;
-    font-size: 1rem;
+
+  .cta-btn.large {
     width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+    justify-content: center;
   }
-  
-  .feature-card,
-  .methodology-card,
-  .privacy-card,
-  .pension-detail-card {
-    padding: 1.5rem;
-  }
-  
-  .privacy-section,
-  .pension-section,
-  .faq-section {
-    padding: 2rem 0.75rem;
-  }
-  
-  .final-cta-section {
-    padding: 2.5rem 0.75rem;
+
+  .pension-callout {
+    flex-direction: column;
+    gap: 0.625rem;
   }
 }
 </style>
