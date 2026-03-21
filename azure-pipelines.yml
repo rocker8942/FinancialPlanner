@@ -47,7 +47,7 @@ stages:
       - deployment: Deploy
         displayName: 'Copy dist to IIS'
         pool:
-          name: Default          # self-hosted agent on the IIS server
+          name: Joe-Metabox          # self-hosted agent on the IIS server
         environment: production
         strategy:
           runOnce:
