@@ -2,9 +2,11 @@
 
 This is a full-stack financial planner web application.
 
+See the live financial planner site: https://retire.moneystock.net/retirementplanner
+
 ## Project Structure
 - `Frontend/` — Vue 3 + TypeScript (Vite)
-- `Backend/` — ASP.NET Core Web API + C#
+- `Backend/` — ASP.NET Core Web API + C# (Currently not being used)
 
 ---
 
