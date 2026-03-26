@@ -234,10 +234,6 @@ const currentFinancialProfile = computed((): FinancialProfile => {
     propertyGrowthRate: advancedOptions.value.propertyGrowthRate,
     propertyRentalYield: advancedOptions.value.propertyRentalYield,
     cpiGrowthRate: advancedOptions.value.cpiGrowthRate,
-    pensionAmount: 0, // Calculated dynamically
-    pensionStartAge: 67,
-    partnerPensionAmount: 0, // Calculated dynamically
-    partnerPensionStartAge: 67,
     partnerAge: personalProfile.value.partnerAge,
     partnerRetireAge: personalProfile.value.partnerRetireAge,
     relationshipStatus: personalProfile.value.relationshipStatus,

@@ -22,10 +22,6 @@ describe('Debug Mortgage Cliff Issue', () => {
     propertyGrowthRate: 0.04,
     propertyRentalYield: 0.033,
     cpiGrowthRate: 0.03,
-    pensionAmount: 0,
-    pensionStartAge: 67,
-    partnerPensionAmount: 0,
-    partnerPensionStartAge: 67,
     partnerAge: 30,
     partnerRetireAge: 65,
     mortgageRate: 0.06

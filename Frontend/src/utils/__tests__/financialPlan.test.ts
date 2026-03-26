@@ -22,10 +22,6 @@ describe('calculateFinancialPlanModular', () => {
     propertyGrowthRate: 0.03,
     propertyRentalYield: 0.033,
     cpiGrowthRate: 0.02,
-    pensionAmount: 25000,
-    pensionStartAge: 67,
-    partnerPensionAmount: 20000,
-    partnerPensionStartAge: 67,
     partnerAge: 28,
     partnerRetireAge: 63,
     relationshipStatus: 'couple' as const,
@@ -371,11 +367,7 @@ describe('calculateFinancialPlanModular', () => {
         salary: 0, // No income to avoid cash flow effects
         partnerSalary: 0,
         expenses: 0,
-        pensionAmount: 0, // No pension to avoid cash flow effects
-        partnerPensionAmount: 0,
         currentAge: 30, // Below pension age to avoid pension calculations
-        pensionStartAge: 67,
-        partnerPensionStartAge: 67,
         propertyRentalYield: 0 // No rental income
       })
       const result = calculateFinancialPlanModular(profile)
@@ -644,10 +636,6 @@ describe('calculateExpenseToZeroNetWorthModular', () => {
     propertyGrowthRate: 0.03,
     propertyRentalYield: 0.033,
     cpiGrowthRate: 0.02,
-    pensionAmount: 25000,
-    pensionStartAge: 67,
-    partnerPensionAmount: 20000,
-    partnerPensionStartAge: 67,
     partnerAge: 28,
     partnerRetireAge: 63,
     relationshipStatus: 'couple' as const,
@@ -703,7 +691,7 @@ describe('calculateExpenseToZeroNetWorthModular', () => {
     expect(optimalExpense).toBeGreaterThan(0)
     // In low asset scenarios, optimal expense might be higher than salary due to growth and pension
     // Allow for higher expenses due to partner salary and pension income over many years
-    expect(optimalExpense).toBeLessThan(profile.salary + profile.partnerSalary + profile.pensionAmount + profile.partnerPensionAmount)
+    expect(optimalExpense).toBeLessThan(profile.salary + profile.partnerSalary + 45000)
   })
 
   it('should account for mortgage debt in calculations', () => {
@@ -799,8 +787,6 @@ describe('calculateExpenseToZeroNetWorthModular', () => {
       currentAge: 30,
       deathAge: 90, // 60 year span
       // Test with minimal pension to see more realistic results
-      pensionAmount: 0, // Override pension calculation
-      partnerPensionAmount: 0
     })
     
     const optimalExpense = calculateExpenseToZeroNetWorthModular(profile)

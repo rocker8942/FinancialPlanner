@@ -467,7 +467,6 @@ import { optimizeExpenseToZeroNetWorth } from '../utils/calculations/expenseOpti
 import type { FinancialProfile } from '../utils/financialPlan';
 import { formatCurrency, formatNumber, parseFormattedNumber, formatPercentage, generateShareableUrl } from '../utils/formatters';
 import { setSecureItem, getSecureItem } from '../utils/encryption';
-import { getAgePensionAmounts } from '../services/agePensionService';
 
 const emit = defineEmits(['update']);
 
@@ -509,44 +508,6 @@ const partnerSalary = ref(0);
 const relationshipStatus = ref<'single' | 'couple'>('single');
 const isHomeowner = ref(true);
 
-// Computed properties for calculated pension amounts
-const calculatedUserPension = computed(() => {
-  if (!isLoaded.value) return 0;
-  
-  const pensionAmounts = getAgePensionAmounts({
-    relationshipStatus: relationshipStatus.value,
-    isHomeowner: isHomeowner.value,
-    propertyAssets: propertyAssets.value,
-    savings: savings.value,
-    superannuation: superannuationBalance.value,
-    mortgageBalance: mortgageBalance.value,
-    userSalary: salary.value,
-    partnerSalary: partnerSalary.value,
-    userAge: currentAge.value,
-    partnerAge: partnerAge.value
-  });
-
-  return pensionAmounts.userPension;
-});
-
-const calculatedPartnerPension = computed(() => {
-  if (!isLoaded.value) return 0;
-
-  const pensionAmounts = getAgePensionAmounts({
-    relationshipStatus: relationshipStatus.value,
-    isHomeowner: isHomeowner.value,
-    propertyAssets: propertyAssets.value,
-    savings: savings.value,
-    superannuation: superannuationBalance.value,
-    mortgageBalance: mortgageBalance.value,
-    userSalary: salary.value,
-    partnerSalary: partnerSalary.value,
-    userAge: currentAge.value,
-    partnerAge: partnerAge.value
-  });
-  
-  return pensionAmounts.partnerPension;
-});
 
 // Computed property for current disposable income
 const currentDisposableIncome = computed(() => {
@@ -569,10 +530,6 @@ const currentDisposableIncome = computed(() => {
     propertyGrowthRate: propertyGrowthRate.value,
     propertyRentalYield: propertyRentalYield.value,
     cpiGrowthRate: cpiGrowthRate.value,
-    pensionAmount: calculatedUserPension.value,
-    pensionStartAge: 67,
-    partnerPensionAmount: calculatedPartnerPension.value,
-    partnerPensionStartAge: 67,
     partnerAge: partnerAge.value,
     partnerRetireAge: partnerRetireAge.value,
     relationshipStatus: relationshipStatus.value,
@@ -1221,10 +1178,6 @@ watch(zeroNetWorthAtDeath, (checked) => {
       propertyGrowthRate: propertyGrowthRate.value,
       propertyRentalYield: propertyRentalYield.value,
       cpiGrowthRate: cpiGrowthRate.value,
-      pensionAmount: calculatedUserPension.value,
-      pensionStartAge: 67, // hardcoded
-      partnerPensionAmount: calculatedPartnerPension.value,
-      partnerPensionStartAge: 67, // Always 67 for Australian age pension
       partnerAge: partnerAge.value,
       partnerRetireAge: partnerRetireAge.value,
       relationshipStatus: relationshipStatus.value,
@@ -1263,10 +1216,6 @@ watch([
       propertyGrowthRate: propertyGrowthRate.value,
       propertyRentalYield: propertyRentalYield.value,
       cpiGrowthRate: cpiGrowthRate.value,
-      pensionAmount: calculatedUserPension.value,
-      pensionStartAge: 67, // hardcoded
-      partnerPensionAmount: calculatedPartnerPension.value,
-      partnerPensionStartAge: 67, // Always 67 for Australian age pension
       partnerAge: partnerAge.value,
       partnerRetireAge: partnerRetireAge.value,
       relationshipStatus: relationshipStatus.value,
@@ -1300,10 +1249,6 @@ watchEffect(() => {
     propertyGrowthRate: propertyGrowthRate.value,
     propertyRentalYield: propertyRentalYield.value,
     cpiGrowthRate: cpiGrowthRate.value,
-    pensionAmount: calculatedUserPension.value,
-    pensionStartAge: 67, // hardcoded
-    partnerPensionAmount: calculatedPartnerPension.value,
-    partnerPensionStartAge: 67, // Always 67 for Australian age pension
     partnerAge: partnerAge.value,
     partnerRetireAge: partnerRetireAge.value,
     relationshipStatus: relationshipStatus.value,
@@ -1465,9 +1410,9 @@ async function load() {
         propertyGrowthRate.value = profile.propertyGrowthRate || 0.03;
         propertyRentalYield.value = profile.propertyRentalYield || 0.033;
         cpiGrowthRate.value = profile.cpiGrowthRate || profile.inflationRate || 0.03;
-        pensionAmount.value = profile.pensionAmount || 0;
+        pensionAmount.value = 0;
         pensionStartAge.value = 67; // always 67
-        partnerPensionAmount.value = profile.partnerPensionAmount || 0;
+        partnerPensionAmount.value = 0;
         partnerAge.value = profile.partnerAge || 30;
         partnerRetireAge.value = profile.partnerRetireAge || 65;
         relationshipStatus.value = profile.relationshipStatus || 'single';
@@ -1535,16 +1480,12 @@ async function handleShare() {
       propertyGrowthRate: propertyGrowthRate.value,
       propertyRentalYield: propertyRentalYield.value,
       cpiGrowthRate: cpiGrowthRate.value,
-      pensionAmount: calculatedUserPension.value,
-      pensionStartAge: 67,
-      partnerPensionAmount: calculatedPartnerPension.value,
-      partnerPensionStartAge: 67,
       partnerAge: partnerAge.value,
       partnerRetireAge: partnerRetireAge.value,
       relationshipStatus: relationshipStatus.value,
       isHomeowner: isHomeowner.value
     };
-    
+
     // Generate secure shareable URL (encrypted by default)
     const shareableUrl = generateShareableUrl(profile);
     
