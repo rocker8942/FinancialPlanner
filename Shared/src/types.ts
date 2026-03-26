@@ -51,11 +51,6 @@ export interface FinancialProfile {
   relationshipStatus: 'single' | 'couple';
   isHomeowner: boolean;
 
-  // Pension (calculated dynamically but included for completeness)
-  pensionAmount: number;
-  pensionStartAge: number;
-  partnerPensionAmount: number;
-  partnerPensionStartAge: number;
   lifeEvents?: LifeEvent[];
   housePurchasePlan?: HousePurchasePlan;
 }
