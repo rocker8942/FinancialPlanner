@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "retirement-planner": {
+      "type": "stdio",
+      "command": "npm",
+      "args": [
+        "run",
+        "mcp-server",
+        "--prefix",
+        "G:/SourceCode/FinancialPlanner/MCP"
+      ],
+      "env": {}
+    }
+  }
+}
