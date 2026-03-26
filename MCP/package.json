@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "mcp-server": "tsx src/index.ts",
-    "build": "tsc",
+    "build": "tsc --build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
+    "shared-calculations": "*",
     "zod": "^3.25.0"
   },
   "devDependencies": {

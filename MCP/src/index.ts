@@ -3,7 +3,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import { calculateRetirementPlan } from './tools/calculateRetirementPlan.js';
 import { optimizeExpense, findOptimalExpense } from './tools/optimizeExpense.js';
-import type { FinancialProfile } from './types.js';
+import type { FinancialProfile } from 'shared-calculations';
 
 const server = new McpServer({
   name: 'retirement-planner',

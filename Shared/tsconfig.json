@@ -16,9 +16,6 @@
     "sourceMap": true,
     "composite": true
   },
-  "references": [
-    { "path": "../Shared" }
-  ],
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,0 +1,5 @@
+{
+  "name": "financial-planner",
+  "private": true,
+  "workspaces": ["Frontend", "MCP", "Shared"]
+}

@@ -1,6 +1,5 @@
-import type { FinancialProfile, OptimizationResult } from '../types.js';
-import { optimizeExpenseToZeroNetWorth } from '../calculations/expenseOptimizer.js';
-import { calculateExpenseToZeroNetWorthModular } from '../calculations/expenseToZeroNetWorthOrchestrator.js';
+import type { FinancialProfile, OptimizationResult } from 'shared-calculations';
+import { optimizeExpenseToZeroNetWorth, calculateExpenseToZeroNetWorthModular } from 'shared-calculations';
 
 /**
  * Find optimal annual expense that depletes wealth to zero at death age

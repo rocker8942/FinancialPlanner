@@ -1,5 +1,5 @@
-import type { FinancialProfile, FinancialPlanResult } from '../types.js';
-import { calculateFinancialPlanModular } from '../calculations/financialPlanOrchestrator.js';
+import type { FinancialProfile, FinancialPlanResult } from 'shared-calculations';
+import { calculateFinancialPlanModular } from 'shared-calculations';
 
 /**
  * Execute retirement plan calculation and return formatted result

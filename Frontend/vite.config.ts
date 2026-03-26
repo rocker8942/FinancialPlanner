@@ -1,10 +1,16 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
+import path from 'node:path'
 // import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vite.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      'shared-calculations': path.resolve(__dirname, '../Shared/src/index.ts')
+    }
+  },
   plugins: [
     tailwindcss(),
     vue(),
