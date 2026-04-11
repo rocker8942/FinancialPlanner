@@ -20,10 +20,10 @@ const lifeEventSchema = z.object({
 });
 
 const housePurchasePlanSchema = z.object({
-  enabled: z.boolean(),
-  purchaseAge: z.number(),
-  purchasePrice: z.number(),
-  downPaymentPercent: z.number()
+  enabled: z.boolean().default(false),
+  purchaseAge: z.number().optional(),
+  purchasePrice: z.number().optional(),
+  downPaymentPercent: z.number().optional()
 });
 
 const financialProfileSchema = z.object({
