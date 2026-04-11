@@ -132,6 +132,26 @@ URL parameters make it easy to share specific financial planning scenarios:
 
 ---
 
+## MCP Server (Claude / AI Integration)
+
+The `retirement-planner-mcp` package exposes the financial planning calculations as an [MCP](https://modelcontextprotocol.io) server so Claude Desktop, Cursor, or any MCP-compatible AI client can run retirement projections directly.
+
+**Install in Claude Desktop** — add to `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "retirement-planner": {
+      "command": "npx",
+      "args": ["-y", "retirement-planner-mcp"]
+    }
+  }
+}
+```
+
+See [`MCP/README.md`](MCP/README.md) for full setup instructions, tool reference, and input schema.
+
+---
+
 ## Code Quality
 - ESLint and Prettier for frontend
 - Swagger for backend API documentation

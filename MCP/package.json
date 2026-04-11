@@ -1,11 +1,20 @@
 {
   "name": "retirement-planner-mcp",
   "version": "1.0.0",
-  "description": "MCP server exposing retirement planner calculations",
+  "description": "MCP server for retirement financial planning calculations",
   "type": "module",
+  "main": "dist/bundle.cjs",
+  "bin": {
+    "retirement-planner-mcp": "dist/bundle.cjs"
+  },
+  "files": [
+    "dist/bundle.cjs",
+    "README.md"
+  ],
   "scripts": {
     "mcp-server": "tsx src/index.ts",
     "build": "tsc --build",
+    "bundle": "esbuild src/index.ts --bundle --platform=node --target=node18 --outfile=dist/bundle.cjs --format=cjs --banner:js=\"#!/usr/bin/env node\"",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -15,7 +24,16 @@
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
+    "esbuild": "^0.27.4",
     "tsx": "^4.19.4",
     "typescript": "^5.7.3"
-  }
+  },
+  "keywords": [
+    "mcp",
+    "retirement",
+    "financial-planning",
+    "claude",
+    "model-context-protocol"
+  ],
+  "license": "MIT"
 }
