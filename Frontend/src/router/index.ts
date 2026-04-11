@@ -10,6 +10,7 @@ const ProfileView = () => import('../views/ProfileView.vue');
 const PlansView = () => import('../views/PlansView.vue');
 const ProgressView = () => import('../views/ProgressView.vue');
 const SettingsView = () => import('../views/SettingsView.vue');
+const McpView = () => import('../views/McpView.vue');
 
 const routes: RouteRecordRaw[] = [
   { path: '/', name: 'Cover', component: CoverView },
@@ -19,7 +20,8 @@ const routes: RouteRecordRaw[] = [
   { path: '/profile', name: 'Profile', component: ProfileView },
   { path: '/plans', name: 'Plans', component: PlansView },
   { path: '/progress', name: 'Progress', component: ProgressView },
-  { path: '/settings', name: 'Settings', component: SettingsView }
+  { path: '/settings', name: 'Settings', component: SettingsView },
+  { path: '/mcp', name: 'MCP', component: McpView }
 ];
 
 const router = createRouter({

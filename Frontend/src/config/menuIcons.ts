@@ -49,6 +49,10 @@ export const menuIcons: Record<string, MenuIcon> = {
     name: 'help_outline',
     color: 'text-cyan-400'
   },
+  mcp: {
+    name: 'hub',
+    color: 'text-cyan-400'
+  },
   logout: {
     name: 'logout',
     color: 'text-red-400'
@@ -79,6 +83,12 @@ export const menuItems: MenuItem[] = [
     label: 'Profile',
     icon: menuIcons.profile,
     tooltip: 'User profile'
+  },
+  {
+    path: '/mcp',
+    label: 'MCP',
+    icon: menuIcons.mcp,
+    tooltip: 'AI Integration with MCP'
   },
   {
     path: '/settings',

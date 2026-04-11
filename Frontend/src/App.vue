@@ -32,6 +32,10 @@
             <span class="material-icons text-lg text-blue-400">trending_up</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Retirement Planner</span>
           </router-link>
+          <router-link to="/mcp" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'MCP' : ''">
+            <span class="material-icons text-lg text-cyan-400">hub</span>
+            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">MCP</span>
+          </router-link>
         </nav>
       </div>
 
@@ -98,6 +102,10 @@
             <router-link to="/retirementplanner" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-blue-400">trending_up</span>
               <span>Retirement Planner</span>
+            </router-link>
+            <router-link to="/mcp" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
+              <span class="material-icons text-lg text-cyan-400">hub</span>
+              <span>MCP</span>
             </router-link>
           </nav>
         </div>
