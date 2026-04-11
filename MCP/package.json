@@ -1,6 +1,6 @@
 {
   "name": "retirement-planner-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for retirement financial planning calculations",
   "type": "module",
   "main": "dist/bundle.cjs",
@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
-    "shared-calculations": "*",
     "zod": "^3.25.0"
   },
   "devDependencies": {

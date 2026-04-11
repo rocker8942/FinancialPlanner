@@ -113,6 +113,31 @@ Once connected, ask Claude:
 
 ---
 
+## Publishing
+
+### Initial publish
+
+```bash
+cd MCP
+npm login       # if not already logged in
+npm publish --access public
+```
+
+### Updating the package
+
+When calculations or tools change:
+
+```bash
+cd MCP
+# 1. Bump the version in package.json (semver: patch / minor / major)
+npm run bundle
+npm publish --access public
+```
+
+Users install via `npx` — no action required on their end after a publish.
+
+---
+
 ## License
 
 MIT
