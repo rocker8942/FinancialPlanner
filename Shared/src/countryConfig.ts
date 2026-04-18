@@ -25,8 +25,12 @@ export interface ICountryPensionInput {
   mortgageBalance: number;
   userSalary: number;
   partnerSalary: number;
+  userPreRetirementSalary?: number;
+  partnerPreRetirementSalary?: number;
   userAge: number;
   partnerAge: number;
+  userBirthYear?: number;
+  partnerBirthYear?: number;
   cpiAdjustmentFactor?: number;
   partnerSuperBalance?: number;
 }
@@ -49,6 +53,10 @@ export interface ICountryDefaults {
   defaultSuperannuationRate: number;
   defaultCpiGrowthRate: number;
   defaultPropertyRentalYield: number;
+  // Employer-paid retirement contribution added to personal DC account (e.g. KR 퇴직급여 8.33%).
+  // Unlike superContributionRate this is NOT deducted from employee salary.
+  // Omit or set to 0 for locales where employer contributions are already captured in superContributionRate.
+  employerRetirementContributionRate?: number;
 }
 
 // Country config bundles tax, pension, and defaults for a single locale

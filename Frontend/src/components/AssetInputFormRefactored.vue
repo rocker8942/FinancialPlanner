@@ -130,6 +130,7 @@ import LifeEventsForm from './forms/LifeEventsForm.vue';
 import HousePurchaseForm from './forms/HousePurchaseForm.vue';
 import { formStorageService, type StoredFinancialData } from '../services/formStorageService';
 import { calculateDisposableIncome, calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
+import { auCountryConfig, krCountryConfig } from '../utils/calculations/financialPlanOrchestrator';
 import { formatCurrency } from '../utils/formatters';
 import { useLocaleStore } from '../store/locale';
 import type { FinancialProfile } from '../utils/financialPlan';
@@ -145,6 +146,7 @@ const emit = defineEmits<{
   'update': [profile: FinancialProfile];
 }>();
 const localeStore = useLocaleStore();
+const countryConfig = computed(() => localeStore.locale === 'kr' ? krCountryConfig : auCountryConfig);
 const fmt = (value: number) => formatCurrency(value, localeStore.locale);
 
 // Section visibility state
@@ -252,7 +254,7 @@ const currentDisposableIncome = computed(() => {
 
 const calculatedOptimalExpense = computed(() => {
   if (!incomeExpenses.value.zeroNetWorthAtDeath) return 0;
-  const result = calculateExpenseToZeroNetWorth(currentFinancialProfile.value);
+  const result = calculateExpenseToZeroNetWorth(currentFinancialProfile.value, undefined, undefined, countryConfig.value);
   return result.optimalExpense;
 });
 

@@ -61,7 +61,7 @@ function onProfileUpdate(profile: FinancialProfile) {
   if (profile) {
       const plan = calculateFinancialPlanModular(profile, countryConfig.value);
       projection.value = plan.projection;
-      optimalExpense.value = optimizeExpenseToZeroNetWorth(profile).optimalExpense;
+      optimalExpense.value = optimizeExpenseToZeroNetWorth(profile, undefined, undefined, countryConfig.value).optimalExpense;
   } else {
     projection.value = [];
     optimalExpense.value = 0;

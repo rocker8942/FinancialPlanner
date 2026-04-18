@@ -115,6 +115,7 @@ function calculateLifetimePensionIncome(
     // CPI adjustment factor for both asset test thresholds and pension amounts
     const cpiAdjustmentFactor = Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
 
+    const currentYear = new Date().getFullYear();
     const pensionAmounts = countryConfig.pension.getPensionAmounts({
       relationshipStatus: profile.relationshipStatus,
       isHomeowner: profile.isHomeowner,
@@ -124,8 +125,12 @@ function calculateLifetimePensionIncome(
       mortgageBalance: avgMortgage,
       userSalary: currentUserSalary,
       partnerSalary: currentPartnerSalary,
+      userPreRetirementSalary: profile.salary,
+      partnerPreRetirementSalary: profile.partnerSalary,
       userAge: age,
       partnerAge: currentPartnerAge,
+      userBirthYear: currentYear - profile.currentAge,
+      partnerBirthYear: currentYear - profile.partnerAge,
       cpiAdjustmentFactor
     });
 

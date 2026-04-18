@@ -47,10 +47,17 @@ export function calculateIncomeComponents(
     countryConfig
   );
 
-  // Update super balances with contributions (but not in first year to preserve starting point)
+  // Update super balances with contributions (but not in first year to preserve starting point).
+  // netSuperContributions: salary-deductible contributions (AU super; KR returns 0 since NPS is
+  // a defined benefit scheme and does not accumulate in a personal account).
+  // employerRetirementContributionRate: employer-paid DC contributions not deducted from salary
+  // (e.g. KR 퇴직급여 ~8.33% of salary credited to the employee's IRP/DC account).
   if (!isFirstYear) {
-    updatedSuperBalance += userEmploymentIncome.netSuperContributions;
-    updatedPartnerSuperBalance += partnerEmploymentIncome.netSuperContributions;
+    const employerIrpRate = countryConfig.defaults.employerRetirementContributionRate ?? 0;
+    updatedSuperBalance += userEmploymentIncome.netSuperContributions
+      + (currentUserSalary > 0 ? currentUserSalary * employerIrpRate : 0);
+    updatedPartnerSuperBalance += partnerEmploymentIncome.netSuperContributions
+      + (currentPartnerSalary > 0 ? currentPartnerSalary * employerIrpRate : 0);
   }
 
   // Calculate pension income
@@ -185,6 +192,11 @@ function calculatePensionIncome(
   // CPI adjustment factor for both asset test thresholds and pension amounts
   const cpiAdjustmentFactor = Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
 
+  // Pass base salaries (today's dollars); cpiAdjustmentFactor applied to pension output below.
+  const userPreRetirementSalary = profile.salary;
+  const partnerPreRetirementSalary = profile.partnerSalary;
+
+  const currentYear = new Date().getFullYear();
   const pensionAmounts = countryConfig.pension.getPensionAmounts({
     relationshipStatus: profile.relationshipStatus,
     isHomeowner: profile.isHomeowner,
@@ -194,8 +206,12 @@ function calculatePensionIncome(
     mortgageBalance: assetState.mortgageBalance,
     userSalary: currentUserSalary,
     partnerSalary: currentPartnerSalary,
+    userPreRetirementSalary,
+    partnerPreRetirementSalary,
     userAge: age,
     partnerAge: currentPartnerAge,
+    userBirthYear: currentYear - profile.currentAge,
+    partnerBirthYear: currentYear - profile.partnerAge,
     cpiAdjustmentFactor,
     partnerSuperBalance: assetState.partnerSuperBalance
   });

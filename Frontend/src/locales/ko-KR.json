@@ -57,7 +57,7 @@
     "footer_opensource": "오픈 소스 — GitHub에서 소스 코드 보기"
   },
   "form": {
-    "privacy_notice": "입력한 데이터는 개인정보 보호를 위해 기기에 암호화되어 저장됩니다.",
+    "privacy_notice": "입력한 데이터는 개인정보 보호를 위해 브라우저에만 암호화되어 저장됩니다.",
     "sections": {
       "personal": "개인 프로필",
       "assets": "자산",
@@ -102,7 +102,7 @@
       "wealth_formula": "순자산 = 자산 - 담보대출 + 연금 + 저축"
     },
     "income": {
-      "salary_label": "연간 급여 (연금/세금 포함)",
+      "salary_label": "연간 급여 총액 (세금 포함)",
       "partner_salary_label": "배우자 연간 급여",
       "expenses_label": "연간 지출",
       "disposable_income": "현재 가처분 소득:",
@@ -151,7 +151,7 @@
     "retirement_at_age": "{age}세 기준",
     "optimal_expense": "최적 지출",
     "optimal_subtitle": "종료 시 0에 도달하는 연간 금액",
-    "pension": "노령연금",
+    "pension": "연금",
     "pension_from_age": "{age}세부터 연간"
   },
   "chart": {

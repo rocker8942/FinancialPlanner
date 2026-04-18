@@ -5,7 +5,8 @@ export const KR_RETIREMENT_DEFAULTS = {
   currencyCode: 'KRW',
   currencySymbol: '₩',
   pensionEligibilityAge: 63, // National Pension; rises to 65 by 2033
-  superContributionRate: 0.09, // National Pension 9% (employer 4.5% + employee 4.5%)
+  superContributionRate: 0.045, // employee NPS contribution — deducted pre-tax but NOT personal accumulation
+  employerRetirementContributionRate: 1 / 12, // 퇴직급여: employer pays 1 month salary/year (~8.33%) into personal DC/IRP account
   superPreservationAge: 55, // IRP withdrawals typically allowed from 55
   defaultPropertyGrowthRate: 0.025,
   defaultSavingsGrowthRate: 0.03,

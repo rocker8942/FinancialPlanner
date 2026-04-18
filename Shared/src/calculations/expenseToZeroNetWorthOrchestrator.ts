@@ -1,4 +1,6 @@
 import type { FinancialProfile } from '../types.js';
+import type { ICountryConfig } from '../countryConfig.js';
+import { auCountryConfig } from '../countries/au/index.js';
 import { optimizeExpenseToZeroNetWorth } from './expenseOptimizer.js';
 import { calculateTotalAvailableResources, hasMeaningfulIncomeStreams } from './lifetimeIncomeCalculator.js';
 
@@ -6,14 +8,17 @@ import { calculateTotalAvailableResources, hasMeaningfulIncomeStreams } from './
  * Calculate optimal annual expense to reach zero net worth at death
  * This is the new orchestrator version of calculateExpenseToZeroNetWorth
  */
-export function calculateExpenseToZeroNetWorthModular(profileInput: FinancialProfile): number {
+export function calculateExpenseToZeroNetWorthModular(
+  profileInput: FinancialProfile,
+  countryConfig: ICountryConfig = auCountryConfig
+): number {
   const years = profileInput.deathAge - profileInput.currentAge;
 
   // Handle edge cases
   if (years < 1) return profileInput.expenses;
 
   // Get total available resources
-  const totalAvailableResources = calculateTotalAvailableResources(profileInput);
+  const totalAvailableResources = calculateTotalAvailableResources(profileInput, countryConfig);
 
   // Handle case with no meaningful resources
   if (totalAvailableResources <= 0) {
@@ -21,7 +26,7 @@ export function calculateExpenseToZeroNetWorthModular(profileInput: FinancialPro
   }
 
   // Special case: if no meaningful income streams or assets
-  if (!hasMeaningfulIncomeStreams(profileInput)) {
+  if (!hasMeaningfulIncomeStreams(profileInput, countryConfig)) {
     // Even if there's some pension income, without other assets or income streams,
     // practical spendable amount might be minimal
     const roughPensionEstimate = estimateRoughPensionIncome(profileInput);
@@ -36,7 +41,7 @@ export function calculateExpenseToZeroNetWorthModular(profileInput: FinancialPro
   }
 
   // Use the sophisticated optimization algorithm
-  const optimizationResult = optimizeExpenseToZeroNetWorth(profileInput);
+  const optimizationResult = optimizeExpenseToZeroNetWorth(profileInput, undefined, undefined, countryConfig);
 
   // Return the optimized expense amount
   return optimizationResult.optimalExpense;
