@@ -1,4 +1,6 @@
 import type { FinancialProfile, YearlyWealth, FinancialPlanResult, LifeEvent, AssetState } from '../types.js';
+import type { ICountryConfig } from '../countryConfig.js';
+import { auCountryConfig } from '../countries/au/index.js';
 import { applyAssetGrowth, calculateTotalNetWealth, calculateNetFinancialAssets, calculateInflationAdjustedValues } from './assetGrowthCalculator.js';
 import { calculateIncomeComponents } from './incomeCalculator.js';
 import { processExpensesAndCashFlow, calculateCpiAdjustedExpenses } from './expenseProcessor.js';
@@ -7,7 +9,10 @@ import { processExpensesAndCashFlow, calculateCpiAdjustedExpenses } from './expe
  * Calculate complete financial plan using modular calculators
  * This is the new orchestrator version of calculateFinancialPlan
  */
-export function calculateFinancialPlanModular(profile: FinancialProfile): FinancialPlanResult {
+export function calculateFinancialPlanModular(
+  profile: FinancialProfile,
+  countryConfig: ICountryConfig = auCountryConfig
+): FinancialPlanResult {
   const projection: YearlyWealth[] = [];
 
   // Initialize asset state
@@ -76,7 +81,8 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
       effectiveProfile,
       age,
       assetStateForIncome,
-      isFirstYear
+      isFirstYear,
+      countryConfig
     );
 
     // Update superannuation balances with contributions
@@ -90,7 +96,8 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
       assetState,
       incomeResult.incomeComponents.spendableIncome,
       cpiAdjustedExpenses,
-      isFirstYear
+      isFirstYear,
+      countryConfig
     );
 
     // Update asset state with cash flow changes
@@ -100,7 +107,8 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
     const { updatedAssets: assetsAfterEvents, lifeEventImpact } = applyLifeEvents(
       assetState,
       age,
-      profile.lifeEvents || []
+      profile.lifeEvents || [],
+      countryConfig.defaults.superPreservationAge
     );
     assetState = assetsAfterEvents;
 
@@ -176,7 +184,8 @@ export function calculateFinancialPlanModular(profile: FinancialProfile): Financ
 function applyLifeEvents(
   assetState: AssetState,
   age: number,
-  lifeEvents: LifeEvent[]
+  lifeEvents: LifeEvent[],
+  superAccessAge: number = 60
 ): { updatedAssets: AssetState; lifeEventImpact: number } {
   const eventsThisYear = lifeEvents.filter(e => e.age === age);
   if (eventsThisYear.length === 0) {
@@ -196,8 +205,8 @@ function applyLifeEvents(
       let remaining = event.amount - fromSavings;
       updatedAssets.savings -= fromSavings;
 
-      // Then from super if accessible (age 60+)
-      if (remaining > 0 && age >= 60 && updatedAssets.superannuationBalance > 0) {
+      // Then from super if accessible (preservation age varies by locale)
+      if (remaining > 0 && age >= superAccessAge && updatedAssets.superannuationBalance > 0) {
         const fromSuper = Math.min(remaining, updatedAssets.superannuationBalance);
         updatedAssets.superannuationBalance -= fromSuper;
         remaining -= fromSuper;

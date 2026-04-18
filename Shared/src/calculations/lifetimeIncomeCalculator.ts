@@ -1,10 +1,14 @@
 import type { FinancialProfile, LifetimeIncomeComponents } from '../types.js';
-import { getAgePensionAmounts } from '../services/agePensionService.js';
+import type { ICountryConfig } from '../countryConfig.js';
+import { auCountryConfig } from '../countries/au/index.js';
 
 /**
  * Calculate total lifetime income for expense optimization
  */
-export function calculateLifetimeIncome(profile: FinancialProfile): LifetimeIncomeComponents {
+export function calculateLifetimeIncome(
+  profile: FinancialProfile,
+  countryConfig: ICountryConfig = auCountryConfig
+): LifetimeIncomeComponents {
   const years = profile.deathAge - profile.currentAge;
 
   if (years <= 0) {
@@ -25,7 +29,7 @@ export function calculateLifetimeIncome(profile: FinancialProfile): LifetimeInco
   const rentalIncome = calculateLifetimeRentalIncome(profile, years);
 
   // Calculate pension income over lifetime
-  const pensionIncome = calculateLifetimePensionIncome(profile);
+  const pensionIncome = calculateLifetimePensionIncome(profile, countryConfig);
 
   const totalLifetimeIncome = salaryIncome + partnerSalaryIncome + pensionIncome + rentalIncome;
 
@@ -84,7 +88,10 @@ function calculateLifetimeRentalIncome(profile: FinancialProfile, years: number)
 /**
  * Calculate lifetime pension income (approximation for optimization)
  */
-function calculateLifetimePensionIncome(profile: FinancialProfile): number {
+function calculateLifetimePensionIncome(
+  profile: FinancialProfile,
+  countryConfig: ICountryConfig
+): number {
   let totalPensionIncome = 0;
 
   // Calculate approximate pension income over the lifetime
@@ -108,7 +115,7 @@ function calculateLifetimePensionIncome(profile: FinancialProfile): number {
     // CPI adjustment factor for both asset test thresholds and pension amounts
     const cpiAdjustmentFactor = Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
 
-    const pensionAmounts = getAgePensionAmounts({
+    const pensionAmounts = countryConfig.pension.getPensionAmounts({
       relationshipStatus: profile.relationshipStatus,
       isHomeowner: profile.isHomeowner,
       propertyAssets: profile.propertyAssets,
@@ -135,9 +142,12 @@ function calculateLifetimePensionIncome(profile: FinancialProfile): number {
 /**
  * Calculate total available resources (assets + lifetime income)
  */
-export function calculateTotalAvailableResources(profile: FinancialProfile): number {
+export function calculateTotalAvailableResources(
+  profile: FinancialProfile,
+  countryConfig: ICountryConfig = auCountryConfig
+): number {
   const currentAssets = profile.savings - profile.mortgageBalance + profile.superannuationBalance;
-  const lifetimeIncome = calculateLifetimeIncome(profile);
+  const lifetimeIncome = calculateLifetimeIncome(profile, countryConfig);
 
   return Math.max(0, currentAssets + lifetimeIncome.totalLifetimeIncome);
 }
@@ -145,19 +155,25 @@ export function calculateTotalAvailableResources(profile: FinancialProfile): num
 /**
  * Estimate average annual income over lifetime
  */
-export function calculateAverageAnnualIncome(profile: FinancialProfile): number {
+export function calculateAverageAnnualIncome(
+  profile: FinancialProfile,
+  countryConfig: ICountryConfig = auCountryConfig
+): number {
   const years = profile.deathAge - profile.currentAge;
   if (years <= 0) return 0;
 
-  const lifetimeIncome = calculateLifetimeIncome(profile);
+  const lifetimeIncome = calculateLifetimeIncome(profile, countryConfig);
   return lifetimeIncome.totalLifetimeIncome / years;
 }
 
 /**
  * Check if the profile has meaningful income streams
  */
-export function hasMeaningfulIncomeStreams(profile: FinancialProfile): boolean {
-  const lifetimeIncome = calculateLifetimeIncome(profile);
+export function hasMeaningfulIncomeStreams(
+  profile: FinancialProfile,
+  countryConfig: ICountryConfig = auCountryConfig
+): boolean {
+  const lifetimeIncome = calculateLifetimeIncome(profile, countryConfig);
   const currentAssets = profile.savings - profile.mortgageBalance + profile.superannuationBalance;
 
   // Consider it meaningful if:

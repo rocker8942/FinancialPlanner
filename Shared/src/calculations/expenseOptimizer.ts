@@ -1,4 +1,6 @@
 import type { FinancialProfile, OptimizationResult } from '../types.js';
+import type { ICountryConfig } from '../countryConfig.js';
+import { auCountryConfig } from '../countries/au/index.js';
 import { calculateFinancialPlanModular } from './financialPlanOrchestrator.js';
 import { calculateTotalAvailableResources, hasMeaningfulIncomeStreams, calculateAverageAnnualIncome } from './lifetimeIncomeCalculator.js';
 
@@ -8,7 +10,8 @@ import { calculateTotalAvailableResources, hasMeaningfulIncomeStreams, calculate
 export function optimizeExpenseToZeroNetWorth(
   profile: FinancialProfile,
   maxIterations: number = 50,
-  tolerance: number = 0.01
+  tolerance: number = 0.01,
+  countryConfig: ICountryConfig = auCountryConfig
 ): OptimizationResult {
   const years = profile.deathAge - profile.currentAge;
 
@@ -23,7 +26,7 @@ export function optimizeExpenseToZeroNetWorth(
   }
 
   // Calculate bounds for binary search
-  const searchBounds = calculateOptimizationBounds(profile);
+  const searchBounds = calculateOptimizationBounds(profile, countryConfig);
 
   if (searchBounds.low >= searchBounds.high) {
     return {
@@ -40,16 +43,20 @@ export function optimizeExpenseToZeroNetWorth(
     searchBounds.low,
     searchBounds.high,
     maxIterations,
-    tolerance
+    tolerance,
+    countryConfig
   );
 }
 
 /**
  * Calculate appropriate bounds for binary search optimization
  */
-function calculateOptimizationBounds(profile: FinancialProfile): { low: number; high: number } {
+function calculateOptimizationBounds(
+  profile: FinancialProfile,
+  countryConfig: ICountryConfig
+): { low: number; high: number } {
   const years = profile.deathAge - profile.currentAge;
-  const totalAvailableResources = calculateTotalAvailableResources(profile);
+  const totalAvailableResources = calculateTotalAvailableResources(profile, countryConfig);
 
   // Handle case with very limited resources
   if (totalAvailableResources <= 0) {
@@ -63,14 +70,14 @@ function calculateOptimizationBounds(profile: FinancialProfile): { low: number; 
   }
 
   // Check for meaningful income streams
-  if (!hasMeaningfulIncomeStreams(profile)) {
+  if (!hasMeaningfulIncomeStreams(profile, countryConfig)) {
     // Very conservative bounds for limited income scenarios
     const conservativeHigh = Math.min(totalAvailableResources / years * 0.8, 15000);
     return { low: 0, high: conservativeHigh };
   }
 
   // Calculate reasonable bounds based on available resources and income
-  const averageAnnualIncome = calculateAverageAnnualIncome(profile);
+  const averageAnnualIncome = calculateAverageAnnualIncome(profile, countryConfig);
 
   // Calculate a reasonable upper bound that prevents unrealistic scenarios
   // For someone with a mortgage, they can't sustainably spend more than their gross income
@@ -99,7 +106,8 @@ function performBinarySearchOptimization(
   initialLow: number,
   initialHigh: number,
   maxIterations: number,
-  tolerance: number
+  tolerance: number,
+  countryConfig: ICountryConfig
 ): OptimizationResult {
   let low = initialLow;
   let high = initialHigh;
@@ -113,7 +121,7 @@ function performBinarySearchOptimization(
 
     // Test this expense level
     const testProfile = { ...profile, expenses: mid };
-    const plan = calculateFinancialPlanModular(testProfile);
+    const plan = calculateFinancialPlanModular(testProfile, countryConfig);
 
     const finalNetWorth = plan.finalNetSavings;
 
@@ -170,11 +178,11 @@ function performBinarySearchOptimization(
   // If we couldn't find a sustainable solution, use the best compromise
   if (optimalExpense === 0) {
     optimalExpense = initialHigh * 0.8;
-    optimalFinalWealth = calculateFinancialPlanModular({ ...profile, expenses: optimalExpense }).finalNetSavings;
+    optimalFinalWealth = calculateFinancialPlanModular({ ...profile, expenses: optimalExpense }, countryConfig).finalNetSavings;
   }
 
   // Fallback validation and final safety check
-  const result = validateOptimizationResult(profile, optimalExpense, optimalFinalWealth);
+  const result = validateOptimizationResult(profile, optimalExpense, optimalFinalWealth, countryConfig);
 
   return {
     optimalExpense: result.expense,
@@ -190,14 +198,15 @@ function performBinarySearchOptimization(
 function validateOptimizationResult(
   profile: FinancialProfile,
   bestExpense: number,
-  bestFinalWealth: number
+  bestFinalWealth: number,
+  countryConfig: ICountryConfig = auCountryConfig
 ): { expense: number; finalWealth: number } {
-  const totalAvailableResources = calculateTotalAvailableResources(profile);
+  const totalAvailableResources = calculateTotalAvailableResources(profile, countryConfig);
   const years = profile.deathAge - profile.currentAge;
 
   // If binary search resulted in 0 but we have income, use simple calculation
-  if (bestExpense <= 0 && hasMeaningfulIncomeStreams(profile)) {
-    const averageIncome = calculateAverageAnnualIncome(profile);
+  if (bestExpense <= 0 && hasMeaningfulIncomeStreams(profile, countryConfig)) {
+    const averageIncome = calculateAverageAnnualIncome(profile, countryConfig);
     // Use a conservative approach: spend average annual income but preserve some buffer
     const fallbackExpense = Math.min(averageIncome * 0.8, totalAvailableResources / years * 0.9);
 

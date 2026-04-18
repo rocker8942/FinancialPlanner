@@ -58,6 +58,7 @@
     />
 
     <FormInputWithButtons
+      v-if="locale !== 'kr'"
       field-id="superannuationBalance"
       label="Your Superannuation Balance"
       :value="superannuationBalance"
@@ -77,7 +78,7 @@
     />
 
     <FormInputWithButtons
-      v-if="relationshipStatus === 'couple'"
+      v-if="relationshipStatus === 'couple' && locale !== 'kr'"
       field-id="partnerSuperBalance"
       label="Partner's Superannuation Balance"
       :value="partnerSuperBalance"
@@ -123,6 +124,10 @@ import FormInputWithButtons from './FormInputWithButtons.vue';
 import { useFormValidation } from '../../composables/useFormValidation';
 import { useFieldFormatting } from '../../composables/useFieldFormatting';
 import { formatCurrency } from '../../utils/formatters';
+import { useLocaleStore } from '../../store/locale';
+
+const localeStore = useLocaleStore();
+const locale = computed(() => localeStore.locale);
 
 interface AssetsData {
   propertyAssets: number;

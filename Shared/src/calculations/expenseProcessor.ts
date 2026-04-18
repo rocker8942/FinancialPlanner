@@ -1,4 +1,6 @@
 import type { FinancialProfile, AssetState, CashFlowResult } from '../types.js';
+import type { ICountryConfig } from '../countryConfig.js';
+import { auCountryConfig } from '../countries/au/index.js';
 
 /**
  * Process expenses and cash flow for a given year
@@ -9,8 +11,10 @@ export function processExpensesAndCashFlow(
   assetState: AssetState,
   spendableIncome: number,
   cpiAdjustedExpenses: number,
-  isFirstYear: boolean = false
+  isFirstYear: boolean = false,
+  countryConfig: ICountryConfig = auCountryConfig
 ): CashFlowResult {
+  const superAccessAge = countryConfig.defaults.superPreservationAge;
   // For the first year, we still process income and expenses, but we only apply
   // the net change to avoid double-counting initial assets
   const updatedAssets = { ...assetState };
@@ -74,7 +78,8 @@ export function processExpensesAndCashFlow(
       updatedAssets,
       expenseShortfall,
       age,
-      partnerCurrentAge
+      partnerCurrentAge,
+      superAccessAge
     );
 
     updatedAssets.savings = assetDrawdown.updatedAssets.savings;

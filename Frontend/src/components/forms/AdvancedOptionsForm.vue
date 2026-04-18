@@ -95,6 +95,7 @@
     />
 
     <FormInputWithButtons
+      v-if="locale !== 'kr'"
       field-id="superannuationRate"
       label="Superannuation Return Rate"
       :value="superannuationRate"
@@ -151,6 +152,10 @@ import { computed } from 'vue';
 import FormInputWithButtons from './FormInputWithButtons.vue';
 import { useFormValidation } from '../../composables/useFormValidation';
 import { useFieldFormatting } from '../../composables/useFieldFormatting';
+import { useLocaleStore } from '../../store/locale';
+
+const localeStore = useLocaleStore();
+const locale = computed(() => localeStore.locale);
 
 interface AdvancedOptionsData {
   deathAge: number;
