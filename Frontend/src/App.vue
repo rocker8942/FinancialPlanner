@@ -23,18 +23,18 @@
         </div>
         <!-- Navigation -->
         <nav class="flex flex-col gap-1 mt-4 px-2">
-          <span v-show="!sidebarCollapsed" :class="['uppercase text-xs px-4 mb-2 transition-opacity duration-300', isDark ? 'text-gray-500' : 'text-slate-400']">Main</span>
-          <router-link to="/" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Home' : ''">
+           <span v-show="!sidebarCollapsed" :class="['uppercase text-xs px-4 mb-2 transition-opacity duration-300', isDark ? 'text-gray-500' : 'text-slate-400']">{{ $t('nav.main') }}</span>
+          <router-link to="/" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? $t('nav.home') : ''">
             <span class="material-icons text-lg text-green-400">home</span>
-            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Home</span>
+            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">{{ $t('nav.home') }}</span>
           </router-link>
-          <router-link to="/retirementplanner" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'Retirement Planner' : ''">
+          <router-link to="/retirementplanner" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? $t('nav.planner') : ''">
             <span class="material-icons text-lg text-blue-400">trending_up</span>
-            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">Retirement Planner</span>
+            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">{{ $t('nav.planner') }}</span>
           </router-link>
-          <router-link to="/mcp" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? 'MCP' : ''">
+          <router-link to="/mcp" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? $t('nav.mcp') : ''">
             <span class="material-icons text-lg text-cyan-400">hub</span>
-            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">MCP</span>
+            <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">{{ $t('nav.mcp') }}</span>
           </router-link>
         </nav>
       </div>
@@ -69,9 +69,9 @@
       <footer :class="['border-t py-4 px-4 md:px-8 max-w-full overflow-hidden', isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-slate-200']">
         <div class="flex justify-center">
           <p :class="['text-sm text-center', isDark ? 'text-gray-400' : 'text-slate-500']">
-            Have questions or feedback?
+            {{ $t('nav.feedback') }}
             <a href="https://github.com/rocker8942/FinancialPlanner/issues" class="text-teal-500 hover:text-teal-600 underline ml-1">
-              Submit an issue
+              {{ $t('nav.submit_issue') }}
             </a>
           </p>
         </div>
@@ -94,18 +94,18 @@
           </div>
           <!-- Mobile Navigation -->
           <nav class="flex flex-col gap-1 mt-4 px-2">
-            <span :class="['uppercase text-xs px-4 mb-2', isDark ? 'text-gray-500' : 'text-slate-400']">Main</span>
+            <span :class="['uppercase text-xs px-4 mb-2', isDark ? 'text-gray-500' : 'text-slate-400']">{{ $t('nav.main') }}</span>
             <router-link to="/" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-green-400">home</span>
-              <span>Home</span>
+              <span>{{ $t('nav.home') }}</span>
             </router-link>
             <router-link to="/retirementplanner" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-blue-400">trending_up</span>
-              <span>Retirement Planner</span>
+              <span>{{ $t('nav.planner') }}</span>
             </router-link>
             <router-link to="/mcp" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-cyan-400">hub</span>
-              <span>MCP</span>
+              <span>{{ $t('nav.mcp') }}</span>
             </router-link>
           </nav>
         </div>
@@ -116,10 +116,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useTheme } from './composables/useTheme';
 
 const { isDark, toggleTheme } = useTheme();
+const { locale } = useI18n();
+const route = useRoute();
+
+// Sync route locale param → i18n locale
+watch(() => route.params.locale, (newLocale) => {
+  locale.value = newLocale === 'kr' ? 'ko-KR' : 'en-AU';
+}, { immediate: true });
 
 const sidebarCollapsed = ref(true); // Start collapsed by default
 const mobileMenuOpen = ref(false);

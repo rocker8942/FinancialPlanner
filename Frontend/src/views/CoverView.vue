@@ -4,11 +4,11 @@
     <!-- Hero -->
     <header class="hero">
       <div class="hero-inner">
-        <p class="hero-eyebrow">Australian Retirement Planner</p>
-        <h1 class="hero-headline">See if you can retire<br>comfortably.</h1>
-        <p class="hero-sub">Enter your assets, income, and expenses. Get a year-by-year picture of your financial future — including Age Pension.</p>
+        <p class="hero-eyebrow">{{ $t('cover.eyebrow') }}</p>
+        <h1 class="hero-headline">{{ $t('cover.headline') }}</h1>
+        <p class="hero-sub">{{ $t('cover.sub') }}</p>
         <button @click="startPlanning" class="cta-btn" aria-label="Open the retirement simulator">
-          Try the Simulation
+          {{ $t('cover.cta') }}
           <span class="material-icons" aria-hidden="true">arrow_forward</span>
         </button>
       </div>
@@ -18,62 +18,62 @@
 
       <!-- Benefits -->
       <section class="section benefits-section" aria-labelledby="benefits-heading">
-        <h2 id="benefits-heading" class="section-label">What you get</h2>
+        <h2 id="benefits-heading" class="section-label">{{ $t('cover.benefits.heading') }}</h2>
         <div class="benefits-grid">
           <div class="benefit-tile">
             <div class="benefit-icon" aria-hidden="true">
               <span class="material-icons">show_chart</span>
             </div>
-            <h3>A clear retirement timeline</h3>
-            <p>Watch your wealth grow (and draw down) year by year, so you know exactly when you can stop working.</p>
+            <h3>{{ $t('cover.benefits.item1_title') }}</h3>
+            <p>{{ $t('cover.benefits.item1_desc') }}</p>
           </div>
           <div class="benefit-tile">
             <div class="benefit-icon" aria-hidden="true">
               <span class="material-icons">tune</span>
             </div>
-            <h3>An optimised spending plan</h3>
-            <p>The calculator finds the highest sustainable annual expense that keeps your money lasting until your target age.</p>
+            <h3>{{ $t('cover.benefits.item2_title') }}</h3>
+            <p>{{ $t('cover.benefits.item2_desc') }}</p>
           </div>
           <div class="benefit-tile">
             <div class="benefit-icon" aria-hidden="true">
               <span class="material-icons">account_balance</span>
             </div>
-            <h3>Automatic Age Pension</h3>
-            <p>Asset and income tests run every year of your projection, so your pension entitlement is always accurate.</p>
+            <h3>{{ $t('cover.benefits.item3_title') }}</h3>
+            <p>{{ $t('cover.benefits.item3_desc') }}</p>
           </div>
         </div>
       </section>
 
       <!-- How It Works -->
       <section class="section steps-section" id="how-it-works" aria-labelledby="steps-heading">
-        <h2 id="steps-heading" class="section-label">How it works</h2>
+        <h2 id="steps-heading" class="section-label">{{ $t('cover.steps.heading') }}</h2>
         <ol class="steps-list" role="list">
           <li class="step">
             <span class="step-num" aria-hidden="true">1</span>
             <div class="step-body">
-              <h3>Enter your details</h3>
-              <p>Your age, assets, income, and expenses — takes about two minutes.</p>
+              <h3>{{ $t('cover.steps.step1_title') }}</h3>
+              <p>{{ $t('cover.steps.step1_desc') }}</p>
             </div>
           </li>
           <li class="step">
             <span class="step-num" aria-hidden="true">2</span>
             <div class="step-body">
-              <h3>Run the projection</h3>
-              <p>Year-by-year calculations including super, tax, inflation, and Age Pension.</p>
+              <h3>{{ $t('cover.steps.step2_title') }}</h3>
+              <p>{{ $t('cover.steps.step2_desc') }}</p>
             </div>
           </li>
           <li class="step">
             <span class="step-num" aria-hidden="true">3</span>
             <div class="step-body">
-              <h3>Read the chart</h3>
-              <p>An interactive chart shows your net wealth trajectory at a glance.</p>
+              <h3>{{ $t('cover.steps.step3_title') }}</h3>
+              <p>{{ $t('cover.steps.step3_desc') }}</p>
             </div>
           </li>
           <li class="step">
             <span class="step-num" aria-hidden="true">4</span>
             <div class="step-body">
-              <h3>Tweak the assumptions</h3>
-              <p>Adjust growth rates, retirement age, or expenses and re-run instantly.</p>
+              <h3>{{ $t('cover.steps.step4_title') }}</h3>
+              <p>{{ $t('cover.steps.step4_desc') }}</p>
             </div>
           </li>
         </ol>
@@ -82,40 +82,40 @@
       <!-- Age Pension callout -->
       <div class="pension-callout" role="note">
         <span class="material-icons callout-icon" aria-hidden="true">verified</span>
-        <p>Includes automatic Age Pension calculations using current Australian Government asset and income test thresholds (Sept 2025 – Mar 2026).</p>
+        <p>{{ $t('cover.pension_callout') }}</p>
       </div>
 
       <!-- Privacy strip -->
       <div class="privacy-strip" role="note">
         <span class="material-icons" aria-hidden="true">lock</span>
-        <span>Your data never leaves your browser — nothing is stored on our servers.</span>
+        <span>{{ $t('cover.privacy_strip') }}</span>
       </div>
 
       <!-- FAQ -->
       <section class="section faq-section" id="faq" aria-labelledby="faq-heading">
-        <h2 id="faq-heading" class="section-label">Common questions</h2>
+        <h2 id="faq-heading" class="section-label">{{ $t('cover.faq.heading') }}</h2>
         <dl class="faq-list">
           <div class="faq-item">
-            <dt>Is my financial data private?</dt>
-            <dd>Yes. Everything is saved in your browser only. We never see or store your numbers.</dd>
+            <dt>{{ $t('cover.faq.q1') }}</dt>
+            <dd>{{ $t('cover.faq.a1') }}</dd>
           </div>
           <div class="faq-item">
-            <dt>Is this specific to Australia?</dt>
-            <dd>Yes — it uses Australian tax brackets, superannuation rules, and Age Pension thresholds. It is not suitable for other countries.</dd>
+            <dt>{{ $t('cover.faq.q2') }}</dt>
+            <dd>{{ $t('cover.faq.a2') }}</dd>
           </div>
           <div class="faq-item">
-            <dt>How accurate are the projections?</dt>
-            <dd>They reflect current rules and your chosen assumptions. Real markets are unpredictable — treat results as a planning guide, not a guarantee.</dd>
+            <dt>{{ $t('cover.faq.q3') }}</dt>
+            <dd>{{ $t('cover.faq.a3') }}</dd>
           </div>
         </dl>
       </section>
 
       <!-- Final CTA -->
       <section class="final-cta" aria-labelledby="final-cta-heading">
-        <h2 id="final-cta-heading">Ready to see your number?</h2>
-        <p>It's free, private, and takes two minutes.</p>
+        <h2 id="final-cta-heading">{{ $t('cover.final_cta.heading') }}</h2>
+        <p>{{ $t('cover.final_cta.sub') }}</p>
         <button @click="startPlanning" class="cta-btn large" aria-label="Open the retirement simulator">
-          Try the Simulation
+          {{ $t('cover.final_cta.button') }}
           <span class="material-icons" aria-hidden="true">arrow_forward</span>
         </button>
       </section>
@@ -128,9 +128,9 @@
         <svg class="github-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
         </svg>
-        <span>Open source — <a href="https://github.com/rocker8942/FinancialPlanner" target="_blank" rel="noopener noreferrer">view the source code on GitHub</a></span>
+        <span>{{ $t('cover.footer_opensource') }} — <a href="https://github.com/rocker8942/FinancialPlanner" target="_blank" rel="noopener noreferrer">view the source code on GitHub</a></span>
       </div>
-      <p>This tool provides estimates only and is not financial advice. Always consult a qualified financial adviser before making retirement decisions.</p>
+      <p>{{ $t('cover.footer_disclaimer') }}</p>
     </footer>
 
   </div>

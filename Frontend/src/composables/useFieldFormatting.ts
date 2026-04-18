@@ -54,7 +54,7 @@ export function useFieldFormatting(rules: FormattingRules = {}) {
   // Specialized parsing functions
   const parseCurrencyValue = (value: string, config: FormatterConfig): number => {
     // Remove currency symbols, commas, spaces
-    const cleaned = value.replace(/[,$\s]/g, '');
+    const cleaned = value.replace(/[,$₩\s]/g, '');
     let parsed = parseFloat(cleaned);
     
     if (isNaN(parsed)) return 0;

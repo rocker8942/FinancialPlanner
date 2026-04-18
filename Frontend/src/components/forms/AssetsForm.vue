@@ -2,15 +2,15 @@
   <div class="assets-form">
     <FormInputWithButtons
       field-id="propertyAssets"
-      label="Investment Property"
+      :label="$t('form.assets.property_label')"
       :value="propertyAssets"
       placeholder="Investment Property ($)"
-      help-text="Real estate, land, and other property investments"
+      :help-text="$t('form.assets.property_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('propertyAssets', propertyAssets)"
       :is-touched="validation.isFieldTouched('propertyAssets')"
       :error-message="validation.getFieldErrorMessage('propertyAssets')"
-      :format-value="formatting.formatField.bind(null, 'propertyAssets')"
+      :format-value="fmt"
       :parse-value="formatting.parseField.bind(null, 'propertyAssets')"
       @update:value="updateField('propertyAssets', $event)"
       @focus="handleFieldFocus"
@@ -21,15 +21,15 @@
 
     <FormInputWithButtons
       field-id="savings"
-      label="Current Savings"
+      :label="$t('form.assets.savings_label')"
       :value="savings"
       placeholder="Savings ($)"
-      help-text="Stocks, bonds, savings, and liquid investments"
+      :help-text="$t('form.assets.savings_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('savings', savings)"
       :is-touched="validation.isFieldTouched('savings')"
       :error-message="validation.getFieldErrorMessage('savings')"
-      :format-value="formatting.formatField.bind(null, 'savings')"
+      :format-value="fmt"
       :parse-value="formatting.parseField.bind(null, 'savings')"
       @update:value="updateField('savings', $event)"
       @focus="handleFieldFocus"
@@ -40,15 +40,15 @@
 
     <FormInputWithButtons
       field-id="mortgageBalance"
-      label="Mortgage Balance"
+      :label="$t('form.assets.mortgage_label')"
       :value="mortgageBalance"
       placeholder="Mortgage Balance ($)"
-      help-text="Outstanding mortgage debt on property"
+      :help-text="$t('form.assets.mortgage_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('mortgageBalance', mortgageBalance)"
       :is-touched="validation.isFieldTouched('mortgageBalance')"
       :error-message="validation.getFieldErrorMessage('mortgageBalance')"
-      :format-value="formatting.formatField.bind(null, 'mortgageBalance')"
+      :format-value="fmt"
       :parse-value="formatting.parseField.bind(null, 'mortgageBalance')"
       @update:value="updateField('mortgageBalance', $event)"
       @focus="handleFieldFocus"
@@ -60,15 +60,15 @@
     <FormInputWithButtons
       v-if="locale !== 'kr'"
       field-id="superannuationBalance"
-      label="Your Superannuation Balance"
+      :label="$t('form.assets.super_label')"
       :value="superannuationBalance"
       placeholder="Superannuation Balance ($)"
-      help-text="Current superannuation fund balance"
+      :help-text="$t('form.assets.super_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('superannuationBalance', superannuationBalance)"
       :is-touched="validation.isFieldTouched('superannuationBalance')"
       :error-message="validation.getFieldErrorMessage('superannuationBalance')"
-      :format-value="formatting.formatField.bind(null, 'superannuationBalance')"
+      :format-value="fmt"
       :parse-value="formatting.parseField.bind(null, 'superannuationBalance')"
       @update:value="updateField('superannuationBalance', $event)"
       @focus="handleFieldFocus"
@@ -80,15 +80,15 @@
     <FormInputWithButtons
       v-if="relationshipStatus === 'couple' && locale !== 'kr'"
       field-id="partnerSuperBalance"
-      label="Partner's Superannuation Balance"
+      :label="$t('form.assets.partner_super_label')"
       :value="partnerSuperBalance"
       placeholder="Partner Superannuation Balance ($)"
-      help-text="Partner's current superannuation fund balance"
+      :help-text="$t('form.assets.partner_super_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('partnerSuperBalance', partnerSuperBalance)"
       :is-touched="validation.isFieldTouched('partnerSuperBalance')"
       :error-message="validation.getFieldErrorMessage('partnerSuperBalance')"
-      :format-value="formatting.formatField.bind(null, 'partnerSuperBalance')"
+      :format-value="fmt"
       :parse-value="formatting.parseField.bind(null, 'partnerSuperBalance')"
       @update:value="updateField('partnerSuperBalance', $event)"
       @focus="handleFieldFocus"
@@ -100,20 +100,18 @@
     <!-- Net Wealth Summary -->
     <div class="wealth-summary">
       <div class="summary-row">
-        <span class="label">Net Property Wealth:</span>
+        <span class="label">{{ $t('form.assets.net_property') }}</span>
         <span class="value" :class="{ negative: netPropertyWealth < 0 }">
-          {{ formatCurrency(netPropertyWealth) }}
+          {{ fmt(netPropertyWealth) }}
         </span>
       </div>
       <div class="summary-row">
-        <span class="label">Total Net Wealth:</span>
+        <span class="label">{{ $t('form.assets.total_net') }}</span>
         <span class="value total" :class="{ negative: totalNetWealth < 0 }">
-          {{ formatCurrency(totalNetWealth) }}
+          {{ fmt(totalNetWealth) }}
         </span>
       </div>
-      <small class="help-text">
-        Net wealth = Assets - Mortgage + Superannuation + Savings
-      </small>
+      <small class="help-text">{{ $t('form.assets.wealth_formula') }}</small>
     </div>
   </div>
 </template>
@@ -128,6 +126,7 @@ import { useLocaleStore } from '../../store/locale';
 
 const localeStore = useLocaleStore();
 const locale = computed(() => localeStore.locale);
+const fmt = (value: number) => formatCurrency(value, locale.value);
 
 interface AssetsData {
   propertyAssets: number;

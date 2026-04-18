@@ -2,7 +2,7 @@
   <div class="dashboard">
     <div class="dashboard-header">
       <h1 class="page-title">
-        Retirement Planner
+        {{ t('home.title') }}
       </h1>
     </div>
     <div class="dashboard-main">
@@ -35,6 +35,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import NetWealthChart from '../components/NetWealthChart.vue';
 import AssetInputFormRefactored from '../components/AssetInputFormRefactored.vue';
 import SummaryCards from '../components/SummaryCards.vue';

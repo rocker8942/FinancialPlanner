@@ -35,7 +35,7 @@
             />
           </div>
           <div class="amount-field">
-            <span class="field-prefix">$</span>
+            <span class="field-prefix">{{ currencySymbol }}</span>
             <input
               class="amount-input"
               type="text"
@@ -50,17 +50,19 @@
       </div>
     </div>
 
-    <p v-else class="empty-state">
-      Add lump sum events like buying a car, receiving an inheritance, home renovation, etc.
-    </p>
+    <p v-else class="empty-state">{{ $t('form.life_events.empty') }}</p>
 
-    <button type="button" class="add-btn" @click="addEvent">+ Add Life Event</button>
+    <button type="button" class="add-btn" @click="addEvent">{{ $t('form.life_events.add_button') }}</button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { LifeEvent } from '../../utils/models/FinancialTypes';
+import { useLocaleStore } from '../../store/locale';
+
+const localeStore = useLocaleStore();
+const currencySymbol = computed(() => localeStore.locale === 'kr' ? '₩' : '$');
 
 const props = defineProps<{
   modelValue: LifeEvent[];

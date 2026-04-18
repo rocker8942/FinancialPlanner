@@ -8,9 +8,9 @@
           </svg>
         </div>
         <div class="summary-text">
-          <h3 class="summary-title">Current Net Wealth</h3>
-          <p class="summary-value">{{ formatCurrency(currentNetWealth) }}</p>
-          <p class="summary-subtitle">{{ showInflationAdjusted ? 'Real value' : 'Nominal value' }}</p>
+          <h3 class="summary-title">{{ $t('summary.current_wealth') }}</h3>
+          <p class="summary-value">{{ fmt(currentNetWealth) }}</p>
+          <p class="summary-subtitle">{{ showInflationAdjusted ? $t('summary.real_value') : $t('summary.nominal_value') }}</p>
         </div>
       </div>
     </div>
@@ -23,9 +23,9 @@
           </svg>
         </div>
         <div class="summary-text">
-          <h3 class="summary-title">Wealth at Retirement</h3>
-          <p class="summary-value">{{ formatCurrency(retirementWealth) }}</p>
-          <p class="summary-subtitle">At age {{ retirementAge }}</p>
+          <h3 class="summary-title">{{ $t('summary.retirement_wealth') }}</h3>
+          <p class="summary-value">{{ fmt(retirementWealth) }}</p>
+          <p class="summary-subtitle">{{ $t('summary.retirement_at_age', { age: retirementAge }) }}</p>
         </div>
       </div>
     </div>
@@ -38,9 +38,9 @@
           </svg>
         </div>
         <div class="summary-text">
-          <h3 class="summary-title">Optimal Expense</h3>
-          <p class="summary-value">{{ formatCurrency(optimalExpense) }}</p>
-          <p class="summary-subtitle">Annual to reach zero at end</p>
+          <h3 class="summary-title">{{ $t('summary.optimal_expense') }}</h3>
+          <p class="summary-value">{{ fmt(optimalExpense) }}</p>
+          <p class="summary-subtitle">{{ $t('summary.optimal_subtitle') }}</p>
         </div>
       </div>
     </div>
@@ -53,9 +53,9 @@
           </svg>
         </div>
         <div class="summary-text">
-          <h3 class="summary-title">Age Pension</h3>
-          <p class="summary-value">{{ formatCurrency(annualPension) }}</p>
-          <p class="summary-subtitle">Annual from age {{ firstPensionAge }}</p>
+          <h3 class="summary-title">{{ $t('summary.pension') }}</h3>
+          <p class="summary-value">{{ fmt(annualPension) }}</p>
+          <p class="summary-subtitle">{{ $t('summary.pension_from_age', { age: firstPensionAge }) }}</p>
         </div>
       </div>
     </div>
@@ -65,6 +65,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { formatCurrency } from '../utils/formatters';
+import { useLocaleStore } from '../store/locale';
 
 interface ProjectionData {
   age: number;
@@ -88,6 +89,8 @@ interface SummaryProps {
 }
 
 const props = defineProps<SummaryProps>();
+const localeStore = useLocaleStore();
+const fmt = (value: number) => formatCurrency(value, localeStore.locale);
 
 const currentNetWealth = computed(() => {
   if (!props.projection.length) return 0;
