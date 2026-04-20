@@ -9,7 +9,7 @@
           :checked="modelValue.enabled"
           @change="update('enabled', ($event.target as HTMLInputElement).checked)"
         />
-        <span class="toggle-text">I plan to buy a house</span>
+        <span class="toggle-text">{{ $t('form.house.toggle') }}</span>
       </label>
     </div>
 
@@ -17,7 +17,7 @@
     <div v-if="modelValue.enabled" class="fields">
       <!-- Purchase Age -->
       <div class="field-row">
-        <label class="field-label">Purchase age</label>
+        <label class="field-label">{{ $t('form.house.purchase_age') }}</label>
         <div class="field-input-wrap">
           <input
             class="field-input"
@@ -32,9 +32,9 @@
 
       <!-- Purchase Price -->
       <div class="field-row">
-        <label class="field-label">Purchase price</label>
+        <label class="field-label">{{ $t('form.house.purchase_price') }}</label>
         <div class="field-input-wrap currency">
-          <span class="currency-prefix">$</span>
+          <span class="currency-prefix">{{ currencySymbol }}</span>
           <input
             class="field-input"
             type="text"
@@ -48,7 +48,7 @@
 
       <!-- Down Payment % -->
       <div class="field-row">
-        <label class="field-label">Down payment</label>
+        <label class="field-label">{{ $t('form.house.down_payment') }}</label>
         <div class="field-input-wrap pct">
           <input
             class="field-input"
@@ -65,18 +65,18 @@
       <!-- Computed summary -->
       <div class="summary">
         <div class="summary-row">
-          <span class="summary-label">Down payment amount</span>
-          <span class="summary-value">{{ formatCurrency(downPaymentAmount) }}</span>
+          <span class="summary-label">{{ $t('form.house.down_payment_amount') }}</span>
+          <span class="summary-value">{{ fmt(downPaymentAmount) }}</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">Mortgage amount</span>
-          <span class="summary-value">{{ formatCurrency(mortgageAmount) }}</span>
+          <span class="summary-label">{{ $t('form.house.mortgage_amount') }}</span>
+          <span class="summary-value">{{ fmt(mortgageAmount) }}</span>
         </div>
       </div>
 
       <!-- Warning if down payment > savings (informational only) -->
       <p v-if="downPaymentAmount > 0" class="info-note">
-        At age {{ modelValue.purchaseAge }}, {{ formatCurrency(downPaymentAmount) }} will be deducted from your savings as a down payment.
+        {{ $t('form.house.purchase_info', { age: modelValue.purchaseAge, amount: fmt(downPaymentAmount) }) }}
       </p>
     </div>
   </div>
@@ -86,6 +86,11 @@
 import { ref, computed } from 'vue';
 import type { HousePurchasePlan } from '../../utils/models/FinancialTypes';
 import { formatCurrency } from '../../utils/formatters';
+import { useLocaleStore } from '../../store/locale';
+
+const localeStore = useLocaleStore();
+const currencySymbol = computed(() => localeStore.locale === 'kr' ? '₩' : '$');
+const fmt = (value: number) => formatCurrency(value, localeStore.locale);
 
 const props = defineProps<{
   modelValue: HousePurchasePlan;

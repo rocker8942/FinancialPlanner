@@ -108,7 +108,7 @@ const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   localText.value = target.value;
   // Emit raw number without clamping so typing isn't interrupted
-  const raw = parseFloat(target.value.replace(/[,$%\s]/g, ''));
+  const raw = parseFloat(target.value.replace(/[,$%₩\s]/g, ''));
   emit('update:value', isNaN(raw) ? 0 : raw);
 };
 

@@ -73,7 +73,7 @@ export function useFormFields(fieldConfigs: FieldConfig[]) {
 
   // Parse numeric value from formatted string
   const parseFormattedNumber = (value: string): number => {
-    const cleaned = value.replace(/[,$%]/g, '');
+    const cleaned = value.replace(/[,$%₩]/g, '');
     const parsed = parseFloat(cleaned);
     return isNaN(parsed) ? 0 : parsed;
   };

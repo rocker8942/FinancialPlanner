@@ -6,12 +6,12 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-9a2 2 0 00-2-2H6a2 2 0 00-2 2v9a2 2 0 002 2z"></path>
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V7a2 2 0 114 0v4"></path>
       </svg>
-      <span>Your data is encrypted and stored locally on your device for privacy and security.</span>
+      <span>{{ $t('form.privacy_notice') }}</span>
     </div>
 
     <!-- Personal Profile Section -->
     <FormSection 
-      title="Personal Profile" 
+      :title="$t('form.sections.personal')" 
       :is-open="sectionOpen.profile"
       section-key="profile"
       @toggle="toggleSection"
@@ -24,7 +24,7 @@
 
     <!-- Assets Section -->
     <FormSection 
-      title="Assets" 
+      :title="$t('form.sections.assets')" 
       :is-open="sectionOpen.assets"
       section-key="assets"
       @toggle="toggleSection"
@@ -38,7 +38,7 @@
 
     <!-- Income and Expenses Section -->
     <FormSection 
-      title="Income and Expenses" 
+      :title="$t('form.sections.income')" 
       :is-open="sectionOpen.income"
       section-key="income"
       @toggle="toggleSection"
@@ -51,7 +51,7 @@
 
     <!-- House Purchase Plan Section -->
     <FormSection
-      title="House Purchase Plan"
+      :title="$t('form.sections.house')"
       :is-open="sectionOpen.housePurchase"
       section-key="housePurchase"
       @toggle="toggleSection"
@@ -66,7 +66,7 @@
 
     <!-- Life Events Section -->
     <FormSection
-      title="Life Events"
+      :title="$t('form.sections.life_events')"
       :is-open="sectionOpen.lifeEvents"
       section-key="lifeEvents"
       @toggle="toggleSection"
@@ -81,7 +81,7 @@
 
     <!-- Advanced Options Section -->
     <FormSection
-      title="Advanced Options"
+      :title="$t('form.sections.advanced')"
       :is-open="sectionOpen.advanced"
       section-key="advanced"
       @toggle="toggleSection"
@@ -96,10 +96,10 @@
     <!-- Auto-Optimization Info -->
     <div v-if="incomeExpenses.zeroNetWorthAtDeath" class="auto-optimize-info">
       <small class="help-text">
-        When enabled, your annual expenses will be automatically calculated and adjusted based on your other inputs to ensure you reach exactly zero net worth at your target age. This maximizes your lifetime spending potential.
+        {{ $t('form.auto_optimize.help') }}
       </small>
       <span class="expense-info">
-        Auto-calculated annual expense: {{ formatCurrency(calculatedOptimalExpense) }}
+        {{ $t('form.auto_optimize.label') }} {{ fmt(calculatedOptimalExpense) }}
       </span>
     </div>
 
@@ -113,7 +113,7 @@
         :title="shareButtonDisabled ? 'Enter some financial data to share' : 'Copy secure, encrypted shareable link to clipboard'"
       >
         <span class="material-icons share-icon">{{ shareSuccess ? 'check' : 'share' }}</span>
-        <span>{{ shareSuccess ? 'Secure Link Copied!' : 'Share Plan' }}</span>
+        <span>{{ shareSuccess ? $t('form.share.success') : $t('form.share.button') }}</span>
       </button>
     </div>
   </form>
@@ -130,7 +130,9 @@ import LifeEventsForm from './forms/LifeEventsForm.vue';
 import HousePurchaseForm from './forms/HousePurchaseForm.vue';
 import { formStorageService, type StoredFinancialData } from '../services/formStorageService';
 import { calculateDisposableIncome, calculateExpenseToZeroNetWorth } from '../utils/financialPlan';
+import { auCountryConfig, krCountryConfig } from '../utils/calculations/financialPlanOrchestrator';
 import { formatCurrency } from '../utils/formatters';
+import { useLocaleStore } from '../store/locale';
 import type { FinancialProfile } from '../utils/financialPlan';
 import type { LifeEvent, HousePurchasePlan } from '../utils/models/FinancialTypes';
 
@@ -143,6 +145,9 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   'update': [profile: FinancialProfile];
 }>();
+const localeStore = useLocaleStore();
+const countryConfig = computed(() => localeStore.locale === 'kr' ? krCountryConfig : auCountryConfig);
+const fmt = (value: number) => formatCurrency(value, localeStore.locale);
 
 // Section visibility state
 const sectionOpen = ref({
@@ -169,7 +174,8 @@ const assets = ref({
   savings: 0,
   mortgageBalance: 0,
   superannuationBalance: 0,
-  partnerSuperBalance: 0
+  partnerSuperBalance: 0,
+  krPensionBalance: 0
 });
 
 const incomeExpenses = ref({
@@ -216,14 +222,15 @@ const shareButtonDisabled = computed(() => {
 });
 
 const currentFinancialProfile = computed((): FinancialProfile => {
+  const isKr = localeStore.locale === 'kr';
   return {
     propertyAssets: assets.value.propertyAssets,
     savings: assets.value.savings,
     mortgageBalance: assets.value.mortgageBalance,
     mortgageRate: advancedOptions.value.mortgageRate,
-    superannuationBalance: assets.value.superannuationBalance,
+    superannuationBalance: assets.value.superannuationBalance + (isKr ? (assets.value.krPensionBalance ?? 0) : 0),
     partnerSuperBalance: assets.value.partnerSuperBalance,
-    superannuationRate: advancedOptions.value.superannuationRate,
+    superannuationRate: isKr ? advancedOptions.value.savingsGrowthRate : advancedOptions.value.superannuationRate,
     salary: incomeExpenses.value.salary,
     partnerSalary: incomeExpenses.value.partnerSalary,
     expenses: incomeExpenses.value.expenses,
@@ -249,7 +256,7 @@ const currentDisposableIncome = computed(() => {
 
 const calculatedOptimalExpense = computed(() => {
   if (!incomeExpenses.value.zeroNetWorthAtDeath) return 0;
-  const result = calculateExpenseToZeroNetWorth(currentFinancialProfile.value);
+  const result = calculateExpenseToZeroNetWorth(currentFinancialProfile.value, undefined, undefined, countryConfig.value);
   return result.optimalExpense;
 });
 
@@ -313,7 +320,8 @@ const collectAllFormData = (): StoredFinancialData => {
     isHomeowner: personalProfile.value.isHomeowner,
     zeroNetWorthAtDeath: incomeExpenses.value.zeroNetWorthAtDeath,
     lifeEvents: lifeEvents.value,
-    housePurchasePlan: housePurchasePlan.value
+    housePurchasePlan: housePurchasePlan.value,
+    krPensionBalance: assets.value.krPensionBalance
   };
 };
 
@@ -357,7 +365,8 @@ const populateFormsFromData = (data: StoredFinancialData) => {
     savings: data.savings,
     mortgageBalance: data.mortgageBalance,
     superannuationBalance: data.superannuationBalance,
-    partnerSuperBalance: data.partnerSuperBalance ?? 0
+    partnerSuperBalance: data.partnerSuperBalance ?? 0,
+    krPensionBalance: data.krPensionBalance ?? 0
   };
 
   incomeExpenses.value = {

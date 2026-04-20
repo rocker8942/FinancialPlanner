@@ -2,7 +2,7 @@
   <div class="dashboard">
     <div class="dashboard-header">
       <h1 class="page-title">
-        Retirement Planner
+        {{ t('home.title') }}
       </h1>
     </div>
     <div class="dashboard-main">
@@ -33,13 +33,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import NetWealthChart from '../components/NetWealthChart.vue';
 import AssetInputFormRefactored from '../components/AssetInputFormRefactored.vue';
 import SummaryCards from '../components/SummaryCards.vue';
-import { calculateFinancialPlanModular } from '../utils/calculations/financialPlanOrchestrator';
+import { calculateFinancialPlanModular, auCountryConfig, krCountryConfig } from '../utils/calculations/financialPlanOrchestrator';
 import { optimizeExpenseToZeroNetWorth } from '../utils/calculations/expenseOptimizer';
+import { useLocaleStore } from '../store/locale';
 import type { FinancialProfile } from '../utils/financialPlan';
 import type { YearlyWealth } from '../utils/models/FinancialTypes';
 import { parseSecureUrlFragment } from '../utils/encryption';
@@ -50,13 +53,15 @@ const optimalExpense = ref(0);
 const showInflationAdjusted = ref(true);
 const route = useRoute();
 const urlParams = ref<Partial<FinancialProfile>>({});
+const localeStore = useLocaleStore();
+const countryConfig = computed(() => localeStore.locale === 'kr' ? krCountryConfig : auCountryConfig);
 
 function onProfileUpdate(profile: FinancialProfile) {
   currentProfile.value = profile;
   if (profile) {
-      const plan = calculateFinancialPlanModular(profile);
+      const plan = calculateFinancialPlanModular(profile, countryConfig.value);
       projection.value = plan.projection;
-      optimalExpense.value = optimizeExpenseToZeroNetWorth(profile).optimalExpense;
+      optimalExpense.value = optimizeExpenseToZeroNetWorth(profile, undefined, undefined, countryConfig.value).optimalExpense;
   } else {
     projection.value = [];
     optimalExpense.value = 0;

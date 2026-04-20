@@ -37,6 +37,7 @@ export interface StoredFinancialData {
   zeroNetWorthAtDeath?: boolean;
   lifeEvents?: LifeEvent[];
   housePurchasePlan?: HousePurchasePlan;
+  krPensionBalance?: number;
 }
 
 export class FormStorageService {

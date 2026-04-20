@@ -3,32 +3,32 @@
     <!-- Chart Controls -->
     <div class="chart-controls">
       <div class="chart-title">
-        <h3>Net Wealth Projection</h3>
+        <h3>{{ $t('chart.title') }}</h3>
         <div class="chart-toggle-group">
           <button
             class="chart-toggle"
             :class="{ active: !showInflationAdjusted }"
             @click="emit('update:showInflationAdjusted', false)"
           >
-            Nominal Values
+            {{ $t('chart.nominal_toggle') }}
           </button>
           <button
             class="chart-toggle"
             :class="{ active: showInflationAdjusted }"
             @click="emit('update:showInflationAdjusted', true)"
           >
-            Real Values (Today's Purchasing Power)
+            {{ $t('chart.real_toggle') }}
           </button>
         </div>
       </div>
       <div class="chart-info">
         <div class="info-item">
-          <span class="info-label">View:</span>
-          <span class="info-value">{{ showInflationAdjusted ? 'Inflation-Adjusted' : 'Nominal' }} Values</span>
+          <span class="info-label">{{ $t('chart.view') }}</span>
+          <span class="info-value">{{ showInflationAdjusted ? $t('chart.inflation_adjusted') : $t('chart.nominal') }}{{ $t('chart.values_suffix') }}</span>
         </div>
         <div class="info-item">
-          <span class="info-label">Currency:</span>
-          <span class="info-value">AUD</span>
+          <span class="info-label">{{ $t('chart.currency') }}</span>
+          <span class="info-value">{{ $t('chart.currency_value') }}</span>
         </div>
       </div>
     </div>
@@ -37,18 +37,18 @@
     
     <!-- Data Table -->
     <div class="mt-6">
-      <h3 class="table-title">Financial Projection Data</h3>
+      <h3 class="table-title">{{ $t('chart.table_title') }}</h3>
       <div class="table-container">
         <table class="data-table">
           <thead class="table-header">
             <tr>
-              <th class="table-cell-header">Age</th>
-              <th class="table-cell-header text-right">Total Income</th>
-              <th class="table-cell-header text-right">Expenses</th>
-              <th class="table-cell-header text-right hidden-mobile">Mortgage</th>
-              <th class="table-cell-header text-right">Superannuation</th>
-              <th class="table-cell-header text-right hidden-mobile">Savings</th>
-              <th class="table-cell-header text-right">Net Financial Assets</th>
+              <th class="table-cell-header">{{ $t('chart.age') }}</th>
+              <th class="table-cell-header text-right">{{ $t('chart.income') }}</th>
+              <th class="table-cell-header text-right">{{ $t('chart.expenses') }}</th>
+              <th class="table-cell-header text-right hidden-mobile">{{ $t('chart.mortgage') }}</th>
+              <th class="table-cell-header text-right">{{ $t('chart.super') }}</th>
+              <th class="table-cell-header text-right hidden-mobile">{{ $t('chart.savings') }}</th>
+              <th class="table-cell-header text-right">{{ $t('chart.net_assets') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -59,12 +59,12 @@
               class="table-row"
             >
               <td class="table-cell">{{ item.age }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.totalIncome, item.age)) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.expenses, item.age)) }}</td>
-              <td class="table-cell text-right hidden-mobile">{{ formatCurrency(getDisplayValue(item.mortgageBalance, item.age)) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(getDisplayValue(item.superannuationBalance, item.age)) }}</td>
-              <td class="table-cell text-right hidden-mobile">{{ formatCurrency(getDisplayValue(item.rawSavings, item.age)) }}</td>
-              <td class="table-cell text-right">{{ formatCurrency(showInflationAdjusted && item.inflationAdjustedSavings !== undefined ? item.inflationAdjustedSavings : item.savings) }}</td>
+              <td class="table-cell text-right">{{ fmt(getDisplayValue(item.totalIncome, item.age)) }}</td>
+              <td class="table-cell text-right">{{ fmt(getDisplayValue(item.expenses, item.age)) }}</td>
+              <td class="table-cell text-right hidden-mobile">{{ fmt(getDisplayValue(item.mortgageBalance, item.age)) }}</td>
+              <td class="table-cell text-right">{{ fmt(getDisplayValue(item.superannuationBalance, item.age)) }}</td>
+              <td class="table-cell text-right hidden-mobile">{{ fmt(getDisplayValue(item.rawSavings, item.age)) }}</td>
+              <td class="table-cell text-right">{{ fmt(showInflationAdjusted && item.inflationAdjustedSavings !== undefined ? item.inflationAdjustedSavings : item.savings) }}</td>
             </tr>
           </tbody>
         </table>
@@ -75,6 +75,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, onUnmounted, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useLocaleStore } from '../store/locale';
 import { useTheme } from '../composables/useTheme';
 // Tree-shaken ECharts imports - only load what we need
 import * as echarts from 'echarts/core';
@@ -125,6 +127,9 @@ const props = defineProps<{
   housePurchasePlan?: HousePurchasePlan;
 }>();
 const emit = defineEmits<{ 'update:showInflationAdjusted': [value: boolean] }>();
+const { t } = useI18n();
+const localeStore = useLocaleStore();
+const fmt = (value: number) => formatCurrency(value, localeStore.locale);
 const { isDark } = useTheme();
 const chartLegendColor = computed(() => isDark.value ? '#e0e3e8' : '#374151');
 const chartInactiveColor = computed(() => isDark.value ? '#6b7280' : '#94a3b8');
@@ -132,12 +137,17 @@ const chart = ref<HTMLDivElement | null>(null);
 const chartContainer = ref<HTMLDivElement | null>(null);
 let chartInstance: echarts.ECharts | null = null;
 let resizeObserver: ResizeObserver | null = null;
-let currentLegendSelection: Record<string, boolean> = {
-  'Property Assets': false,
-  'Financial Assets': true,
-  'Pension Income': true,
-  'Life Events': false
-};
+// Internal selection state — keys track which series are visible
+const legendSelectionState = { property: false, financial: true, pension: true, lifeEvents: false };
+
+function getLegendSelection(): Record<string, boolean> {
+  return {
+    [t('chart.property_legend')]: legendSelectionState.property,
+    [t('chart.financial_legend')]: legendSelectionState.financial,
+    [t('chart.pension_legend')]: legendSelectionState.pension,
+    [t('chart.life_events_legend')]: legendSelectionState.lifeEvents
+  };
+}
 
 function inflationFactor(age: number): number {
   if (!props.currentAge || !props.cpiGrowthRate) return 1;
@@ -156,7 +166,11 @@ function renderChart() {
     
     // Listen for legend selection changes
     chartInstance.on('legendselectchanged', (params: any) => {
-      currentLegendSelection = { ...params.selected };
+      const sel = params.selected as Record<string, boolean>;
+      legendSelectionState.property = sel[t('chart.property_legend')] ?? legendSelectionState.property;
+      legendSelectionState.financial = sel[t('chart.financial_legend')] ?? legendSelectionState.financial;
+      legendSelectionState.pension = sel[t('chart.pension_legend')] ?? legendSelectionState.pension;
+      legendSelectionState.lifeEvents = sel[t('chart.life_events_legend')] ?? legendSelectionState.lifeEvents;
     });
   }
 
@@ -190,7 +204,7 @@ function renderChart() {
     const savingsValue = savingsData[projIndex];
     const yValue = savingsValue;
     return {
-      name: event.label || (event.type === 'income' ? 'Income' : 'Expense'),
+      name: event.label || (event.type === 'income' ? t('chart.income_event') : t('chart.expense_event')),
       coord: [projIndex, yValue],
       symbol: 'circle',
       symbolSize: 12,
@@ -206,10 +220,10 @@ function renderChart() {
       name: 'Retirement',
       xAxis: String(props.retirementAge),
       lineStyle: { color: '#fbbf24', width: 2, type: 'dashed' },
-      label: { 
-        show: true, 
-        position: 'insideEndTop',
-        formatter: `Retirement\nAge ${props.retirementAge}`,
+        label: { 
+          show: true, 
+          position: 'insideEndTop',
+          formatter: `${t('chart.retirement_marker')}\n${t('chart.retirement_age_label', { age: props.retirementAge })}`,
         color: '#fbbf24',
         fontSize: 12,
         fontWeight: 'bold'
@@ -224,7 +238,7 @@ function renderChart() {
     label: {
       show: true,
       position: 'insideEndTop',
-      formatter: 'Age Pension\nEligible (67)',
+      formatter: t('chart.pension_marker'),
       color: '#34d399',
       fontSize: 12,
       fontWeight: 'bold'
@@ -241,7 +255,7 @@ function renderChart() {
         label: {
           show: true,
           position: 'insideEndTop',
-          formatter: `Buy House\n(Age ${purchaseAge})`,
+          formatter: t('chart.house_marker', { age: purchaseAge }),
           color: '#f59e0b',
           fontSize: 12,
           fontWeight: 'bold'
@@ -268,29 +282,29 @@ function renderChart() {
           const superValue = projectionData.superannuationBalance * factor;
           const pensionValue = (projectionData.pensionIncome ?? 0) * factor;
           
-          const valueType = useInflationAdjusted ? ' (Real Value)' : ' (Nominal)';
+          const valueType = useInflationAdjusted ? t('chart.real_value_type') : t('chart.nominal_type');
 
           const ageInt = parseInt(age);
           const eventsAtAge = (props.lifeEvents || []).filter(e => e.age === ageInt);
           const eventsHtml = eventsAtAge.map(e =>
-            `<br/><span style="color:${e.type === 'income' ? '#10b981' : '#ef4444'}">${e.type === 'income' ? '▲' : '▼'} ${e.label || (e.type === 'income' ? 'Income' : 'Expense')}: ${formatCurrency(e.amount)}</span>`
+            `<br/><span style="color:${e.type === 'income' ? '#10b981' : '#ef4444'}">${e.type === 'income' ? '▲' : '▼'} ${e.label || (e.type === 'income' ? t('chart.income_event') : t('chart.expense_event'))}: ${fmt(e.amount)}</span>`
           ).join('');
 
           return `
-            Age: ${age}<br/>
-            Property Assets${valueType}: ${formatCurrency(propertyValue)}<br/>
-            Net Financial Asset${valueType}: ${formatCurrency(savingsValue)}<br/>
-            Superannuation${valueType}: ${formatCurrency(superValue)}<br/>
-            Pension Income${valueType}: ${formatCurrency(pensionValue)}${eventsHtml}
+            ${t('chart.age')}: ${age}<br/>
+            ${t('chart.property_legend')}${valueType}: ${fmt(propertyValue)}<br/>
+            ${t('chart.net_assets')}${valueType}: ${fmt(savingsValue)}<br/>
+            ${t('chart.super')}${valueType}: ${fmt(superValue)}<br/>
+            ${t('chart.pension_legend')}${valueType}: ${fmt(pensionValue)}${eventsHtml}
           `;
         }
-        return `Age: ${age}<br/>Net Wealth: ${formatCurrency(dataPoint.value)}`;
+        return `${t('chart.age')}: ${age}<br/>${t('chart.net_wealth_axis')}: ${fmt(dataPoint.value)}`;
       }
     },
     legend: {
-      data: ['Property Assets', 'Financial Assets', 'Pension Income', 'Life Events'],
+      data: [t('chart.property_legend'), t('chart.financial_legend'), t('chart.pension_legend'), t('chart.life_events_legend')],
       top: 10,
-      selected: currentLegendSelection,
+      selected: getLegendSelection(),
       textStyle: {
         color: chartLegendColor.value
       },
@@ -300,18 +314,18 @@ function renderChart() {
     xAxis: { 
       type: 'category', 
       data: props.projection.map(p => String(p.age)),
-      name: 'Age'
+      name: t('chart.age')
     },
-    yAxis: { 
+    yAxis: {
       type: 'value',
-      name: 'Net Wealth',
+      name: t('chart.net_wealth_axis'),
       axisLabel: {
-        formatter: (value: number) => formatCurrency(value)
+        formatter: (value: number) => fmt(value)
       }
     },
     series: [
       {
-        name: 'Property Assets',
+        name: t('chart.property_legend'),
         data: propertyData,
         type: 'line',
         smooth: true,
@@ -321,7 +335,7 @@ function renderChart() {
         color: '#8b5cf6'
       },
       {
-        name: 'Pension Income',
+        name: t('chart.pension_legend'),
         data: pensionIncome,
         type: 'line',
         smooth: true,
@@ -331,7 +345,7 @@ function renderChart() {
         emphasis: { focus: 'series' },
       },
       {
-        name: 'Financial Assets',
+        name: t('chart.financial_legend'),
         data: savingsData,
         type: 'line',
         smooth: true,
@@ -345,7 +359,7 @@ function renderChart() {
         }
       },
       {
-        name: 'Life Events',
+        name: t('chart.life_events_legend'),
         data: props.projection.map(() => null),
         type: 'line',
         showSymbol: false,
@@ -410,6 +424,7 @@ onUnmounted(() => {
 watch(() => props.projection, renderChart, { deep: true });
 watch(() => props.showInflationAdjusted, renderChart);
 watch(isDark, renderChart);
+watch(() => localeStore.locale, renderChart);
 </script>
 
 <style scoped>

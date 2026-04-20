@@ -2,9 +2,9 @@
   <div class="advanced-options-form">
     <FormInputWithButtons
       field-id="deathAge"
-      label="Age the plan ends"
+      :label="$t('form.advanced.death_age_label')"
       :value="deathAge"
-      placeholder="Target Age"
+      :placeholder="$t('form.advanced.death_age_placeholder')"
       :increment-step="1"
       :is-valid="validation.isFieldValid('deathAge', deathAge, { retireAge })"
       :is-touched="validation.isFieldTouched('deathAge')"
@@ -20,10 +20,10 @@
 
     <FormInputWithButtons
       field-id="propertyGrowthRate"
-      label="Property Growth Rate"
+      :label="$t('form.advanced.property_growth_label')"
       :value="propertyGrowthRate"
-      placeholder="Growth Rate (%)"
-      help-text="Historic average property appreciation (default: 4%)"
+      :placeholder="$t('form.advanced.property_growth_label')"
+      :help-text="$t('form.advanced.property_growth_help')"
       :increment-step="0.005"
       :is-valid="validation.isFieldValid('propertyGrowthRate', propertyGrowthRate)"
       :is-touched="validation.isFieldTouched('propertyGrowthRate')"
@@ -39,10 +39,10 @@
 
     <FormInputWithButtons
       field-id="propertyRentalYield"
-      label="Property Rental Yield"
+      :label="$t('form.advanced.rental_yield_label')"
       :value="propertyRentalYield"
-      placeholder="Rental Yield (%)"
-      help-text="Net rental return after fees and tax (Australian average: 3.3%)"
+      :placeholder="$t('form.advanced.rental_yield_label')"
+      :help-text="$t('form.advanced.rental_yield_help')"
       :increment-step="0.001"
       :is-valid="validation.isFieldValid('propertyRentalYield', propertyRentalYield)"
       :is-touched="validation.isFieldTouched('propertyRentalYield')"
@@ -58,10 +58,10 @@
 
     <FormInputWithButtons
       field-id="savingsGrowthRate"
-      label="Expected Savings Growth Rate"
+      :label="$t('form.advanced.savings_growth_label')"
       :value="savingsGrowthRate"
-      placeholder="Growth Rate (%)"
-      help-text="Expected annual return on your investments"
+      :placeholder="$t('form.advanced.savings_growth_label')"
+      :help-text="$t('form.advanced.savings_growth_help')"
       :increment-step="0.005"
       :is-valid="validation.isFieldValid('savingsGrowthRate', savingsGrowthRate)"
       :is-touched="validation.isFieldTouched('savingsGrowthRate')"
@@ -77,10 +77,10 @@
 
     <FormInputWithButtons
       field-id="mortgageRate"
-      label="Mortgage Interest Rate"
+      :label="$t('form.advanced.mortgage_rate_label')"
       :value="mortgageRate"
-      placeholder="Mortgage Rate (%)"
-      help-text="Annual mortgage interest rate (default: 6%)"
+      :placeholder="$t('form.advanced.mortgage_rate_label')"
+      :help-text="$t('form.advanced.mortgage_rate_help')"
       :increment-step="0.005"
       :is-valid="validation.isFieldValid('mortgageRate', mortgageRate)"
       :is-touched="validation.isFieldTouched('mortgageRate')"
@@ -95,11 +95,12 @@
     />
 
     <FormInputWithButtons
+      v-if="locale !== 'kr'"
       field-id="superannuationRate"
-      label="Superannuation Return Rate"
+      :label="$t('form.advanced.super_rate_label')"
       :value="superannuationRate"
-      placeholder="Return Rate (%)"
-      help-text="Expected annual return on superannuation (default: 7%)"
+      :placeholder="$t('form.advanced.super_rate_label')"
+      :help-text="$t('form.advanced.super_rate_help')"
       :increment-step="0.005"
       :is-valid="validation.isFieldValid('superannuationRate', superannuationRate)"
       :is-touched="validation.isFieldTouched('superannuationRate')"
@@ -115,10 +116,10 @@
 
     <FormInputWithButtons
       field-id="cpiGrowthRate"
-      label="Consumer Price Index (CPI) Growth Rate"
+      :label="$t('form.advanced.cpi_label')"
       :value="cpiGrowthRate"
-      placeholder="CPI Growth Rate (%)"
-      help-text="Consumer Price Index growth rate for expense escalation (default: 3%)"
+      :placeholder="$t('form.advanced.cpi_label')"
+      :help-text="$t('form.advanced.cpi_help')"
       :increment-step="0.005"
       :is-valid="validation.isFieldValid('cpiGrowthRate', cpiGrowthRate)"
       :is-touched="validation.isFieldTouched('cpiGrowthRate')"
@@ -140,7 +141,7 @@
         @click="resetToDefaults"
         title="Reset all advanced options to recommended defaults"
       >
-        Reset to Defaults
+        {{ $t('form.advanced.reset_button') }}
       </button>
     </div>
   </div>
@@ -151,6 +152,10 @@ import { computed } from 'vue';
 import FormInputWithButtons from './FormInputWithButtons.vue';
 import { useFormValidation } from '../../composables/useFormValidation';
 import { useFieldFormatting } from '../../composables/useFieldFormatting';
+import { useLocaleStore } from '../../store/locale';
+
+const localeStore = useLocaleStore();
+const locale = computed(() => localeStore.locale);
 
 interface AdvancedOptionsData {
   deathAge: number;

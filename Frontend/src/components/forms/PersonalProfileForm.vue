@@ -1,7 +1,7 @@
 <template>
   <div class="personal-profile-form">
     <div class="form-group">
-      <label>Relationship Status</label>
+      <label>{{ $t('form.personal.relationship_label') }}</label>
       <div class="radio-group">
         <label class="radio-label">
           <input 
@@ -10,7 +10,7 @@
             :checked="relationshipStatus === 'single'"
             @change="updateRelationshipStatus('single')" 
           />
-          <span>Single</span>
+          <span>{{ $t('form.personal.single') }}</span>
         </label>
         <label class="radio-label">
           <input 
@@ -19,7 +19,7 @@
             :checked="relationshipStatus === 'couple'"
             @change="updateRelationshipStatus('couple')" 
           />
-          <span>Couple</span>
+          <span>{{ $t('form.personal.couple') }}</span>
         </label>
       </div>
     </div>
@@ -31,16 +31,16 @@
           :checked="isHomeowner"
           @change="updateHomeownerStatus($event)"
         />
-        <span>I own my home</span>
-      </label>
-      <small class="help-text">Homeowner status affects age pension asset test thresholds</small>
+        <span>{{ $t('form.personal.homeowner_checkbox') }}</span>
+       </label>
+       <small class="help-text">{{ $t('form.personal.homeowner_help') }}</small>
     </div>
 
     <FormInputWithButtons
       field-id="currentAge"
-      label="Current Age"
+      :label="$t('form.personal.current_age')"
       :value="currentAge"
-      placeholder="Current Age"
+      :placeholder="$t('form.personal.current_age')"
       help-text=""
       :increment-step="1"
       :is-valid="validation.isFieldValid('currentAge', currentAge)"
@@ -57,10 +57,10 @@
 
     <FormInputWithButtons
       field-id="retireAge"
-      label="Your Retirement Age"
+      :label="$t('form.personal.retirement_age')"
       :value="retireAge"
-      placeholder="Retirement Age"
-      help-text="Age when salary income stops"
+      :placeholder="$t('form.personal.retirement_age')"
+      :help-text="$t('form.personal.retirement_age_help')"
       :increment-step="1"
       :is-valid="validation.isFieldValid('retireAge', retireAge, { currentAge })"
       :is-touched="validation.isFieldTouched('retireAge')"
@@ -78,9 +78,9 @@
     <div v-show="relationshipStatus === 'couple'" class="partner-section">
       <FormInputWithButtons
         field-id="partnerAge"
-        label="Partner's Age"
+        :label="$t('form.personal.partner_age')"
         :value="partnerAge"
-        placeholder="Partner's Age"
+        :placeholder="$t('form.personal.partner_age')"
         :increment-step="1"
         :is-valid="validation.isFieldValid('partnerAge', partnerAge)"
         :is-touched="validation.isFieldTouched('partnerAge')"
@@ -96,9 +96,9 @@
 
       <FormInputWithButtons
         field-id="partnerRetireAge"
-        label="Partner's Retirement Age"
+        :label="$t('form.personal.partner_retirement_age')"
         :value="partnerRetireAge"
-        placeholder="Partner's Retirement Age"
+        :placeholder="$t('form.personal.partner_retirement_age')"
         :increment-step="1"
         :is-valid="validation.isFieldValid('partnerRetireAge', partnerRetireAge, { partnerAge })"
         :is-touched="validation.isFieldTouched('partnerRetireAge')"

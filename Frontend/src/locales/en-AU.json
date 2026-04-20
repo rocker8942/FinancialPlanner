@@ -1,0 +1,197 @@
+{
+  "nav": {
+    "main": "Main",
+    "home": "Home",
+    "planner": "Retirement Planner",
+    "mcp": "MCP",
+    "feedback": "Have questions or feedback?",
+    "submit_issue": "Submit an issue",
+    "login": "Login",
+    "register": "Register"
+  },
+  "home": {
+    "title": "Retirement Planner"
+  },
+  "cover": {
+    "eyebrow": "Australian Retirement Planner",
+    "headline": "See if you can retire comfortably.",
+    "sub": "Enter your assets, income, and expenses. Get a year-by-year picture of your financial future — including Age Pension.",
+    "cta": "Try the Simulation",
+    "benefits": {
+      "heading": "What you get",
+      "item1_title": "A clear retirement timeline",
+      "item1_desc": "Watch your wealth grow (and draw down) year by year, so you know exactly when you can stop working.",
+      "item2_title": "An optimised spending plan",
+      "item2_desc": "The calculator finds the highest sustainable annual expense that keeps your money lasting until your target age.",
+      "item3_title": "Automatic Age Pension",
+      "item3_desc": "Asset and income tests run every year of your projection, so your pension entitlement is always accurate."
+    },
+    "steps": {
+      "heading": "How it works",
+      "step1_title": "Enter your details",
+      "step1_desc": "Your age, assets, income, and expenses — takes about two minutes.",
+      "step2_title": "Run the projection",
+      "step2_desc": "Year-by-year calculations including super, tax, inflation, and Age Pension.",
+      "step3_title": "Read the chart",
+      "step3_desc": "An interactive chart shows your net wealth trajectory at a glance.",
+      "step4_title": "Tweak the assumptions",
+      "step4_desc": "Adjust growth rates, retirement age, or expenses and re-run instantly."
+    },
+    "pension_callout": "Includes automatic Age Pension calculations using current Australian Government asset and income test thresholds (Sept 2025 – Mar 2026).",
+    "privacy_strip": "Your data never leaves your browser — nothing is stored on our servers.",
+    "faq": {
+      "heading": "Common questions",
+      "q1": "Is my financial data private?",
+      "a1": "Yes. Everything is saved in your browser only. We never see or store your numbers.",
+      "q2": "Is this specific to Australia?",
+      "a2": "Yes — it uses Australian tax brackets, superannuation rules, and Age Pension thresholds. It is not suitable for other countries.",
+      "q3": "How accurate are the projections?",
+      "a3": "They reflect current rules and your chosen assumptions. Real markets are unpredictable — treat results as a planning guide, not a guarantee."
+    },
+    "final_cta": {
+      "heading": "Ready to see your number?",
+      "sub": "It's free, private, and takes two minutes.",
+      "button": "Try the Simulation"
+    },
+    "footer_disclaimer": "This tool provides estimates only and is not financial advice. Always consult a qualified financial adviser before making retirement decisions.",
+    "footer_opensource": "Open source — view the source code on GitHub"
+  },
+  "form": {
+    "privacy_notice": "Your data is encrypted and stored locally on your device for privacy and security.",
+    "sections": {
+      "personal": "Personal Profile",
+      "assets": "Assets",
+      "income": "Income and Expenses",
+      "house": "House Purchase Plan",
+      "life_events": "Life Events",
+      "advanced": "Advanced Options"
+    },
+    "auto_optimize": {
+      "help": "When enabled, your annual expenses will be automatically calculated and adjusted based on your other inputs to ensure you reach exactly zero net worth at your target age. This maximizes your lifetime spending potential.",
+      "label": "Auto-calculated annual expense:",
+      "toggle_title": "Auto-optimize expenses"
+    },
+    "share": {
+      "button": "Share Plan",
+      "success": "Secure Link Copied!"
+    },
+    "personal": {
+      "relationship_label": "Relationship Status",
+      "single": "Single",
+      "couple": "Couple",
+      "homeowner_checkbox": "I own my home",
+      "homeowner_help": "Homeowner status affects age pension asset test thresholds",
+      "current_age": "Current Age",
+      "retirement_age": "Your Retirement Age",
+      "retirement_age_help": "Age when salary income stops",
+      "partner_age": "Partner's Age",
+      "partner_retirement_age": "Partner's Retirement Age"
+    },
+    "assets": {
+      "property_label": "Investment Property",
+      "property_help": "Real estate, land, and other property investments",
+      "savings_label": "Current Savings",
+      "savings_help": "Stocks, bonds, savings, and liquid investments",
+      "mortgage_label": "Mortgage Balance",
+      "mortgage_help": "Outstanding mortgage debt on property",
+      "super_label": "Your Superannuation Balance",
+      "super_help": "Current superannuation fund balance",
+      "partner_super_label": "Partner's Superannuation Balance",
+      "partner_super_help": "Partner's current superannuation fund balance",
+      "net_property": "Net Property Wealth:",
+      "total_net": "Total Net Wealth:",
+      "wealth_formula": "Net wealth = Assets - Mortgage + Superannuation + Savings"
+    },
+    "income": {
+      "salary_label": "Your Annual Salary (Include super/tax)",
+      "partner_salary_label": "Partner's Annual Salary",
+      "expenses_label": "Annual Expenses",
+      "disposable_income": "Current Disposable Income:",
+      "user_net_income": "Your Net Income:",
+      "partner_net_income": "Partner Net Income:",
+      "disposable_formula": "Disposable income = Net salary after tax + Age pension + Rental income",
+      "expense_warning": "Expense has been automatically adjusted to your maximum disposable income of {amount}",
+      "expense_error": "Expenses cannot exceed disposable income of {amount}",
+      "auto_calculated": "Auto-calculated based on your other inputs",
+      "paid_from_assets": "Will be paid from financial assets only",
+      "disposable_income_note": "Disposable income: {amount}"
+    },
+    "advanced": {
+      "death_age_label": "Age the plan ends",
+      "death_age_placeholder": "Target Age",
+      "property_growth_label": "Property Growth Rate",
+      "property_growth_help": "Historic average property appreciation (default: 4%)",
+      "rental_yield_label": "Property Rental Yield",
+      "rental_yield_help": "Net rental return after fees and tax (Australian average: 3.3%)",
+      "savings_growth_label": "Expected Savings Growth Rate",
+      "savings_growth_help": "Expected annual return on your investments",
+      "mortgage_rate_label": "Mortgage Interest Rate",
+      "mortgage_rate_help": "Annual mortgage interest rate (default: 6%)",
+      "super_rate_label": "Superannuation Return Rate",
+      "super_rate_help": "Expected annual return on superannuation (default: 7%)",
+      "cpi_label": "Consumer Price Index (CPI) Growth Rate",
+      "cpi_help": "Consumer Price Index growth rate for expense escalation (default: 3%)",
+      "reset_button": "Reset to Defaults"
+    },
+    "house": {
+      "toggle": "I plan to buy a house",
+      "purchase_age": "Purchase age",
+      "purchase_price": "Purchase price",
+      "down_payment": "Down payment",
+      "down_payment_amount": "Down payment amount",
+      "mortgage_amount": "Mortgage amount",
+      "purchase_info": "At age {age} {amount} will be deducted from your savings as a down payment."
+    },
+    "life_events": {
+      "empty": "Add lump sum events like buying a car, receiving an inheritance, home renovation, etc.",
+      "add_button": "+ Add Life Event",
+      "age_prefix": "Age",
+      "event_placeholder": "e.g. Buy a car",
+      "income_title": "Income — click to switch to expense",
+      "expense_title": "Expense — click to switch to income"
+    }
+  },
+  "summary": {
+    "current_wealth": "Current Net Wealth",
+    "real_value": "Real value",
+    "nominal_value": "Nominal value",
+    "retirement_wealth": "Wealth at Retirement",
+    "retirement_at_age": "At age {age}",
+    "optimal_expense": "Optimal Expense",
+    "optimal_subtitle": "Annual to reach zero at end",
+    "pension": "Age Pension",
+    "pension_from_age": "Annual from age {age}"
+  },
+  "chart": {
+    "title": "Net Wealth Projection",
+    "view": "View:",
+    "nominal_toggle": "Nominal Values",
+    "real_toggle": "Real Values (Today's Purchasing Power)",
+    "inflation_adjusted": "Inflation-Adjusted",
+    "nominal": "Nominal",
+    "currency": "Currency:",
+    "currency_value": "AUD",
+    "table_title": "Financial Projection Data",
+    "age": "Age",
+    "income": "Total Income",
+    "expenses": "Expenses",
+    "mortgage": "Mortgage",
+    "super": "Superannuation",
+    "savings": "Savings",
+    "net_assets": "Net Financial Assets",
+    "retirement_marker": "Retirement",
+    "pension_marker": "Age Pension Eligible (67)",
+    "house_marker": "Buy House (Age {age})",
+    "property_legend": "Property Assets",
+    "financial_legend": "Financial Assets",
+    "pension_legend": "Pension Income",
+    "life_events_legend": "Life Events",
+    "values_suffix": " Values",
+    "net_wealth_axis": "Net Wealth",
+    "real_value_type": " (Real Value)",
+    "nominal_type": " (Nominal)",
+    "income_event": "Income",
+    "expense_event": "Expense",
+    "retirement_age_label": "Age {age}"
+  }
+}

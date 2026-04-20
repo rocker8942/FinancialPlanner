@@ -14,7 +14,10 @@ const McpView = () => import('../views/McpView.vue');
 
 const routes: RouteRecordRaw[] = [
   { path: '/', name: 'Cover', component: CoverView },
+  { path: '/kr', name: 'CoverKR', component: CoverView, meta: { locale: 'kr' } },
   { path: '/retirementplanner', name: 'Home', component: HomeView },
+  { path: '/:locale(au|kr)/retirementplanner', name: 'HomeLocale', component: HomeView },
+  { path: '/:locale(au)', redirect: to => `/${to.params.locale}/retirementplanner` },
   { path: '/login', name: 'Login', component: LoginView },
   { path: '/register', name: 'Register', component: RegisterView },
   { path: '/profile', name: 'Profile', component: ProfileView },

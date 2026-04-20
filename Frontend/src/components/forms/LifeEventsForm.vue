@@ -9,14 +9,14 @@
             class="type-btn"
             :class="event.type"
             @click="toggleType(event.id)"
-            :title="event.type === 'income' ? 'Income — click to switch to expense' : 'Expense — click to switch to income'"
+            :title="event.type === 'income' ? $t('form.life_events.income_title') : $t('form.life_events.expense_title')"
           >
             {{ event.type === 'income' ? '+' : '−' }}
           </button>
           <input
             class="label-input"
             type="text"
-            placeholder="e.g. Buy a car"
+            :placeholder="$t('form.life_events.event_placeholder')"
             :value="event.label"
             @input="updateField(event.id, 'label', ($event.target as HTMLInputElement).value)"
           />
@@ -24,7 +24,7 @@
         <!-- Row 2: age + amount + delete -->
         <div class="event-bottom">
           <div class="age-field">
-            <span class="field-prefix">Age</span>
+            <span class="field-prefix">{{ $t('form.life_events.age_prefix') }}</span>
             <input
               class="age-input"
               type="number"
@@ -35,7 +35,7 @@
             />
           </div>
           <div class="amount-field">
-            <span class="field-prefix">$</span>
+            <span class="field-prefix">{{ currencySymbol }}</span>
             <input
               class="amount-input"
               type="text"
@@ -50,17 +50,19 @@
       </div>
     </div>
 
-    <p v-else class="empty-state">
-      Add lump sum events like buying a car, receiving an inheritance, home renovation, etc.
-    </p>
+    <p v-else class="empty-state">{{ $t('form.life_events.empty') }}</p>
 
-    <button type="button" class="add-btn" @click="addEvent">+ Add Life Event</button>
+    <button type="button" class="add-btn" @click="addEvent">{{ $t('form.life_events.add_button') }}</button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { LifeEvent } from '../../utils/models/FinancialTypes';
+import { useLocaleStore } from '../../store/locale';
+
+const localeStore = useLocaleStore();
+const currencySymbol = computed(() => localeStore.locale === 'kr' ? '₩' : '$');
 
 const props = defineProps<{
   modelValue: LifeEvent[];

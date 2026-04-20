@@ -1,6 +1,6 @@
 import type { FinancialProfile, AssetState, IncomeComponents } from '../types.js';
-import { getAgePensionAmounts } from '../services/agePensionService.js';
-import { calculateNetIncome, getTaxBreakdown, calculateNetSuperContributions } from '../utils/taxCalculation.js';
+import type { ICountryConfig } from '../countryConfig.js';
+import { auCountryConfig } from '../countries/au/index.js';
 
 /**
  * Calculate all income components for a given year
@@ -9,7 +9,8 @@ export function calculateIncomeComponents(
   profile: FinancialProfile,
   age: number,
   assetState: AssetState,
-  isFirstYear: boolean = false
+  isFirstYear: boolean = false,
+  countryConfig: ICountryConfig = auCountryConfig
 ): {
   incomeComponents: IncomeComponents;
   updatedSuperBalance: number;
@@ -32,22 +33,31 @@ export function calculateIncomeComponents(
   let updatedPartnerSuperBalance = assetState.partnerSuperBalance;
 
   // Calculate employment income (user and partner separately for super tracking)
+  const superRate = countryConfig.defaults.superContributionRate;
   const userEmploymentIncome = currentUserSalary > 0
-    ? processSalaryPackage(currentUserSalary)
+    ? processSalaryPackage(currentUserSalary, superRate, countryConfig)
     : { taxableIncome: 0, superContributions: 0, netSuperContributions: 0 };
   const partnerEmploymentIncome = currentPartnerSalary > 0
-    ? processSalaryPackage(currentPartnerSalary)
+    ? processSalaryPackage(currentPartnerSalary, superRate, countryConfig)
     : { taxableIncome: 0, superContributions: 0, netSuperContributions: 0 };
 
   const employmentIncome = calculateEmploymentIncome(
     currentUserSalary,
-    currentPartnerSalary
+    currentPartnerSalary,
+    countryConfig
   );
 
-  // Update super balances with contributions (but not in first year to preserve starting point)
+  // Update super balances with contributions (but not in first year to preserve starting point).
+  // netSuperContributions: salary-deductible contributions (AU super; KR returns 0 since NPS is
+  // a defined benefit scheme and does not accumulate in a personal account).
+  // employerRetirementContributionRate: employer-paid DC contributions not deducted from salary
+  // (e.g. KR 퇴직급여 ~8.33% of salary credited to the employee's IRP/DC account).
   if (!isFirstYear) {
-    updatedSuperBalance += userEmploymentIncome.netSuperContributions;
-    updatedPartnerSuperBalance += partnerEmploymentIncome.netSuperContributions;
+    const employerIrpRate = countryConfig.defaults.employerRetirementContributionRate ?? 0;
+    updatedSuperBalance += userEmploymentIncome.netSuperContributions
+      + (currentUserSalary > 0 ? currentUserSalary * employerIrpRate : 0);
+    updatedPartnerSuperBalance += partnerEmploymentIncome.netSuperContributions
+      + (currentPartnerSalary > 0 ? currentPartnerSalary * employerIrpRate : 0);
   }
 
   // Calculate pension income
@@ -58,7 +68,8 @@ export function calculateIncomeComponents(
     assetState,
     currentUserSalary,
     currentPartnerSalary,
-    yearsFromStart
+    yearsFromStart,
+    countryConfig
   );
 
   // Calculate rental income
@@ -70,7 +81,7 @@ export function calculateIncomeComponents(
 
   // Get tax breakdown
   const taxBreakdown = employmentIncome.grossEmploymentIncome > 0
-    ? getTaxBreakdown(employmentIncome.grossEmploymentIncome, employmentIncome.totalSuperContributions)
+    ? countryConfig.tax.getTaxBreakdown(employmentIncome.grossEmploymentIncome, employmentIncome.totalSuperContributions)
     : {
         grossIncome: 0,
         incomeTax: 0,
@@ -103,14 +114,18 @@ export function calculateIncomeComponents(
 /**
  * Break down a total salary package into taxable income, super contributions, and net super
  */
-function processSalaryPackage(totalPackage: number): {
+function processSalaryPackage(
+  totalPackage: number,
+  superRate: number,
+  countryConfig: ICountryConfig
+): {
   taxableIncome: number;
   superContributions: number;
   netSuperContributions: number;
 } {
-  const superContributions = totalPackage * 0.12;
+  const superContributions = totalPackage * superRate;
   const taxableIncome = totalPackage - superContributions;
-  const netSuper = calculateNetSuperContributions(superContributions, taxableIncome);
+  const netSuper = countryConfig.tax.calculateNetSuperContributions(superContributions, taxableIncome);
   return { taxableIncome, superContributions, netSuperContributions: netSuper };
 }
 
@@ -119,7 +134,8 @@ function processSalaryPackage(totalPackage: number): {
  */
 function calculateEmploymentIncome(
   currentUserSalary: number,
-  currentPartnerSalary: number
+  currentPartnerSalary: number,
+  countryConfig: ICountryConfig
 ): {
   grossEmploymentIncome: number;
   netEmploymentIncome: number;
@@ -132,9 +148,10 @@ function calculateEmploymentIncome(
   let totalPackageAmount = 0;
   let netSuperContributions = 0;
 
+  const superRate = countryConfig.defaults.superContributionRate;
   for (const salary of [currentUserSalary, currentPartnerSalary]) {
     if (salary > 0) {
-      const breakdown = processSalaryPackage(salary);
+      const breakdown = processSalaryPackage(salary, superRate, countryConfig);
       grossEmploymentIncome += breakdown.taxableIncome;
       totalSuperContributions += breakdown.superContributions;
       totalPackageAmount += salary;
@@ -142,7 +159,9 @@ function calculateEmploymentIncome(
     }
   }
 
-  const netEmploymentIncome = grossEmploymentIncome > 0 ? calculateNetIncome(grossEmploymentIncome) : 0;
+  const netEmploymentIncome = grossEmploymentIncome > 0
+    ? countryConfig.tax.calculateNetIncome(grossEmploymentIncome)
+    : 0;
 
   return {
     grossEmploymentIncome,
@@ -163,7 +182,8 @@ function calculatePensionIncome(
   assetState: AssetState,
   currentUserSalary: number,
   currentPartnerSalary: number,
-  yearsFromStart: number
+  yearsFromStart: number,
+  countryConfig: ICountryConfig
 ): {
   userPension: number;
   partnerPension: number;
@@ -172,7 +192,12 @@ function calculatePensionIncome(
   // CPI adjustment factor for both asset test thresholds and pension amounts
   const cpiAdjustmentFactor = Math.pow(1 + profile.cpiGrowthRate, yearsFromStart);
 
-  const pensionAmounts = getAgePensionAmounts({
+  // Pass base salaries (today's dollars); cpiAdjustmentFactor applied to pension output below.
+  const userPreRetirementSalary = profile.salary;
+  const partnerPreRetirementSalary = profile.partnerSalary;
+
+  const currentYear = new Date().getFullYear();
+  const pensionAmounts = countryConfig.pension.getPensionAmounts({
     relationshipStatus: profile.relationshipStatus,
     isHomeowner: profile.isHomeowner,
     propertyAssets: assetState.propertyAssets,
@@ -181,8 +206,12 @@ function calculatePensionIncome(
     mortgageBalance: assetState.mortgageBalance,
     userSalary: currentUserSalary,
     partnerSalary: currentPartnerSalary,
+    userPreRetirementSalary,
+    partnerPreRetirementSalary,
     userAge: age,
     partnerAge: currentPartnerAge,
+    userBirthYear: currentYear - profile.currentAge,
+    partnerBirthYear: currentYear - profile.partnerAge,
     cpiAdjustmentFactor,
     partnerSuperBalance: assetState.partnerSuperBalance
   });

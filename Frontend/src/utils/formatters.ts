@@ -13,13 +13,22 @@ export function formatNumber(value: number): string {
 /**
  * Formats a number as currency with commas as thousand separators
  * @param value - The number to format
+ * @param locale - Optional locale code ('au' for AUD, 'kr' for KRW). Defaults to 'au'.
  * @returns Formatted currency string
  */
-export function formatCurrency(value: number): string {
-  if (value == null || isNaN(value)) return '$0';
-  return value.toLocaleString('en-US', { 
+export function formatCurrency(value: number, locale: 'au' | 'kr' = 'au'): string {
+  if (value == null || isNaN(value)) return locale === 'kr' ? '₩0' : '$0';
+  if (locale === 'kr') {
+    return value.toLocaleString('ko-KR', {
+      style: 'currency',
+      currency: 'KRW',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    });
+  }
+  return value.toLocaleString('en-AU', { 
     style: 'currency', 
-    currency: 'USD',
+    currency: 'AUD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   });

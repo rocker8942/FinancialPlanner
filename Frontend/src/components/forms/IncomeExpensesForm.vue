@@ -2,14 +2,14 @@
   <div class="income-expenses-form">
     <FormInputWithButtons
       field-id="salary"
-      label="Your Annual Salary (Include super/tax)"
+      :label="$t('form.income.salary_label')"
       :value="salary"
-      placeholder="Annual Salary ($)"
+      :placeholder="$t('form.income.salary_label')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('salary', salary)"
       :is-touched="validation.isFieldTouched('salary')"
       :error-message="validation.getFieldErrorMessage('salary')"
-      :format-value="formatting.formatField.bind(null, 'salary')"
+      :format-value="fmt"
       :parse-value="formatting.parseField.bind(null, 'salary')"
       @update:value="updateField('salary', $event)"
       @focus="handleFieldFocus"
@@ -22,14 +22,14 @@
     <div v-show="relationshipStatus === 'couple'">
       <FormInputWithButtons
         field-id="partnerSalary"
-        label="Partner's Annual Salary"
+        :label="$t('form.income.partner_salary_label')"
         :value="partnerSalary"
-        placeholder="Partner's Annual Salary ($)"
+        :placeholder="$t('form.income.partner_salary_label')"
         :increment-step="1000"
         :is-valid="validation.isFieldValid('partnerSalary', partnerSalary)"
         :is-touched="validation.isFieldTouched('partnerSalary')"
         :error-message="validation.getFieldErrorMessage('partnerSalary')"
-        :format-value="formatting.formatField.bind(null, 'partnerSalary')"
+        :format-value="fmt"
         :parse-value="formatting.parseField.bind(null, 'partnerSalary')"
         @update:value="updateField('partnerSalary', $event)"
         @focus="handleFieldFocus"
@@ -42,13 +42,13 @@
     <!-- Expenses with Auto-Optimize Toggle -->
     <div class="form-group">
       <div class="label-with-toggle">
-        <label for="expenses">Annual Expenses</label>
+        <label for="expenses">{{ $t('form.income.expenses_label') }}</label>
         <button 
           type="button" 
           class="toggle-switch" 
           :class="{ active: zeroNetWorthAtDeath }"
           @click="toggleAutoOptimize"
-          title="Auto-optimize expenses"
+          :title="$t('form.auto_optimize.toggle_title')"
         >
           <span class="toggle-slider"></span>
         </button>
@@ -57,12 +57,12 @@
       <FormInputWithButtons
         field-id="expenses"
         :value="expenses"
-        placeholder="Annual Expenses ($)"
+        :placeholder="$t('form.income.expenses_label')"
         :increment-step="1000"
         :is-valid="isExpenseFieldValid"
         :is-touched="validation.isFieldTouched('expenses')"
         :error-message="expenseErrorMessage"
-        :format-value="formatting.formatField.bind(null, 'expenses')"
+        :format-value="fmt"
         :parse-value="formatting.parseField.bind(null, 'expenses')"
         :show-validation="false"
         @update:value="updateField('expenses', $event)"
@@ -82,47 +82,51 @@
         {{ expenseErrorMessage }}
       </small>
       <small v-if="expensesAutoCapped" class="validation-warning">
-        ⚠️ Expense has been automatically adjusted to your maximum disposable income of {{ formatCurrency(currentDisposableIncome) }}
+        ⚠️ {{ $t('form.income.expense_warning', { amount: fmt(currentDisposableIncome) }) }}
       </small>
       <small v-if="!zeroNetWorthAtDeath && currentDisposableIncome > 0" class="help-text">
-        Disposable income: {{ formatCurrency(currentDisposableIncome) }} | {{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}
+        {{ $t('form.income.disposable_income_note', { amount: fmt(currentDisposableIncome) }) }} | {{ $t('form.income.paid_from_assets') }}
       </small>
       <small v-else class="help-text">
-        {{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}
+        {{ zeroNetWorthAtDeath ? $t('form.income.auto_calculated') : $t('form.income.paid_from_assets') }}
       </small>
     </div>
 
     <!-- Disposable Income Summary -->
     <div class="income-summary">
       <div class="summary-row">
-        <span class="label">Current Disposable Income:</span>
+        <span class="label">{{ $t('form.income.disposable_income') }}</span>
         <span class="value" :class="{ negative: currentDisposableIncome < 0 }">
-          {{ formatCurrency(currentDisposableIncome) }}
+          {{ fmt(currentDisposableIncome) }}
         </span>
       </div>
       <div v-if="relationshipStatus === 'couple'" class="summary-breakdown">
         <div class="breakdown-row">
-          <span class="breakdown-label">Your Net Income:</span>
-          <span class="breakdown-value">{{ formatCurrency(userNetIncome) }}</span>
+          <span class="breakdown-label">{{ $t('form.income.user_net_income') }}</span>
+          <span class="breakdown-value">{{ fmt(userNetIncome) }}</span>
         </div>
         <div class="breakdown-row">
-          <span class="breakdown-label">Partner Net Income:</span>
-          <span class="breakdown-value">{{ formatCurrency(partnerNetIncome) }}</span>
+          <span class="breakdown-label">{{ $t('form.income.partner_net_income') }}</span>
+          <span class="breakdown-value">{{ fmt(partnerNetIncome) }}</span>
         </div>
       </div>
-      <small class="help-text">
-        Disposable income = Net salary after tax + Age pension + Rental income
-      </small>
+      <small class="help-text">{{ $t('form.income.disposable_formula') }}</small>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import FormInputWithButtons from './FormInputWithButtons.vue';
 import { useFormValidation } from '../../composables/useFormValidation';
 import { useFieldFormatting } from '../../composables/useFieldFormatting';
 import { formatCurrency } from '../../utils/formatters';
+import { useLocaleStore } from '../../store/locale';
+
+const { t } = useI18n();
+const localeStore = useLocaleStore();
+const fmt = (value: number) => formatCurrency(value, localeStore.locale);
 
 interface IncomeExpensesData {
   salary: number;
@@ -175,7 +179,7 @@ const isExpenseFieldValid = computed(() => {
 const expenseErrorMessage = computed(() => {
   if (zeroNetWorthAtDeath.value) return '';
   if (expenses.value > currentDisposableIncome.value) {
-    return `Expenses cannot exceed disposable income of ${formatCurrency(currentDisposableIncome.value)}`;
+    return t('form.income.expense_error', { amount: fmt(currentDisposableIncome.value) });
   }
   return validation.getFieldErrorMessage('expenses');
 });

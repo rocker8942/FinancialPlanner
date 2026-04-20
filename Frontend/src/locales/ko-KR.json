@@ -1,0 +1,199 @@
+{
+  "nav": {
+    "main": "메인",
+    "home": "홈",
+    "planner": "은퇴 플래너",
+    "mcp": "MCP",
+    "feedback": "질문이나 피드백이 있으신가요?",
+    "submit_issue": "이슈 제출",
+    "login": "로그인",
+    "register": "회원가입"
+  },
+  "home": {
+    "title": "은퇴 플래너"
+  },
+  "cover": {
+    "eyebrow": "은퇴 플래너",
+    "headline": "편안한 은퇴가 가능한지 확인해 보세요.",
+    "sub": "자산, 소득, 지출을 입력하면 재정 미래를 연도별로 확인할 수 있습니다.",
+    "cta": "시뮬레이션 시작",
+    "benefits": {
+      "heading": "제공 기능",
+      "item1_title": "명확한 은퇴 일정",
+      "item1_desc": "연도별로 자산의 증감을 확인하여 은퇴가능 시기를 정확히 파악하세요.",
+      "item2_title": "최적화된 지출 계획",
+      "item2_desc": "목표 나이까지 자산이 지속되도록 최대 연간 지출을 계산해 드립니다.",
+      "item3_title": "자동 연금 계산",
+      "item3_desc": "매년 자산 및 소득 심사를 적용하여 에상 연금 수령액을 산출합니다."
+    },
+    "steps": {
+      "heading": "이용 방법",
+      "step1_title": "정보 입력",
+      "step1_desc": "나이, 자산, 소득, 지출을 입력합니다 — 약 2분 소요.",
+      "step2_title": "예측 실행",
+      "step2_desc": "연금, 세금, 물가상승률을 반영한 연도별 계산.",
+      "step3_title": "차트 확인",
+      "step3_desc": "인터랙티브 차트로 순자산 추이를 한눈에 확인.",
+      "step4_title": "예상값 조정",
+      "step4_desc": "성장률, 은퇴 나이, 지출을 조정하고 즉시 재계산."
+    },
+    "pension_callout": "현행 노령연금 자산 및 소득 심사 기준을 적용한 자동 연금 계산이 포함됩니다.",
+    "privacy_strip": "입력한 데이터는 브라우저에만 저장되며 서버에는 전송되지 않습니다.",
+    "faq": {
+      "heading": "자주 묻는 질문",
+      "q1": "재정 데이터는 안전한가요?",
+      "a1": "네. 모든 데이터는 브라우저에만 저장되며 저희는 어떤 정보도 수집하지 않습니다.",
+      "q2": "한국 전용인가요?",
+      "a2": "네 — 한국 세율, 국민연금 규정을 사용합니다.",
+      "q3": "예측은 얼마나 정확한가요?",
+      "a3": "현행 규정과 입력한 가정을 반영합니다. 실제 시장은 예측 불가하므로 계획 참고용으로 활용하세요."
+    },
+    "final_cta": {
+      "heading": "나의 미래를 확인할 준비가 됐나요?",
+      "sub": "무료이며, 개인정보는 안전하게 보호되고, 2분이면 충분합니다.",
+      "button": "시뮬레이션 시작"
+    },
+    "footer_disclaimer": "이 도구는 추정치만 제공하며 재무 조언이 아닙니다. 은퇴 결정 전 반드시 공인 재무 전문가와 상담하세요.",
+    "footer_opensource": "GitHub에서 소스 코드 보기"
+  },
+  "form": {
+    "privacy_notice": "입력한 데이터는 개인정보 보호를 위해 브라우저에만 암호화되어 저장됩니다.",
+    "sections": {
+      "personal": "개인 프로필",
+      "assets": "자산",
+      "income": "소득 및 지출",
+      "house": "주택 구매 계획",
+      "life_events": "생애 이벤트",
+      "advanced": "고급 옵션"
+    },
+    "auto_optimize": {
+      "help": "활성화하면 목표 나이에 순자산이 정확히 0이 되도록 연간 지출이 자동으로 계산됩니다. 평생 지출을 최대화합니다.",
+      "label": "자동 계산 연간 지출:",
+      "toggle_title": "지출 자동 최적화"
+    },
+    "share": {
+      "button": "계획 공유",
+      "success": "보안 링크가 복사되었습니다!"
+    },
+    "personal": {
+      "relationship_label": "관계 상태",
+      "single": "싱글",
+      "couple": "부부",
+      "homeowner_checkbox": "자가 주택 소유",
+      "homeowner_help": "주택 소유 여부는 노령연금 자산 심사 기준에 영향을 줍니다",
+      "current_age": "현재 나이",
+      "retirement_age": "은퇴 나이",
+      "retirement_age_help": "급여 소득이 중단되는 나이",
+      "partner_age": "배우자 나이",
+      "partner_retirement_age": "배우자 은퇴 나이"
+    },
+    "assets": {
+      "property_label": "투자 부동산",
+      "property_help": "부동산, 토지 및 기타 부동산 투자",
+      "savings_label": "현재 저축",
+      "savings_help": "주식, 채권, 저축 및 유동 자산",
+      "mortgage_label": "주택담보대출 잔액",
+      "mortgage_help": "부동산 담보 대출 잔액",
+      "super_label": "본인 연금 잔액",
+      "super_help": "현재 연금 계좌 잔액",
+      "partner_super_label": "배우자 연금 잔액",
+      "partner_super_help": "배우자의 현재 연금 계좌 잔액",
+      "kr_pension_label": "연금 잔액",
+      "kr_pension_help": "국민연금, 개인연금, 기타연금 등 현재까지 누적된 연금 자산 총액. 저축수익률로 성장합니다.",
+      "net_property": "순 부동산 자산:",
+      "total_net": "총 순자산:",
+      "wealth_formula": "순자산 = 자산 - 담보대출 + 연금 + 저축"
+    },
+    "income": {
+      "salary_label": "연간 급여 총액 (세금 포함)",
+      "partner_salary_label": "배우자 연간 급여",
+      "expenses_label": "연간 지출",
+      "disposable_income": "현재 가처분 소득:",
+      "user_net_income": "본인 실수령 소득:",
+      "partner_net_income": "배우자 실수령 소득:",
+      "disposable_formula": "가처분 소득 = 세후 급여 + 노령연금 + 임대 수입",
+      "expense_warning": "지출이 최대 가처분 소득 {amount}으로 자동 조정되었습니다",
+      "expense_error": "지출은 가처분 소득 {amount}을 초과할 수 없습니다",
+      "auto_calculated": "다른 입력값 기반으로 자동 계산됩니다",
+      "paid_from_assets": "금융 자산에서 지출됩니다",
+      "disposable_income_note": "가처분 소득: {amount}"
+    },
+    "advanced": {
+      "death_age_label": "계획 종료 나이",
+      "death_age_placeholder": "목표 나이",
+      "property_growth_label": "부동산 성장률",
+      "property_growth_help": "역사적 평균 부동산 가치 상승률 (기본값: 4%)",
+      "rental_yield_label": "부동산 임대 수익률",
+      "rental_yield_help": "수수료 및 세금 공제 후 순 임대 수익 (기본값: 3.3%)",
+      "savings_growth_label": "예상 저축 성장률",
+      "savings_growth_help": "투자에 대한 예상 연간 수익률",
+      "mortgage_rate_label": "주택담보대출 금리",
+      "mortgage_rate_help": "연간 담보대출 이자율 (기본값: 6%)",
+      "super_rate_label": "연금 수익률",
+      "super_rate_help": "연금에 대한 예상 연간 수익률 (기본값: 7%)",
+      "cpi_label": "소비자물가지수 (CPI) 상승률",
+      "cpi_help": "지출 증가를 위한 소비자물가지수 상승률 (기본값: 3%)",
+      "reset_button": "기본값으로 초기화"
+    },
+    "house": {
+      "toggle": "주택 구입 계획이 있습니다",
+      "purchase_age": "구입시 나이",
+      "purchase_price": "구입 가격",
+      "down_payment": "현금지급비율",
+      "down_payment_amount": "현금지급액 금액",
+      "mortgage_amount": "대출 금액",
+      "purchase_info": "{age}세에 {amount}이 현금지급액으로 저축에서 차감됩니다."
+    },
+    "life_events": {
+      "empty": "자동차 구매, 상속, 주택 리모델링 등 일시적 재정 이벤트를 추가하세요.",
+      "add_button": "+ 생애 이벤트 추가",
+      "age_prefix": "나이",
+      "event_placeholder": "예: 자동차 구매",
+      "income_title": "수입 — 클릭하여 지출로 변경",
+      "expense_title": "지출 — 클릭하여 수입으로 변경"
+    }
+  },
+  "summary": {
+    "current_wealth": "현재 순자산",
+    "real_value": "실질 가치",
+    "nominal_value": "명목 가치",
+    "retirement_wealth": "은퇴 시 자산",
+    "retirement_at_age": "{age}세 기준",
+    "optimal_expense": "최적 지출",
+    "optimal_subtitle": "종료 시 0에 도달하는 연간 금액",
+    "pension": "연금",
+    "pension_from_age": "{age}세부터 연간"
+  },
+  "chart": {
+    "title": "순자산 예측",
+    "view": "보기:",
+    "nominal_toggle": "명목 금액",
+    "real_toggle": "실질 금액 (현재 구매력 기준)",
+    "inflation_adjusted": "물가 조정",
+    "nominal": "명목",
+    "currency": "통화:",
+    "currency_value": "KRW",
+    "table_title": "재정 예측 데이터",
+    "age": "나이",
+    "income": "총 소득",
+    "expenses": "지출",
+    "mortgage": "담보대출",
+    "super": "연금",
+    "savings": "저축",
+    "net_assets": "순 금융 자산",
+    "retirement_marker": "은퇴",
+    "pension_marker": "노령연금 수령 가능",
+    "house_marker": "주택 구매 ({age}세)",
+    "property_legend": "부동산 자산",
+    "financial_legend": "금융 자산",
+    "pension_legend": "연금 소득",
+    "life_events_legend": "생애 이벤트",
+    "values_suffix": "",
+    "net_wealth_axis": "순자산",
+    "real_value_type": " (실질 가치)",
+    "nominal_type": " (명목)",
+    "income_event": "수입",
+    "expense_event": "지출",
+    "retirement_age_label": "{age}세"
+  }
+}
