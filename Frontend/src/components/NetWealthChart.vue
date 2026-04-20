@@ -23,8 +23,8 @@
       </div>
       <div class="chart-info">
         <div class="info-item">
-          <span class="info-label">View:</span>
-          <span class="info-value">{{ showInflationAdjusted ? $t('chart.inflation_adjusted') : $t('chart.nominal') }} Values</span>
+          <span class="info-label">{{ $t('chart.view') }}</span>
+          <span class="info-value">{{ showInflationAdjusted ? $t('chart.inflation_adjusted') : $t('chart.nominal') }}{{ $t('chart.values_suffix') }}</span>
         </div>
         <div class="info-item">
           <span class="info-label">{{ $t('chart.currency') }}</span>
@@ -204,7 +204,7 @@ function renderChart() {
     const savingsValue = savingsData[projIndex];
     const yValue = savingsValue;
     return {
-      name: event.label || (event.type === 'income' ? 'Income' : 'Expense'),
+      name: event.label || (event.type === 'income' ? t('chart.income_event') : t('chart.expense_event')),
       coord: [projIndex, yValue],
       symbol: 'circle',
       symbolSize: 12,
@@ -223,7 +223,7 @@ function renderChart() {
         label: { 
           show: true, 
           position: 'insideEndTop',
-          formatter: `${t('chart.retirement_marker')}\nAge ${props.retirementAge}`,
+          formatter: `${t('chart.retirement_marker')}\n${t('chart.retirement_age_label', { age: props.retirementAge })}`,
         color: '#fbbf24',
         fontSize: 12,
         fontWeight: 'bold'
@@ -282,23 +282,23 @@ function renderChart() {
           const superValue = projectionData.superannuationBalance * factor;
           const pensionValue = (projectionData.pensionIncome ?? 0) * factor;
           
-          const valueType = useInflationAdjusted ? ' (Real Value)' : ' (Nominal)';
+          const valueType = useInflationAdjusted ? t('chart.real_value_type') : t('chart.nominal_type');
 
           const ageInt = parseInt(age);
           const eventsAtAge = (props.lifeEvents || []).filter(e => e.age === ageInt);
           const eventsHtml = eventsAtAge.map(e =>
-            `<br/><span style="color:${e.type === 'income' ? '#10b981' : '#ef4444'}">${e.type === 'income' ? '▲' : '▼'} ${e.label || (e.type === 'income' ? 'Income' : 'Expense')}: ${fmt(e.amount)}</span>`
+            `<br/><span style="color:${e.type === 'income' ? '#10b981' : '#ef4444'}">${e.type === 'income' ? '▲' : '▼'} ${e.label || (e.type === 'income' ? t('chart.income_event') : t('chart.expense_event'))}: ${fmt(e.amount)}</span>`
           ).join('');
 
           return `
-            Age: ${age}<br/>
-            Property Assets${valueType}: ${fmt(propertyValue)}<br/>
-            Net Financial Asset${valueType}: ${fmt(savingsValue)}<br/>
-            Superannuation${valueType}: ${fmt(superValue)}<br/>
-            Pension Income${valueType}: ${fmt(pensionValue)}${eventsHtml}
+            ${t('chart.age')}: ${age}<br/>
+            ${t('chart.property_legend')}${valueType}: ${fmt(propertyValue)}<br/>
+            ${t('chart.net_assets')}${valueType}: ${fmt(savingsValue)}<br/>
+            ${t('chart.super')}${valueType}: ${fmt(superValue)}<br/>
+            ${t('chart.pension_legend')}${valueType}: ${fmt(pensionValue)}${eventsHtml}
           `;
         }
-        return `Age: ${age}<br/>Net Wealth: ${fmt(dataPoint.value)}`;
+        return `${t('chart.age')}: ${age}<br/>${t('chart.net_wealth_axis')}: ${fmt(dataPoint.value)}`;
       }
     },
     legend: {
@@ -314,11 +314,11 @@ function renderChart() {
     xAxis: { 
       type: 'category', 
       data: props.projection.map(p => String(p.age)),
-      name: 'Age'
+      name: t('chart.age')
     },
-    yAxis: { 
+    yAxis: {
       type: 'value',
-      name: 'Net Wealth',
+      name: t('chart.net_wealth_axis'),
       axisLabel: {
         formatter: (value: number) => fmt(value)
       }

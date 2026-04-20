@@ -167,7 +167,8 @@ export function calculateFinancialPlanModular(
     finalWealth,
     finalInflationAdjustedWealth,
     assetState.propertyAssets,
-    finalNetSavings
+    finalNetSavings,
+    countryConfig.defaults.currencySymbol
   );
 
   return {
@@ -233,9 +234,11 @@ function generateSummary(
   finalWealth: number,
   finalInflationAdjustedWealth: number,
   propertyAssets: number,
-  netSavings: number
+  netSavings: number,
+  currencySymbol: string = '$'
 ): string {
-  return `Retiring at age ${retireAge}, with projected net wealth of $${finalWealth.toLocaleString(undefined, {maximumFractionDigits: 0})} at age ${deathAge} ` +
-    `($${finalInflationAdjustedWealth.toLocaleString(undefined, {maximumFractionDigits: 0})} in today's purchasing power). ` +
-    `Property assets: $${propertyAssets.toLocaleString(undefined, {maximumFractionDigits: 0})}, Savings: $${netSavings.toLocaleString(undefined, {maximumFractionDigits: 0})}.`;
+  const fmt = (n: number) => n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  return `Retiring at age ${retireAge}, with projected net wealth of ${currencySymbol}${fmt(finalWealth)} at age ${deathAge} ` +
+    `(${currencySymbol}${fmt(finalInflationAdjustedWealth)} in today's purchasing power). ` +
+    `Property assets: ${currencySymbol}${fmt(propertyAssets)}, Savings: ${currencySymbol}${fmt(netSavings)}.`;
 }

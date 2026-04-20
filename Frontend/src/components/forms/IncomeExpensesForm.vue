@@ -4,7 +4,7 @@
       field-id="salary"
       :label="$t('form.income.salary_label')"
       :value="salary"
-      placeholder="Annual Salary ($)"
+      :placeholder="$t('form.income.salary_label')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('salary', salary)"
       :is-touched="validation.isFieldTouched('salary')"
@@ -24,7 +24,7 @@
         field-id="partnerSalary"
         :label="$t('form.income.partner_salary_label')"
         :value="partnerSalary"
-        placeholder="Partner's Annual Salary ($)"
+        :placeholder="$t('form.income.partner_salary_label')"
         :increment-step="1000"
         :is-valid="validation.isFieldValid('partnerSalary', partnerSalary)"
         :is-touched="validation.isFieldTouched('partnerSalary')"
@@ -48,7 +48,7 @@
           class="toggle-switch" 
           :class="{ active: zeroNetWorthAtDeath }"
           @click="toggleAutoOptimize"
-          title="Auto-optimize expenses"
+          :title="$t('form.auto_optimize.toggle_title')"
         >
           <span class="toggle-slider"></span>
         </button>
@@ -57,7 +57,7 @@
       <FormInputWithButtons
         field-id="expenses"
         :value="expenses"
-        placeholder="Annual Expenses ($)"
+        :placeholder="$t('form.income.expenses_label')"
         :increment-step="1000"
         :is-valid="isExpenseFieldValid"
         :is-touched="validation.isFieldTouched('expenses')"
@@ -85,10 +85,10 @@
         ⚠️ {{ $t('form.income.expense_warning', { amount: fmt(currentDisposableIncome) }) }}
       </small>
       <small v-if="!zeroNetWorthAtDeath && currentDisposableIncome > 0" class="help-text">
-        Disposable income: {{ fmt(currentDisposableIncome) }} | {{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}
+        {{ $t('form.income.disposable_income_note', { amount: fmt(currentDisposableIncome) }) }} | {{ $t('form.income.paid_from_assets') }}
       </small>
       <small v-else class="help-text">
-        {{ zeroNetWorthAtDeath ? 'Auto-calculated based on your other inputs' : 'Will be paid from financial assets only' }}
+        {{ zeroNetWorthAtDeath ? $t('form.income.auto_calculated') : $t('form.income.paid_from_assets') }}
       </small>
     </div>
 

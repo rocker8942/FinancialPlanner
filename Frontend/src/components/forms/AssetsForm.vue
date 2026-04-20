@@ -4,7 +4,7 @@
       field-id="propertyAssets"
       :label="$t('form.assets.property_label')"
       :value="propertyAssets"
-      placeholder="Investment Property ($)"
+      :placeholder="$t('form.assets.property_label')"
       :help-text="$t('form.assets.property_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('propertyAssets', propertyAssets)"
@@ -23,7 +23,7 @@
       field-id="savings"
       :label="$t('form.assets.savings_label')"
       :value="savings"
-      placeholder="Savings ($)"
+      :placeholder="$t('form.assets.savings_label')"
       :help-text="$t('form.assets.savings_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('savings', savings)"
@@ -42,7 +42,7 @@
       field-id="mortgageBalance"
       :label="$t('form.assets.mortgage_label')"
       :value="mortgageBalance"
-      placeholder="Mortgage Balance ($)"
+      :placeholder="$t('form.assets.mortgage_label')"
       :help-text="$t('form.assets.mortgage_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('mortgageBalance', mortgageBalance)"
@@ -57,12 +57,32 @@
       @adjust="handleFieldAdjust"
     />
 
+    <!-- Korean pension balance field -->
+    <FormInputWithButtons
+      v-if="locale === 'kr'"
+      field-id="krPensionBalance"
+      :label="$t('form.assets.kr_pension_label')"
+      :value="krPensionBalance"
+      :help-text="$t('form.assets.kr_pension_help')"
+      :increment-step="1000000"
+      :is-valid="true"
+      :is-touched="false"
+      :error-message="''"
+      :format-value="fmt"
+      :parse-value="formatting.parseField.bind(null, 'krPensionBalance')"
+      @update:value="updateField('krPensionBalance', $event)"
+      @focus="handleFieldFocus"
+      @blur="handleFieldBlur"
+      @enter="handleFieldEnter"
+      @adjust="handleFieldAdjust"
+    />
+
     <FormInputWithButtons
       v-if="locale !== 'kr'"
       field-id="superannuationBalance"
       :label="$t('form.assets.super_label')"
       :value="superannuationBalance"
-      placeholder="Superannuation Balance ($)"
+      :placeholder="$t('form.assets.super_label')"
       :help-text="$t('form.assets.super_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('superannuationBalance', superannuationBalance)"
@@ -82,7 +102,7 @@
       field-id="partnerSuperBalance"
       :label="$t('form.assets.partner_super_label')"
       :value="partnerSuperBalance"
-      placeholder="Partner Superannuation Balance ($)"
+      :placeholder="$t('form.assets.partner_super_label')"
       :help-text="$t('form.assets.partner_super_help')"
       :increment-step="1000"
       :is-valid="validation.isFieldValid('partnerSuperBalance', partnerSuperBalance)"
@@ -134,6 +154,7 @@ interface AssetsData {
   mortgageBalance: number;
   superannuationBalance: number;
   partnerSuperBalance: number;
+  krPensionBalance: number;
 }
 
 interface Props {
@@ -153,13 +174,14 @@ const savings = computed(() => props.modelValue.savings);
 const mortgageBalance = computed(() => props.modelValue.mortgageBalance);
 const superannuationBalance = computed(() => props.modelValue.superannuationBalance);
 const partnerSuperBalance = computed(() => props.modelValue.partnerSuperBalance);
+const krPensionBalance = computed(() => props.modelValue.krPensionBalance ?? 0);
 const relationshipStatus = computed(() => props.relationshipStatus ?? 'single');
 
 // Calculate wealth summaries
 const netPropertyWealth = computed(() => propertyAssets.value - mortgageBalance.value);
 const totalNetWealth = computed(() =>
-  propertyAssets.value + savings.value + superannuationBalance.value + partnerSuperBalance.value - mortgageBalance.value
-);
+  propertyAssets.value + savings.value + superannuationBalance.value + partnerSuperBalance.value + krPensionBalance.value - mortgageBalance.value
+); // krPensionBalance shown separately in form; folded into superannuationBalance for calculations
 
 // Setup validation
 const validation = useFormValidation();

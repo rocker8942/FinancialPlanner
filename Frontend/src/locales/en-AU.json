@@ -68,7 +68,8 @@
     },
     "auto_optimize": {
       "help": "When enabled, your annual expenses will be automatically calculated and adjusted based on your other inputs to ensure you reach exactly zero net worth at your target age. This maximizes your lifetime spending potential.",
-      "label": "Auto-calculated annual expense:"
+      "label": "Auto-calculated annual expense:",
+      "toggle_title": "Auto-optimize expenses"
     },
     "share": {
       "button": "Share Plan",
@@ -110,7 +111,10 @@
       "partner_net_income": "Partner Net Income:",
       "disposable_formula": "Disposable income = Net salary after tax + Age pension + Rental income",
       "expense_warning": "Expense has been automatically adjusted to your maximum disposable income of {amount}",
-      "expense_error": "Expenses cannot exceed disposable income of {amount}"
+      "expense_error": "Expenses cannot exceed disposable income of {amount}",
+      "auto_calculated": "Auto-calculated based on your other inputs",
+      "paid_from_assets": "Will be paid from financial assets only",
+      "disposable_income_note": "Disposable income: {amount}"
     },
     "advanced": {
       "death_age_label": "Age the plan ends",
@@ -140,7 +144,11 @@
     },
     "life_events": {
       "empty": "Add lump sum events like buying a car, receiving an inheritance, home renovation, etc.",
-      "add_button": "+ Add Life Event"
+      "add_button": "+ Add Life Event",
+      "age_prefix": "Age",
+      "event_placeholder": "e.g. Buy a car",
+      "income_title": "Income — click to switch to expense",
+      "expense_title": "Expense — click to switch to income"
     }
   },
   "summary": {
@@ -177,6 +185,13 @@
     "property_legend": "Property Assets",
     "financial_legend": "Financial Assets",
     "pension_legend": "Pension Income",
-    "life_events_legend": "Life Events"
+    "life_events_legend": "Life Events",
+    "values_suffix": " Values",
+    "net_wealth_axis": "Net Wealth",
+    "real_value_type": " (Real Value)",
+    "nominal_type": " (Nominal)",
+    "income_event": "Income",
+    "expense_event": "Expense",
+    "retirement_age_label": "Age {age}"
   }
 }

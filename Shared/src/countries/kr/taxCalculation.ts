@@ -49,13 +49,22 @@ function calculateEarnedIncomeDeduction(grossIncome: number): number {
   return MAX_DEDUCTION;
 }
 
-export function calculateIncomeTax(grossIncome: number): number {
-  if (grossIncome <= 0) return 0;
+// The orchestrator deducts NPS (4.5%) from the salary package before calling these functions,
+// so all exported tax functions receive postNpsIncome = salary * (1 - NPS_EMPLOYEE_RATE).
+// We reverse this to obtain the true gross salary so that:
+//   1. 근로소득공제 is applied to the correct (pre-NPS) gross base
+//   2. NPS itself is also deducted from the taxable base (it is a 소득공제 item)
+//   3. Social insurance (건강보험 등) is calculated on the true gross salary (보수월액)
+function recoverGross(postNpsIncome: number): number {
+  return postNpsIncome / (1 - NPS_EMPLOYEE_RATE);
+}
 
-  const taxableIncome = Math.max(0, grossIncome - calculateEarnedIncomeDeduction(grossIncome));
+// Computes income tax given the true pre-NPS gross salary.
+function incomeTaxFromGross(grossSalary: number): number {
+  const npsDeduction = Math.round(grossSalary * NPS_EMPLOYEE_RATE);
+  const taxableIncome = Math.max(0, grossSalary - calculateEarnedIncomeDeduction(grossSalary) - npsDeduction);
   let tax = 0;
   let processed = 0;
-
   for (const bracket of TAX_BRACKETS) {
     if (processed >= taxableIncome) break;
     const end = Math.min(bracket.max, taxableIncome);
@@ -64,59 +73,59 @@ export function calculateIncomeTax(grossIncome: number): number {
       processed = end;
     }
   }
-
   return Math.round(tax);
 }
 
-// Local income tax = 10% of national income tax. Returned separately so callers can
-// surface it in summaries; the primary tax calculation includes both layers.
-export function calculateLocalIncomeTax(grossIncome: number): number {
-  if (grossIncome <= 0) return 0;
-  return Math.round(calculateIncomeTax(grossIncome) * LOCAL_INCOME_TAX_RATE);
+export function calculateIncomeTax(postNpsIncome: number): number {
+  if (postNpsIncome <= 0) return 0;
+  return incomeTaxFromGross(recoverGross(postNpsIncome));
 }
 
-// Combined social insurance deductions (health + LTC + employment).
-// NPS is treated separately as the "super contributions" equivalent in the orchestrator.
-export function calculateSocialInsurance(grossIncome: number): number {
-  if (grossIncome <= 0) return 0;
-  const health = grossIncome * HEALTH_INSURANCE_EMPLOYEE_RATE;
+// Local income tax = 10% of national income tax.
+export function calculateLocalIncomeTax(postNpsIncome: number): number {
+  if (postNpsIncome <= 0) return 0;
+  return Math.round(calculateIncomeTax(postNpsIncome) * LOCAL_INCOME_TAX_RATE);
+}
+
+// Social insurance (health + LTC + employment) on true gross salary (보수월액 기준).
+export function calculateSocialInsurance(postNpsIncome: number): number {
+  if (postNpsIncome <= 0) return 0;
+  const grossSalary = recoverGross(postNpsIncome);
+  const health = grossSalary * HEALTH_INSURANCE_EMPLOYEE_RATE;
   const longTermCare = health * LONG_TERM_CARE_RATE;
-  const employment = grossIncome * EMPLOYMENT_INSURANCE_EMPLOYEE_RATE;
+  const employment = grossSalary * EMPLOYMENT_INSURANCE_EMPLOYEE_RATE;
   return Math.round(health + longTermCare + employment);
 }
 
-export function calculateNetIncome(grossIncome: number): number {
-  if (grossIncome <= 0) return 0;
-
-  const incomeTax = calculateIncomeTax(grossIncome);
-  const localTax = calculateLocalIncomeTax(grossIncome);
-  const socialInsurance = calculateSocialInsurance(grossIncome);
-
-  return Math.max(0, grossIncome - incomeTax - localTax - socialInsurance);
+export function calculateNetIncome(postNpsIncome: number): number {
+  if (postNpsIncome <= 0) return 0;
+  const incomeTax = calculateIncomeTax(postNpsIncome);
+  const localTax = calculateLocalIncomeTax(postNpsIncome);
+  const socialInsurance = calculateSocialInsurance(postNpsIncome);
+  return Math.max(0, postNpsIncome - incomeTax - localTax - socialInsurance);
 }
 
-// Adapter to the shared TaxBreakdown shape so the rest of the orchestrator stays generic.
-// `medicareLevy` is repurposed to carry the combined local-tax-plus-social-insurance figure
-// for Korea so it surfaces as a single non-income-tax deduction in summaries.
+// `medicareLevy` carries combined local-tax + social-insurance for KR display.
 export function getTaxBreakdown(
-  grossIncome: number,
+  postNpsIncome: number,
   _superContributions: number = 0
 ): TaxBreakdown {
-  const incomeTax = calculateIncomeTax(grossIncome);
-  const localTax = calculateLocalIncomeTax(grossIncome);
-  const socialInsurance = calculateSocialInsurance(grossIncome);
+  if (postNpsIncome <= 0) {
+    return { grossIncome: 0, incomeTax: 0, medicareLevy: 0, netIncome: 0, superContributionsTax: 0 };
+  }
+  const grossSalary = recoverGross(postNpsIncome);
+  const incomeTax = calculateIncomeTax(postNpsIncome);
+  const localTax = calculateLocalIncomeTax(postNpsIncome);
+  const socialInsurance = calculateSocialInsurance(postNpsIncome);
   const otherDeductions = localTax + socialInsurance;
-  const netIncome = grossIncome - incomeTax - otherDeductions;
-  // For KR, NPS contributions are deducted from the employee's gross before being paid in.
-  // There is no equivalent of Australia's super contributions tax, so we report 0 here.
-  const superContributionsTax = 0;
+  const netIncome = postNpsIncome - incomeTax - otherDeductions;
 
   return {
-    grossIncome: Math.round(grossIncome),
+    grossIncome: Math.round(grossSalary),
     incomeTax: Math.round(incomeTax),
     medicareLevy: Math.round(otherDeductions),
     netIncome: Math.round(Math.max(0, netIncome)),
-    superContributionsTax
+    superContributionsTax: 0
   };
 }
 

@@ -24,19 +24,34 @@
         <!-- Navigation -->
         <nav class="flex flex-col gap-1 mt-4 px-2">
            <span v-show="!sidebarCollapsed" :class="['uppercase text-xs px-4 mb-2 transition-opacity duration-300', isDark ? 'text-gray-500' : 'text-slate-400']">{{ $t('nav.main') }}</span>
-          <router-link to="/" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? $t('nav.home') : ''">
+          <router-link :to="currentLocale === 'kr' ? '/kr' : '/'" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? $t('nav.home') : ''">
             <span class="material-icons text-lg text-green-400">home</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">{{ $t('nav.home') }}</span>
           </router-link>
-          <router-link to="/retirementplanner" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? $t('nav.planner') : ''">
+          <router-link :to="currentLocale === 'kr' ? '/kr/retirementplanner' : '/retirementplanner'" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? $t('nav.planner') : ''">
             <span class="material-icons text-lg text-blue-400">trending_up</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">{{ $t('nav.planner') }}</span>
           </router-link>
-          <router-link to="/mcp" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? $t('nav.mcp') : ''">
+          <router-link v-if="currentLocale !== 'kr'" to="/mcp" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700', sidebarCollapsed ? 'justify-center' : '']" :title="sidebarCollapsed ? $t('nav.mcp') : ''">
             <span class="material-icons text-lg text-cyan-400">hub</span>
             <span v-show="!sidebarCollapsed" class="transition-opacity duration-300">{{ $t('nav.mcp') }}</span>
           </router-link>
         </nav>
+
+        <!-- Country / Locale Switcher -->
+        <div :class="['locale-switcher px-2 mt-4', sidebarCollapsed ? 'collapsed' : '']">
+          <span v-show="!sidebarCollapsed" :class="['uppercase text-xs px-2 mb-2 block transition-opacity duration-300', isDark ? 'text-gray-500' : 'text-slate-400']">Region</span>
+          <div :class="['locale-pills', sidebarCollapsed ? 'flex-col' : 'flex-row', isDark ? 'bg-gray-700' : 'bg-slate-100']">
+            <button @click="switchLocale('au')" :class="['locale-pill', currentLocale === 'au' ? 'locale-pill-active' : (isDark ? 'locale-pill-inactive-dark' : 'locale-pill-inactive')]" title="Australia">
+              <span v-show="sidebarCollapsed" class="flag">🇦🇺</span>
+              <span v-show="!sidebarCollapsed" class="locale-label">Australia</span>
+            </button>
+            <button @click="switchLocale('kr')" :class="['locale-pill', currentLocale === 'kr' ? 'locale-pill-active' : (isDark ? 'locale-pill-inactive-dark' : 'locale-pill-inactive')]" title="Korea">
+              <span v-show="sidebarCollapsed"class="flag">🇰🇷</span>
+              <span v-show="!sidebarCollapsed" class="locale-label">한국</span>
+            </button>
+          </div>
+        </div>
       </div>
 
     </aside>
@@ -95,19 +110,34 @@
           <!-- Mobile Navigation -->
           <nav class="flex flex-col gap-1 mt-4 px-2">
             <span :class="['uppercase text-xs px-4 mb-2', isDark ? 'text-gray-500' : 'text-slate-400']">{{ $t('nav.main') }}</span>
-            <router-link to="/" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
+            <router-link :to="currentLocale === 'kr' ? '/kr' : '/'" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-green-400">home</span>
               <span>{{ $t('nav.home') }}</span>
             </router-link>
-            <router-link to="/retirementplanner" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
+            <router-link :to="currentLocale === 'kr' ? '/kr/retirementplanner' : '/retirementplanner'" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-blue-400">trending_up</span>
               <span>{{ $t('nav.planner') }}</span>
             </router-link>
-            <router-link to="/mcp" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
+            <router-link v-if="currentLocale !== 'kr'" to="/mcp" @click="closeMobileMenu" :class="['flex items-center gap-2 px-4 py-2 rounded transition-colors', isDark ? 'hover:bg-gray-700 hover:text-teal-300 text-gray-100' : 'hover:bg-slate-100 hover:text-teal-600 text-slate-700']">
               <span class="material-icons text-lg text-cyan-400">hub</span>
               <span>{{ $t('nav.mcp') }}</span>
             </router-link>
           </nav>
+
+          <!-- Mobile Country Switcher -->
+          <div class="px-4 mt-6 mb-4">
+            <span :class="['uppercase text-xs mb-2 block', isDark ? 'text-gray-500' : 'text-slate-400']">Region</span>
+            <div :class="['locale-pills flex-row', isDark ? 'bg-gray-700' : 'bg-slate-100']">
+              <button @click="switchLocale('au'); closeMobileMenu()" :class="['locale-pill flex-1', currentLocale === 'au' ? 'locale-pill-active' : (isDark ? 'locale-pill-inactive-dark' : 'locale-pill-inactive')]">
+                <span class="flag">🇦🇺</span>
+                <span class="locale-label">Australia</span>
+              </button>
+              <button @click="switchLocale('kr'); closeMobileMenu()" :class="['locale-pill flex-1', currentLocale === 'kr' ? 'locale-pill-active' : (isDark ? 'locale-pill-inactive-dark' : 'locale-pill-inactive')]">
+                <span class="flag">🇰🇷</span>
+                <span class="locale-label">한국</span>
+              </button>
+            </div>
+          </div>
         </div>
 
       </aside>
@@ -116,21 +146,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, computed, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useTheme } from './composables/useTheme';
 
 const { isDark, toggleTheme } = useTheme();
 const { locale } = useI18n();
 const route = useRoute();
+const router = useRouter();
 
-// Sync route locale param → i18n locale
-watch(() => route.params.locale, (newLocale) => {
-  locale.value = newLocale === 'kr' ? 'ko-KR' : 'en-AU';
+// Sync route locale param or meta → i18n locale
+watch(() => [route.params.locale, route.meta.locale], ([paramLocale, metaLocale]) => {
+  const resolved = paramLocale ?? metaLocale;
+  locale.value = resolved === 'kr' ? 'ko-KR' : 'en-AU';
+  document.documentElement.lang = resolved === 'kr' ? 'ko' : 'en';
 }, { immediate: true });
 
-const sidebarCollapsed = ref(true); // Start collapsed by default
+const currentLocale = computed<'au' | 'kr'>(() => {
+  const p = route.params.locale ?? route.meta.locale;
+  return p === 'kr' ? 'kr' : 'au';
+});
+
+function switchLocale(target: 'au' | 'kr') {
+  const name = route.name as string | undefined;
+  if (target === 'kr') {
+    if (name === 'HomeLocale' || name === 'Home') router.push('/kr/retirementplanner');
+    else router.push('/kr');
+  } else {
+    if (name === 'HomeLocale' || name === 'Home') router.push('/retirementplanner');
+    else router.push('/');
+  }
+}
+
+const sidebarCollapsed = ref(true);
 const mobileMenuOpen = ref(false);
 
 function toggleSidebar() {
@@ -225,6 +274,76 @@ function closeMobileMenu() {
   letter-spacing: 0.05em;
   box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── Locale Switcher ───────────────────────────────────────── */
+.locale-switcher {
+  margin-top: 0.5rem;
+}
+
+.locale-pills {
+  display: flex;
+  gap: 0.25rem;
+  border-radius: 0.625rem;
+  padding: 0.25rem;
+}
+
+.locale-pills.flex-col {
+  flex-direction: column;
+}
+
+.locale-pills.flex-row {
+  flex-direction: row;
+}
+
+.locale-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.4rem 0.75rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.locale-pill-active {
+  background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.35);
+}
+
+.locale-pill-inactive {
+  background: transparent;
+  color: #64748b;
+}
+
+.locale-pill-inactive:hover {
+  background: #e2e8f0;
+  color: #0d9488;
+}
+
+.locale-pill-inactive-dark {
+  background: transparent;
+  color: #9ca3af;
+}
+
+.locale-pill-inactive-dark:hover {
+  background: #374151;
+  color: #6ee7b7;
+}
+
+.flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.locale-label {
+  font-size: 0.8125rem;
 }
 
 /* Hide Settings menu on iPhone and narrow mobile screens */

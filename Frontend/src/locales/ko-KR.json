@@ -13,18 +13,18 @@
     "title": "은퇴 플래너"
   },
   "cover": {
-    "eyebrow": "한국 은퇴 플래너",
+    "eyebrow": "은퇴 플래너",
     "headline": "편안한 은퇴가 가능한지 확인해 보세요.",
     "sub": "자산, 소득, 지출을 입력하면 재정 미래를 연도별로 확인할 수 있습니다.",
     "cta": "시뮬레이션 시작",
     "benefits": {
       "heading": "제공 기능",
       "item1_title": "명확한 은퇴 일정",
-      "item1_desc": "연도별로 자산의 증감을 확인하여 언제 일을 멈출 수 있는지 정확히 파악하세요.",
+      "item1_desc": "연도별로 자산의 증감을 확인하여 은퇴가능 시기를 정확히 파악하세요.",
       "item2_title": "최적화된 지출 계획",
       "item2_desc": "목표 나이까지 자산이 지속되도록 최대 연간 지출을 계산해 드립니다.",
-      "item3_title": "자동 노령연금 계산",
-      "item3_desc": "매년 자산 및 소득 심사를 적용하여 연금 수령액을 정확히 산출합니다."
+      "item3_title": "자동 연금 계산",
+      "item3_desc": "매년 자산 및 소득 심사를 적용하여 에상 연금 수령액을 산출합니다."
     },
     "steps": {
       "heading": "이용 방법",
@@ -34,7 +34,7 @@
       "step2_desc": "연금, 세금, 물가상승률을 반영한 연도별 계산.",
       "step3_title": "차트 확인",
       "step3_desc": "인터랙티브 차트로 순자산 추이를 한눈에 확인.",
-      "step4_title": "가정 조정",
+      "step4_title": "예상값 조정",
       "step4_desc": "성장률, 은퇴 나이, 지출을 조정하고 즉시 재계산."
     },
     "pension_callout": "현행 노령연금 자산 및 소득 심사 기준을 적용한 자동 연금 계산이 포함됩니다.",
@@ -49,12 +49,12 @@
       "a3": "현행 규정과 입력한 가정을 반영합니다. 실제 시장은 예측 불가하므로 계획 참고용으로 활용하세요."
     },
     "final_cta": {
-      "heading": "나의 숫자를 확인할 준비가 됐나요?",
+      "heading": "나의 미래를 확인할 준비가 됐나요?",
       "sub": "무료이며, 개인정보는 안전하게 보호되고, 2분이면 충분합니다.",
       "button": "시뮬레이션 시작"
     },
     "footer_disclaimer": "이 도구는 추정치만 제공하며 재무 조언이 아닙니다. 은퇴 결정 전 반드시 공인 재무 전문가와 상담하세요.",
-    "footer_opensource": "오픈 소스 — GitHub에서 소스 코드 보기"
+    "footer_opensource": "GitHub에서 소스 코드 보기"
   },
   "form": {
     "privacy_notice": "입력한 데이터는 개인정보 보호를 위해 브라우저에만 암호화되어 저장됩니다.",
@@ -68,7 +68,8 @@
     },
     "auto_optimize": {
       "help": "활성화하면 목표 나이에 순자산이 정확히 0이 되도록 연간 지출이 자동으로 계산됩니다. 평생 지출을 최대화합니다.",
-      "label": "자동 계산 연간 지출:"
+      "label": "자동 계산 연간 지출:",
+      "toggle_title": "지출 자동 최적화"
     },
     "share": {
       "button": "계획 공유",
@@ -97,6 +98,8 @@
       "super_help": "현재 연금 계좌 잔액",
       "partner_super_label": "배우자 연금 잔액",
       "partner_super_help": "배우자의 현재 연금 계좌 잔액",
+      "kr_pension_label": "연금 잔액",
+      "kr_pension_help": "국민연금, 개인연금, 기타연금 등 현재까지 누적된 연금 자산 총액. 저축수익률로 성장합니다.",
       "net_property": "순 부동산 자산:",
       "total_net": "총 순자산:",
       "wealth_formula": "순자산 = 자산 - 담보대출 + 연금 + 저축"
@@ -110,7 +113,10 @@
       "partner_net_income": "배우자 실수령 소득:",
       "disposable_formula": "가처분 소득 = 세후 급여 + 노령연금 + 임대 수입",
       "expense_warning": "지출이 최대 가처분 소득 {amount}으로 자동 조정되었습니다",
-      "expense_error": "지출은 가처분 소득 {amount}을 초과할 수 없습니다"
+      "expense_error": "지출은 가처분 소득 {amount}을 초과할 수 없습니다",
+      "auto_calculated": "다른 입력값 기반으로 자동 계산됩니다",
+      "paid_from_assets": "금융 자산에서 지출됩니다",
+      "disposable_income_note": "가처분 소득: {amount}"
     },
     "advanced": {
       "death_age_label": "계획 종료 나이",
@@ -130,17 +136,21 @@
       "reset_button": "기본값으로 초기화"
     },
     "house": {
-      "toggle": "주택 구매 계획이 있습니다",
-      "purchase_age": "구매 나이",
-      "purchase_price": "구매 가격",
-      "down_payment": "계약금",
-      "down_payment_amount": "계약금 금액",
+      "toggle": "주택 구입 계획이 있습니다",
+      "purchase_age": "구입시 나이",
+      "purchase_price": "구입 가격",
+      "down_payment": "현금지급비율",
+      "down_payment_amount": "현금지급액 금액",
       "mortgage_amount": "대출 금액",
-      "purchase_info": "{age}세에 {amount}이 계약금으로 저축에서 차감됩니다."
+      "purchase_info": "{age}세에 {amount}이 현금지급액으로 저축에서 차감됩니다."
     },
     "life_events": {
       "empty": "자동차 구매, 상속, 주택 리모델링 등 일시적 재정 이벤트를 추가하세요.",
-      "add_button": "+ 생애 이벤트 추가"
+      "add_button": "+ 생애 이벤트 추가",
+      "age_prefix": "나이",
+      "event_placeholder": "예: 자동차 구매",
+      "income_title": "수입 — 클릭하여 지출로 변경",
+      "expense_title": "지출 — 클릭하여 수입으로 변경"
     }
   },
   "summary": {
@@ -177,6 +187,13 @@
     "property_legend": "부동산 자산",
     "financial_legend": "금융 자산",
     "pension_legend": "연금 소득",
-    "life_events_legend": "생애 이벤트"
+    "life_events_legend": "생애 이벤트",
+    "values_suffix": "",
+    "net_wealth_axis": "순자산",
+    "real_value_type": " (실질 가치)",
+    "nominal_type": " (명목)",
+    "income_event": "수입",
+    "expense_event": "지출",
+    "retirement_age_label": "{age}세"
   }
 }

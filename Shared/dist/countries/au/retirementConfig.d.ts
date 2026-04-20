@@ -11,5 +11,6 @@ export declare const AU_RETIREMENT_DEFAULTS: {
     defaultSuperannuationRate: number;
     defaultCpiGrowthRate: number;
     defaultPropertyRentalYield: number;
+    currencyBaseAmount: number;
 };
 //# sourceMappingURL=retirementConfig.d.ts.map

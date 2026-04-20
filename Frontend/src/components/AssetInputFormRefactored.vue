@@ -174,7 +174,8 @@ const assets = ref({
   savings: 0,
   mortgageBalance: 0,
   superannuationBalance: 0,
-  partnerSuperBalance: 0
+  partnerSuperBalance: 0,
+  krPensionBalance: 0
 });
 
 const incomeExpenses = ref({
@@ -221,14 +222,15 @@ const shareButtonDisabled = computed(() => {
 });
 
 const currentFinancialProfile = computed((): FinancialProfile => {
+  const isKr = localeStore.locale === 'kr';
   return {
     propertyAssets: assets.value.propertyAssets,
     savings: assets.value.savings,
     mortgageBalance: assets.value.mortgageBalance,
     mortgageRate: advancedOptions.value.mortgageRate,
-    superannuationBalance: assets.value.superannuationBalance,
+    superannuationBalance: assets.value.superannuationBalance + (isKr ? (assets.value.krPensionBalance ?? 0) : 0),
     partnerSuperBalance: assets.value.partnerSuperBalance,
-    superannuationRate: advancedOptions.value.superannuationRate,
+    superannuationRate: isKr ? advancedOptions.value.savingsGrowthRate : advancedOptions.value.superannuationRate,
     salary: incomeExpenses.value.salary,
     partnerSalary: incomeExpenses.value.partnerSalary,
     expenses: incomeExpenses.value.expenses,
@@ -318,7 +320,8 @@ const collectAllFormData = (): StoredFinancialData => {
     isHomeowner: personalProfile.value.isHomeowner,
     zeroNetWorthAtDeath: incomeExpenses.value.zeroNetWorthAtDeath,
     lifeEvents: lifeEvents.value,
-    housePurchasePlan: housePurchasePlan.value
+    housePurchasePlan: housePurchasePlan.value,
+    krPensionBalance: assets.value.krPensionBalance
   };
 };
 
@@ -362,7 +365,8 @@ const populateFormsFromData = (data: StoredFinancialData) => {
     savings: data.savings,
     mortgageBalance: data.mortgageBalance,
     superannuationBalance: data.superannuationBalance,
-    partnerSuperBalance: data.partnerSuperBalance ?? 0
+    partnerSuperBalance: data.partnerSuperBalance ?? 0,
+    krPensionBalance: data.krPensionBalance ?? 0
   };
 
   incomeExpenses.value = {

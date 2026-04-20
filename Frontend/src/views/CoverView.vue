@@ -80,15 +80,9 @@
       </section>
 
       <!-- Age Pension callout -->
-      <div class="pension-callout" role="note">
+      <div v-if="!isKorean" class="pension-callout" role="note">
         <span class="material-icons callout-icon" aria-hidden="true">verified</span>
         <p>{{ $t('cover.pension_callout') }}</p>
-      </div>
-
-      <!-- Privacy strip -->
-      <div class="privacy-strip" role="note">
-        <span class="material-icons" aria-hidden="true">lock</span>
-        <span>{{ $t('cover.privacy_strip') }}</span>
       </div>
 
       <!-- FAQ -->
@@ -137,12 +131,16 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
+const isKorean = computed(() => (route.params.locale ?? route.meta.locale) === 'kr');
 
 function startPlanning() {
-  router.push('/retirementplanner');
+  const locale = (route.params.locale as string | undefined) ?? (route.meta.locale as string | undefined);
+  router.push(locale ? `/${locale}/retirementplanner` : '/retirementplanner');
 }
 </script>
 
@@ -172,6 +170,10 @@ function startPlanning() {
   text-transform: uppercase;
   color: var(--accent-text);
   margin: 0 0 1.25rem;
+}
+
+:lang(ko) .hero-eyebrow {
+  font-size: 2.0rem;
 }
 
 .hero-headline {
@@ -231,6 +233,10 @@ function startPlanning() {
   color: var(--accent-text);
   margin: 0 0 2.5rem;
   text-align: center;
+}
+
+:lang(ko) .section-label {
+  font-size: 2rem;
 }
 
 /* ── Benefits ──────────────────────────────────────────────── */

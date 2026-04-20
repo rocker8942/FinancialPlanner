@@ -13,5 +13,6 @@ export const KR_RETIREMENT_DEFAULTS = {
   defaultMortgageRate: 0.045,
   defaultSuperannuationRate: 0.05, // IRP / pension fund return assumption
   defaultCpiGrowthRate: 0.025,
-  defaultPropertyRentalYield: 0.025
+  defaultPropertyRentalYield: 0.025,
+  currencyBaseAmount: 10_000_000
 };

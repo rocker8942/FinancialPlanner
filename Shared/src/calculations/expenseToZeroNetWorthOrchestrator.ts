@@ -27,16 +27,15 @@ export function calculateExpenseToZeroNetWorthModular(
 
   // Special case: if no meaningful income streams or assets
   if (!hasMeaningfulIncomeStreams(profileInput, countryConfig)) {
-    // Even if there's some pension income, without other assets or income streams,
-    // practical spendable amount might be minimal
-    const roughPensionEstimate = estimateRoughPensionIncome(profileInput);
-    if (roughPensionEstimate < 15000) { // Very low pension income threshold
-      return Math.max(0, Math.round(roughPensionEstimate / years * 0.8)); // Conservative pension spending
+    const base = countryConfig.defaults.currencyBaseAmount;
+    const roughPensionEstimate = estimateRoughPensionIncome(profileInput, base);
+    if (roughPensionEstimate < base * 1.5) {
+      return Math.max(0, Math.round(roughPensionEstimate / years * 0.8));
     }
   }
 
-  // If total available is very small (less than $5000), use simple calculation
-  if (totalAvailableResources < 5000) {
+  // If total available is very small, use simple calculation
+  if (totalAvailableResources < countryConfig.defaults.currencyBaseAmount * 0.5) {
     return Math.max(0, Math.round(totalAvailableResources / years));
   }
 
@@ -50,26 +49,19 @@ export function calculateExpenseToZeroNetWorthModular(
 /**
  * Rough estimation of pension income for edge case handling
  */
-function estimateRoughPensionIncome(profile: FinancialProfile): number {
-  // Very rough estimate - assume some basic age pension if eligible
-  const pensionEligibleYears = Math.max(0, profile.deathAge - 67); // Pension starts at 67
-
+function estimateRoughPensionIncome(profile: FinancialProfile, currencyBase: number): number {
+  const pensionEligibleYears = Math.max(0, profile.deathAge - 67);
   if (pensionEligibleYears <= 0) return 0;
 
-  // Rough estimate based on relationship status
-  let roughAnnualPension = 0;
-  if (profile.relationshipStatus === 'single') {
-    roughAnnualPension = 25000; // Rough single pension amount
-  } else {
-    roughAnnualPension = 38000; // Rough combined couple pension amount
-  }
+  let roughAnnualPension = profile.relationshipStatus === 'single'
+    ? currencyBase * 2.5  // ~$25K AUD or ~₩25M KRW
+    : currencyBase * 3.8; // ~$38K AUD or ~₩38M KRW
 
-  // Rough asset test reduction
   const roughAssets = profile.savings + profile.superannuationBalance + profile.propertyAssets - profile.mortgageBalance;
-  if (roughAssets > 500000) {
-    roughAnnualPension *= 0.05; // Major reduction for high assets (0.5 * 0.1)
-  } else if (roughAssets > 100000) {
-    roughAnnualPension *= 0.5; // Moderate reduction for asset test
+  if (roughAssets > currencyBase * 50) {
+    roughAnnualPension *= 0.05;
+  } else if (roughAssets > currencyBase * 10) {
+    roughAnnualPension *= 0.5;
   }
 
   return roughAnnualPension * pensionEligibleYears;
@@ -80,13 +72,14 @@ function estimateRoughPensionIncome(profile: FinancialProfile): number {
  */
 export function validateCalculatedExpense(
   profile: FinancialProfile,
-  calculatedExpense: number
+  calculatedExpense: number,
+  countryConfig: ICountryConfig = auCountryConfig
 ): {
   isReasonable: boolean;
   adjustedExpense: number;
   reason: string;
 } {
-  const totalResources = calculateTotalAvailableResources(profile);
+  const totalResources = calculateTotalAvailableResources(profile, countryConfig);
   const years = profile.deathAge - profile.currentAge;
 
   if (years <= 0) {

@@ -181,14 +181,10 @@ export function hasMeaningfulIncomeStreams(
   const lifetimeIncome = calculateLifetimeIncome(profile, countryConfig);
   const currentAssets = profile.savings - profile.mortgageBalance + profile.superannuationBalance;
 
-  // Consider it meaningful if:
-  // 1. Has significant salary income, OR
-  // 2. Has significant pension income, OR
-  // 3. Has significant current assets, OR
-  // 4. Has rental income
-  return lifetimeIncome.totalSalaryIncome > 50000 ||
-         lifetimeIncome.totalPartnerSalaryIncome > 50000 ||
-         lifetimeIncome.totalPensionIncome > 15000 ||
-         currentAssets > 10000 ||
-         lifetimeIncome.totalRentalIncome > 10000;
+  const base = countryConfig.defaults.currencyBaseAmount;
+  return lifetimeIncome.totalSalaryIncome > base * 5 ||
+         lifetimeIncome.totalPartnerSalaryIncome > base * 5 ||
+         lifetimeIncome.totalPensionIncome > base * 1.5 ||
+         currentAssets > base ||
+         lifetimeIncome.totalRentalIncome > base;
 }

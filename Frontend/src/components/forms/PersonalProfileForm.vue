@@ -59,7 +59,7 @@
       field-id="retireAge"
       :label="$t('form.personal.retirement_age')"
       :value="retireAge"
-      placeholder="Retirement Age"
+      :placeholder="$t('form.personal.retirement_age')"
       :help-text="$t('form.personal.retirement_age_help')"
       :increment-step="1"
       :is-valid="validation.isFieldValid('retireAge', retireAge, { currentAge })"

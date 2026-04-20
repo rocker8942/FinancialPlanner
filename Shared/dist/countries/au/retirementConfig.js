@@ -11,6 +11,7 @@ export const AU_RETIREMENT_DEFAULTS = {
     defaultMortgageRate: 0.06,
     defaultSuperannuationRate: 0.07,
     defaultCpiGrowthRate: 0.03,
-    defaultPropertyRentalYield: 0.033
+    defaultPropertyRentalYield: 0.033,
+    currencyBaseAmount: 10_000
 };
 //# sourceMappingURL=retirementConfig.js.map

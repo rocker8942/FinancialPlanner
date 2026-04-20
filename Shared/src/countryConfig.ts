@@ -57,6 +57,9 @@ export interface ICountryDefaults {
   // Unlike superContributionRate this is NOT deducted from employee salary.
   // Omit or set to 0 for locales where employer contributions are already captured in superContributionRate.
   employerRetirementContributionRate?: number;
+  // Approximate "one year of minimum meaningful expenses" in this currency.
+  // Used to scale algorithm constants so they work correctly across currencies (AUD vs KRW etc).
+  currencyBaseAmount: number;
 }
 
 // Country config bundles tax, pension, and defaults for a single locale

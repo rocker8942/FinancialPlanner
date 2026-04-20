@@ -44,6 +44,7 @@ export interface ICountryDefaults {
     defaultCpiGrowthRate: number;
     defaultPropertyRentalYield: number;
     employerRetirementContributionRate?: number;
+    currencyBaseAmount: number;
 }
 export interface ICountryConfig {
     tax: ICountryTaxService;

@@ -58,13 +58,15 @@ function calculateOptimizationBounds(
   const years = profile.deathAge - profile.currentAge;
   const totalAvailableResources = calculateTotalAvailableResources(profile, countryConfig);
 
+  const base = countryConfig.defaults.currencyBaseAmount;
+
   // Handle case with very limited resources
   if (totalAvailableResources <= 0) {
     return { low: 0, high: 0 };
   }
 
-  // Special case: if total available is very small (less than $5000)
-  if (totalAvailableResources < 5000) {
+  // Special case: if total available is very small (less than half a base year of expenses)
+  if (totalAvailableResources < base * 0.5) {
     const simpleAverage = Math.max(0, totalAvailableResources / years);
     return { low: 0, high: simpleAverage * 1.5 };
   }
@@ -72,7 +74,7 @@ function calculateOptimizationBounds(
   // Check for meaningful income streams
   if (!hasMeaningfulIncomeStreams(profile, countryConfig)) {
     // Very conservative bounds for limited income scenarios
-    const conservativeHigh = Math.min(totalAvailableResources / years * 0.8, 15000);
+    const conservativeHigh = Math.min(totalAvailableResources / years * 0.8, base * 1.5);
     return { low: 0, high: conservativeHigh };
   }
 
@@ -80,8 +82,7 @@ function calculateOptimizationBounds(
   const averageAnnualIncome = calculateAverageAnnualIncome(profile, countryConfig);
 
   // Calculate a reasonable upper bound that prevents unrealistic scenarios
-  // For someone with a mortgage, they can't sustainably spend more than their gross income
-  let upperBound = Math.max(averageAnnualIncome * 1.5, 10000); // At least $10k or 1.5x average annual income
+  let upperBound = Math.max(averageAnnualIncome * 1.5, base); // At least 1 base year or 1.5x average annual income
 
   // If there are significant assets, allow higher spending by drawing down assets
   if (totalAvailableResources > averageAnnualIncome * 5) {
@@ -137,12 +138,17 @@ function performBinarySearchOptimization(
     });
 
     const currentIncome = profile.salary + (profile.partnerSalary || 0);
+    const totalAvailableResources = calculateTotalAvailableResources(profile, countryConfig);
 
     // Cash flow sustainability limits:
     // 1. Annual deficit shouldn't exceed 20% of current income
-    // 2. Total cumulative deficit during working years shouldn't exceed 200% of current super balance
-    const maxAllowableAnnualDeficit = currentIncome * 0.20; // 20% of income
-    const maxAllowableTotalDeficit = profile.superannuationBalance * 2.0; // 200% of super
+    // 2. Total cumulative deficit during working years shouldn't exceed 200% of super balance,
+    //    with a floor of 5% of total resources so the check doesn't collapse to zero when IRP is empty
+    const maxAllowableAnnualDeficit = currentIncome * 0.20;
+    const maxAllowableTotalDeficit = Math.max(
+      profile.superannuationBalance * 2.0,
+      totalAvailableResources * 0.05
+    );
 
     const isCashFlowSustainable = maxAnnualDeficit <= maxAllowableAnnualDeficit &&
                                    totalDeficit <= maxAllowableTotalDeficit;
@@ -218,12 +224,14 @@ function validateOptimizationResult(
     };
   }
 
+  const base = countryConfig.defaults.currencyBaseAmount;
+
   // Final sanity check: ensure the result is reasonable
   let finalExpense = Math.max(0, Math.round(bestExpense));
 
   // Additional validation: if we still have 0 but significant resources, return a minimum
-  if (finalExpense === 0 && totalAvailableResources > 10000) {
-    finalExpense = Math.round(totalAvailableResources / years * 0.5); // Conservative 50% of average available per year
+  if (finalExpense === 0 && totalAvailableResources > base) {
+    finalExpense = Math.round(totalAvailableResources / years * 0.5);
   }
 
   return {
@@ -237,10 +245,11 @@ function validateOptimizationResult(
  */
 export function canSupportExpenseLevel(
   profile: FinancialProfile,
-  proposedExpense: number
+  proposedExpense: number,
+  countryConfig: ICountryConfig = auCountryConfig
 ): boolean {
   const testProfile = { ...profile, expenses: proposedExpense };
-  const plan = calculateFinancialPlanModular(testProfile);
+  const plan = calculateFinancialPlanModular(testProfile, countryConfig);
 
   // Check if assets go negative at any point
   const minWealth = Math.min(...plan.projection.map(y => y.savings));
