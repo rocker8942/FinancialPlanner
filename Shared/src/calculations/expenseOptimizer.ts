@@ -84,9 +84,13 @@ function calculateOptimizationBounds(
   // Calculate a reasonable upper bound that prevents unrealistic scenarios
   let upperBound = Math.max(averageAnnualIncome * 1.5, base); // At least 1 base year or 1.5x average annual income
 
-  // If there are significant assets, allow higher spending by drawing down assets
+  // If there are significant assets, allow higher spending by drawing down assets.
+  // Use working years (not total years) and a 3x multiplier to account for investment returns
+  // that allow sustainable withdrawal rates well above simple assets/years.
   if (totalAvailableResources > averageAnnualIncome * 5) {
-    upperBound = Math.max(upperBound, totalAvailableResources / years * 2);
+    const workingYears = Math.max(1, profile.retireAge - profile.currentAge);
+    const currentLiquidAssets = Math.max(0, profile.savings - profile.mortgageBalance + profile.superannuationBalance);
+    upperBound = Math.max(upperBound, currentLiquidAssets / workingYears * 3);
   }
 
   // Remove the hard income cap - let the optimization algorithm find the true optimal expense
@@ -124,34 +128,29 @@ function performBinarySearchOptimization(
     const testProfile = { ...profile, expenses: mid };
     const plan = calculateFinancialPlanModular(testProfile, countryConfig);
 
-    const finalNetWorth = plan.finalNetSavings;
+    // Guard against NaN from missing profile fields (e.g. undefined superannuationRate)
+    const finalNetWorth = isFinite(plan.finalNetSavings) ? plan.finalNetSavings
+      : isFinite(plan.finalWealth) ? plan.finalWealth
+      : plan.projection.length > 0 ? plan.projection[plan.projection.length - 1].rawSavings
+      : 0;
 
-    // Check cash flow sustainability during working years
+    // Check cash flow sustainability during working years using actual simulation results.
+    // Deficit-proxy checks ignore investment returns and incorrectly reject asset-funded plans.
+    // Instead, check whether liquid assets went significantly negative in the simulation.
     const workingYears = plan.projection.filter(y => y.age <= profile.retireAge);
-    let maxAnnualDeficit = 0;
-    let totalDeficit = 0;
-
-    workingYears.forEach(year => {
-      const deficit = Math.max(0, year.expenses - year.totalIncome);
-      maxAnnualDeficit = Math.max(maxAnnualDeficit, deficit);
-      totalDeficit += deficit;
-    });
-
-    const currentIncome = profile.salary + (profile.partnerSalary || 0);
-    const totalAvailableResources = calculateTotalAvailableResources(profile, countryConfig);
-
-    // Cash flow sustainability limits:
-    // 1. Annual deficit shouldn't exceed 20% of current income
-    // 2. Total cumulative deficit during working years shouldn't exceed 200% of super balance,
-    //    with a floor of 5% of total resources so the check doesn't collapse to zero when IRP is empty
-    const maxAllowableAnnualDeficit = currentIncome * 0.20;
-    const maxAllowableTotalDeficit = Math.max(
-      profile.superannuationBalance * 2.0,
-      totalAvailableResources * 0.05
-    );
-
-    const isCashFlowSustainable = maxAnnualDeficit <= maxAllowableAnnualDeficit &&
-                                   totalDeficit <= maxAllowableTotalDeficit;
+    const currentLiquidAssets = Math.max(0, profile.savings - profile.mortgageBalance + profile.superannuationBalance);
+    // Guard each field against NaN individually — superannuationBalance can be NaN in edge cases
+    // (e.g. KR NPS calculation with near-zero income). Treating NaN super as 0 keeps the
+    // liquid-savings check correct while not poisoning the total.
+    const minWorkingAssets = workingYears.length > 0
+      ? Math.min(...workingYears.map(y => {
+          const raw = isFinite(y.rawSavings) ? y.rawSavings : 0;
+          const sup = isFinite(y.superannuationBalance) ? y.superannuationBalance : 0;
+          return raw + sup;
+        }))
+      : 0;
+    const overdraftTolerance = currentLiquidAssets * 0.02;
+    const isCashFlowSustainable = minWorkingAssets >= -overdraftTolerance;
 
     // Track the result closest to zero net worth, but only if cash flow is sustainable
     if (isCashFlowSustainable && Math.abs(finalNetWorth) < Math.abs(optimalFinalWealth)) {
