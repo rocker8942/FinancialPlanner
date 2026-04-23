@@ -336,10 +336,8 @@ const loadData = () => {
 };
 
 const loadFromStorage = () => {
-  const savedData = formStorageService.loadFromStorage(localeStore.locale);
-  if (savedData) {
-    populateFormsFromData(savedData);
-  }
+  const savedData = formStorageService.loadOrDefault(localeStore.locale);
+  populateFormsFromData(savedData);
 };
 
 const loadFromUrlParams = (params: Partial<StoredFinancialData>) => {
