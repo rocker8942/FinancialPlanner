@@ -287,7 +287,7 @@ const handleFieldChange = (fieldName: string, value: any) => {
 // Auto-save functionality
 const autoSaveToStorage = () => {
   const allData = collectAllFormData();
-  formStorageService.autoSave(allData);
+  formStorageService.autoSave(allData, localeStore.locale);
 };
 
 // Collect all form data into storage format
@@ -336,7 +336,7 @@ const loadData = () => {
 };
 
 const loadFromStorage = () => {
-  const savedData = formStorageService.loadFromStorage();
+  const savedData = formStorageService.loadFromStorage(localeStore.locale);
   if (savedData) {
     populateFormsFromData(savedData);
   }
@@ -458,6 +458,11 @@ watch(calculatedOptimalExpense, (newExpense) => {
   if (incomeExpenses.value.zeroNetWorthAtDeath) {
     incomeExpenses.value.expenses = newExpense;
   }
+});
+
+// Reload data when locale switches (au <-> kr)
+watch(() => localeStore.locale, () => {
+  loadData();
 });
 
 // Initialize on mount

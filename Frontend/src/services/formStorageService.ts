@@ -4,7 +4,7 @@ import type { FinancialProfile } from '../utils/financialPlan';
 import type { LifeEvent, HousePurchasePlan } from '../utils/models/FinancialTypes';
 
 // Storage keys
-const LOCAL_STORAGE_KEY = 'financialPlannerData';
+const getStorageKey = (locale: string) => `financialPlannerData_${locale}`;
 const AUTO_SAVE_DEBOUNCE_MS = 500;
 
 // Storage interface matching the current form structure
@@ -46,31 +46,31 @@ export class FormStorageService {
   /**
    * Save form data to encrypted local storage
    */
-  saveToStorage(data: StoredFinancialData): void {
+  saveToStorage(data: StoredFinancialData, locale = 'au'): void {
     try {
-      setSecureItem(LOCAL_STORAGE_KEY, data);
+      setSecureItem(getStorageKey(locale), data);
     } catch (error) {
       console.error('Failed to save to localStorage:', error);
     }
   }
-  
+
   /**
    * Load form data from encrypted local storage
    */
-  loadFromStorage(): StoredFinancialData | null {
+  loadFromStorage(locale = 'au'): StoredFinancialData | null {
     try {
-      const data = getSecureItem<StoredFinancialData>(LOCAL_STORAGE_KEY);
+      const data = getSecureItem<StoredFinancialData>(getStorageKey(locale));
       return data;
     } catch (error) {
       console.warn('Failed to load from localStorage:', error);
       return null;
     }
   }
-  
+
   /**
    * Auto-save with debouncing to prevent excessive writes
    */
-  autoSave(data: StoredFinancialData): void {
+  autoSave(data: StoredFinancialData, locale = 'au'): void {
     // Clear existing timeout
     if (this.autoSaveTimeout) {
       clearTimeout(this.autoSaveTimeout);
@@ -78,7 +78,7 @@ export class FormStorageService {
     
     // Set new timeout for debounced save
     this.autoSaveTimeout = window.setTimeout(() => {
-      this.saveToStorage(data);
+      this.saveToStorage(data, locale);
       this.autoSaveTimeout = null;
     }, AUTO_SAVE_DEBOUNCE_MS);
   }
@@ -206,20 +206,20 @@ export class FormStorageService {
   /**
    * Clear all stored data
    */
-  clearStorage(): void {
+  clearStorage(locale = 'au'): void {
     try {
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
+      localStorage.removeItem(getStorageKey(locale));
     } catch (error) {
       console.error('Failed to clear localStorage:', error);
     }
   }
-  
+
   /**
    * Check if we have any saved data
    */
-  hasSavedData(): boolean {
+  hasSavedData(locale = 'au'): boolean {
     try {
-      const data = this.loadFromStorage();
+      const data = this.loadFromStorage(locale);
       return data !== null;
     } catch {
       return false;
@@ -264,8 +264,8 @@ export class FormStorageService {
   /**
    * Load data or return defaults if none exists
    */
-  loadOrDefault(): StoredFinancialData {
-    const saved = this.loadFromStorage();
+  loadOrDefault(locale = 'au'): StoredFinancialData {
+    const saved = this.loadFromStorage(locale);
     return saved || this.getDefaultValues();
   }
   
