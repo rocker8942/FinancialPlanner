@@ -14,6 +14,7 @@
           :retirement-age="currentProfile?.retireAge || 65"
           :show-inflation-adjusted="showInflationAdjusted"
           :optimal-expense="optimalExpense"
+          :cpi-growth-rate="currentProfile?.cpiGrowthRate ?? 0.025"
         />
         <NetWealthChart
           :projection="projection"

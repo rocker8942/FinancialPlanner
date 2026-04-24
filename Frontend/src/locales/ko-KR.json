@@ -175,7 +175,7 @@
     "currency_value": "KRW",
     "table_title": "재정 예측 데이터",
     "age": "나이",
-    "income": "총 소득",
+    "income": "총 소득(금융소득 제외)",
     "expenses": "지출",
     "mortgage": "담보대출",
     "super": "연금",
