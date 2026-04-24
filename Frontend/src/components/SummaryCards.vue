@@ -86,6 +86,7 @@ interface SummaryProps {
   retirementAge: number;
   showInflationAdjusted: boolean;
   optimalExpense: number;
+  cpiGrowthRate: number;
 }
 
 const props = defineProps<SummaryProps>();
@@ -112,7 +113,10 @@ const retirementWealth = computed(() => {
 const annualPension = computed(() => {
   if (!props.projection.length) return 0;
   const pensionData = props.projection.find(p => p.pensionIncome > 0);
-  return pensionData?.pensionIncome || 0;
+  if (!pensionData) return 0;
+  if (!props.showInflationAdjusted) return pensionData.pensionIncome;
+  const yearsFromStart = pensionData.age - props.currentAge;
+  return pensionData.pensionIncome * Math.pow(1 + props.cpiGrowthRate, -yearsFromStart);
 });
 
 const firstPensionAge = computed(() => {
