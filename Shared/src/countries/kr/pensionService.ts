@@ -224,8 +224,7 @@ export function getKoreanPensionAmounts(
     cpiAdjustmentFactor = 1.0,
     partnerSuperBalance = 0,
     userNpsContributionYearsToDate,
-    partnerNpsContributionYearsToDate,
-    userCurrentAge
+    partnerNpsContributionYearsToDate
   } = input;
 
   const currentYear = new Date().getFullYear();
