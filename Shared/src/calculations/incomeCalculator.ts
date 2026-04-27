@@ -213,7 +213,10 @@ function calculatePensionIncome(
     userBirthYear: currentYear - profile.currentAge,
     partnerBirthYear: currentYear - profile.partnerAge,
     cpiAdjustmentFactor,
-    partnerSuperBalance: assetState.partnerSuperBalance
+    partnerSuperBalance: assetState.partnerSuperBalance,
+    userNpsContributionYearsToDate: profile.userNpsContributionYears,
+    partnerNpsContributionYearsToDate: profile.partnerNpsContributionYears,
+    userCurrentAge: profile.currentAge
   });
 
   // Apply CPI adjustment to pension amounts (age pension typically increases with CPI)

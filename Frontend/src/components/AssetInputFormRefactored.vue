@@ -88,6 +88,7 @@
     >
       <AdvancedOptionsForm
         v-model="advancedOptions"
+        :relationship-status="personalProfile.relationshipStatus"
         @field-change="handleFieldChange"
         @reset-defaults="handleResetDefaults"
       />
@@ -196,7 +197,9 @@ const advancedOptions = ref({
   mortgageRate: 0.06, // 6%
   superannuationRate: 0.07, // 7%
   cpiGrowthRate: 0.03, // 3%
-  retireAge: 65 // Needed for death age validation
+  retireAge: 65, // Needed for death age validation
+  userNpsContributionYears: undefined as number | undefined,
+  partnerNpsContributionYears: undefined as number | undefined
 });
 
 const lifeEvents = ref<LifeEvent[]>([]);
@@ -246,7 +249,9 @@ const currentFinancialProfile = computed((): FinancialProfile => {
     relationshipStatus: personalProfile.value.relationshipStatus,
     isHomeowner: personalProfile.value.isHomeowner,
     lifeEvents: lifeEvents.value,
-    housePurchasePlan: housePurchasePlan.value
+    housePurchasePlan: housePurchasePlan.value,
+    userNpsContributionYears: advancedOptions.value.userNpsContributionYears,
+    partnerNpsContributionYears: advancedOptions.value.partnerNpsContributionYears
   };
 });
 
@@ -319,6 +324,8 @@ const collectAllFormData = (): StoredFinancialData => {
     relationshipStatus: personalProfile.value.relationshipStatus,
     isHomeowner: personalProfile.value.isHomeowner,
     zeroNetWorthAtDeath: incomeExpenses.value.zeroNetWorthAtDeath,
+    userNpsContributionYears: advancedOptions.value.userNpsContributionYears,
+    partnerNpsContributionYears: advancedOptions.value.partnerNpsContributionYears,
     lifeEvents: lifeEvents.value,
     housePurchasePlan: housePurchasePlan.value,
     krPensionBalance: assets.value.krPensionBalance
@@ -385,7 +392,9 @@ const populateFormsFromData = (data: StoredFinancialData) => {
     mortgageRate: data.mortgageRate,
     superannuationRate: data.superannuationRate,
     cpiGrowthRate: data.cpiGrowthRate,
-    retireAge: data.retireAge
+    retireAge: data.retireAge,
+    userNpsContributionYears: data.userNpsContributionYears,
+    partnerNpsContributionYears: data.partnerNpsContributionYears
   };
 
   lifeEvents.value = data.lifeEvents ?? [];

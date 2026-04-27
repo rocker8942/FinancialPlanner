@@ -38,6 +38,8 @@ export interface StoredFinancialData {
   lifeEvents?: LifeEvent[];
   housePurchasePlan?: HousePurchasePlan;
   krPensionBalance?: number;
+  userNpsContributionYears?: number;
+  partnerNpsContributionYears?: number;
 }
 
 export class FormStorageService {
@@ -113,7 +115,9 @@ export class FormStorageService {
       partnerRetireAge: fields.partnerRetireAge || 65,
       relationshipStatus: fields.relationshipStatus || 'single',
       isHomeowner: fields.isHomeowner || false,
-      lifeEvents: fields.lifeEvents || []
+      lifeEvents: fields.lifeEvents || [],
+      userNpsContributionYears: fields.userNpsContributionYears,
+      partnerNpsContributionYears: fields.partnerNpsContributionYears
     };
   }
   
@@ -147,7 +151,9 @@ export class FormStorageService {
       partnerRetireAge: data.partnerRetireAge,
       relationshipStatus: data.relationshipStatus,
       isHomeowner: data.isHomeowner,
-      lifeEvents: data.lifeEvents ?? []
+      lifeEvents: data.lifeEvents ?? [],
+      userNpsContributionYears: data.userNpsContributionYears,
+      partnerNpsContributionYears: data.partnerNpsContributionYears
     };
   }
 
@@ -177,7 +183,9 @@ export class FormStorageService {
       partnerRetireAge: data.partnerRetireAge,
       relationshipStatus: data.relationshipStatus,
       isHomeowner: data.isHomeowner,
-      lifeEvents: data.lifeEvents ?? []
+      lifeEvents: data.lifeEvents ?? [],
+      userNpsContributionYears: data.userNpsContributionYears,
+      partnerNpsContributionYears: data.partnerNpsContributionYears
     };
   }
 

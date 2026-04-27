@@ -33,6 +33,11 @@ export interface ICountryPensionInput {
   partnerBirthYear?: number;
   cpiAdjustmentFactor?: number;
   partnerSuperBalance?: number;
+  // KR-specific: years already contributed to NPS as of today (userCurrentAge).
+  // When provided, overrides the default "started at age 25" assumption.
+  userNpsContributionYearsToDate?: number;
+  partnerNpsContributionYearsToDate?: number;
+  userCurrentAge?: number;
 }
 
 export interface ICountryPensionService {

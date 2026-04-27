@@ -133,6 +133,47 @@
       @adjust="handleFieldAdjust"
     />
 
+    <!-- KR-only: NPS contribution years -->
+    <FormInputWithButtons
+      v-if="locale === 'kr'"
+      field-id="userNpsContributionYears"
+      :label="$t('form.advanced.nps_years_label')"
+      :value="userNpsContributionYears"
+      :placeholder="$t('form.advanced.nps_years_label')"
+      :help-text="$t('form.advanced.nps_years_help')"
+      :increment-step="1"
+      :is-valid="true"
+      :is-touched="false"
+      :error-message="''"
+      :format-value="(v: number) => String(Math.round(v))"
+      :parse-value="(v: string) => Math.max(0, Math.min(40, parseInt(v) || 0))"
+      @update:value="updateField('userNpsContributionYears', $event)"
+      @focus="handleFieldFocus"
+      @blur="handleFieldBlur"
+      @enter="handleFieldEnter"
+      @adjust="handleFieldAdjust"
+    />
+
+    <FormInputWithButtons
+      v-if="locale === 'kr' && relationshipStatus === 'couple'"
+      field-id="partnerNpsContributionYears"
+      :label="$t('form.advanced.partner_nps_years_label')"
+      :value="partnerNpsContributionYears"
+      :placeholder="$t('form.advanced.partner_nps_years_label')"
+      :help-text="$t('form.advanced.partner_nps_years_help')"
+      :increment-step="1"
+      :is-valid="true"
+      :is-touched="false"
+      :error-message="''"
+      :format-value="(v: number) => String(Math.round(v))"
+      :parse-value="(v: string) => Math.max(0, Math.min(40, parseInt(v) || 0))"
+      @update:value="updateField('partnerNpsContributionYears', $event)"
+      @focus="handleFieldFocus"
+      @blur="handleFieldBlur"
+      @enter="handleFieldEnter"
+      @adjust="handleFieldAdjust"
+    />
+
     <!-- Reset to Defaults Button -->
     <div class="form-actions">
       <button 
@@ -166,10 +207,13 @@ interface AdvancedOptionsData {
   superannuationRate: number;
   cpiGrowthRate: number;
   retireAge: number; // Needed for death age validation
+  userNpsContributionYears?: number;
+  partnerNpsContributionYears?: number;
 }
 
 interface Props {
   modelValue: AdvancedOptionsData;
+  relationshipStatus?: 'single' | 'couple';
 }
 
 const props = defineProps<Props>();
@@ -178,6 +222,8 @@ const emit = defineEmits<{
   'field-change': [fieldName: string, value: any];
   'reset-defaults': [];
 }>();
+
+const relationshipStatus = computed(() => props.relationshipStatus ?? 'single');
 
 // Extract individual field values for easier access
 const deathAge = computed(() => props.modelValue.deathAge);
@@ -188,6 +234,8 @@ const mortgageRate = computed(() => props.modelValue.mortgageRate);
 const superannuationRate = computed(() => props.modelValue.superannuationRate);
 const cpiGrowthRate = computed(() => props.modelValue.cpiGrowthRate);
 const retireAge = computed(() => props.modelValue.retireAge);
+const userNpsContributionYears = computed(() => props.modelValue.userNpsContributionYears ?? 0);
+const partnerNpsContributionYears = computed(() => props.modelValue.partnerNpsContributionYears ?? 0);
 
 // Setup validation
 const validation = useFormValidation();

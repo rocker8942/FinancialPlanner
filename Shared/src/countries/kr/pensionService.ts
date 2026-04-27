@@ -32,7 +32,7 @@
 //   호출자(incomeCalculator.ts)가 (1+cpi)^연도 를 곱해 명목금액으로 변환.
 //
 // NPS 수급연령 (생년 기준, 국민연금법 일정):
-//   ≤1960: 61세 | 1961-1964: 63세 | 1965-1968: 64세 | ≥1969: 65세
+//   ≤1956: 61세 | 1957-1960: 62세 | 1961-1964: 63세 | 1965-1968: 64세 | ≥1969: 65세
 //
 // ═════════════════════════════════════════════════════════════════════════════
 // BASIC OLD-AGE PENSION (기초연금) — 2026년 기준
@@ -43,7 +43,7 @@
 //   - 소득인정액이 선정기준액 이하인 하위 70%
 //     단독가구 2026 선정기준액: 월 247만원 (소득인정액 기준)
 //     * 소득인정액 = 소득평가액 + 재산의 소득환산액 (복잡한 산정식)
-//     * 이 코드에서는 financialAssets 총액으로 단순 근사
+//     * 이 코드에서는 금융자산 + (일반재산 - 기본재산공제) 합계로 근사
 //
 // [기준연금액 (최대 급여)]
 //   연도별 기준연금액 (물가 연동 매년 인상):
@@ -81,13 +81,20 @@ import type { ICountryPensionInput } from '../../countryConfig.js';
 
 // NPS eligibility age by birth year (National Pension Act schedule).
 function getNpsEligibilityAge(birthYear: number): number {
-  if (birthYear <= 1960) return 61;
+  if (birthYear <= 1956) return 61;
+  if (birthYear <= 1960) return 62;
   if (birthYear <= 1964) return 63;
   if (birthYear <= 1968) return 64;
   return 65;
 }
 
-function getContributionYears(eligibilityAge: number): number {
+function getContributionYears(
+  eligibilityAge: number,
+  npsContributionYearsToDate?: number,
+): number {
+  if (npsContributionYearsToDate !== undefined) {
+    return Math.min(NPS_FULL_CONTRIBUTION_YEARS, npsContributionYearsToDate);
+  }
   return Math.min(NPS_FULL_CONTRIBUTION_YEARS,
     Math.max(NPS_MIN_CONTRIBUTION_YEARS, eligibilityAge - 25));
 }
@@ -124,19 +131,32 @@ const BASIC_PENSION_MIN_GUARANTEE_RATIO = 0.1;
 const BASIC_PENSION_ASSET_CUTOFF_SINGLE = 213_000_000;
 const BASIC_PENSION_ASSET_CUTOFF_COUPLE = 340_800_000;
 
+// 기본재산공제: 일반재산(투자부동산 포함)에서 공제하는 지역별 기준액. 대도시 기준 적용 (계획 용도).
+// 대도시 135,000,000 | 중소도시 85,000,000 | 농어촌 72,500,000
+const BASIC_PENSION_PROPERTY_DEDUCTION = 135_000_000;
+
 // Returns { totalAnnual, aComponentMonthly } in today's KRW.
 // aComponentMonthly: 기초연금 연계감액 계산에 사용되는 A급여 월액.
 function estimateNpsComponents(
   individualAnnualSalary: number,
   age: number,
-  birthYear: number
+  birthYear: number,
+  npsContributionYearsToDate?: number
 ): { totalAnnual: number; aComponentMonthly: number } {
   const eligibilityAge = getNpsEligibilityAge(birthYear);
-  if (age < eligibilityAge || individualAnnualSalary <= 0) {
+  if (age < eligibilityAge) {
     return { totalAnnual: 0, aComponentMonthly: 0 };
   }
 
-  const years = getContributionYears(eligibilityAge);
+  // When NPS years not explicitly provided, require salary > 0 to infer employment history.
+  if (npsContributionYearsToDate === undefined && individualAnnualSalary <= 0) {
+    return { totalAnnual: 0, aComponentMonthly: 0 };
+  }
+
+  const years = getContributionYears(eligibilityAge, npsContributionYearsToDate);
+  if (years < NPS_MIN_CONTRIBUTION_YEARS) {
+    return { totalAnnual: 0, aComponentMonthly: 0 };
+  }
   const yearRatio = years / NPS_FULL_CONTRIBUTION_YEARS;
 
   // A급여(월) = 소득대체율 × A값(월) / 2 × (기여연수/40)
@@ -202,7 +222,10 @@ export function getKoreanPensionAmounts(
     userBirthYear,
     partnerBirthYear,
     cpiAdjustmentFactor = 1.0,
-    partnerSuperBalance = 0
+    partnerSuperBalance = 0,
+    userNpsContributionYearsToDate,
+    partnerNpsContributionYearsToDate,
+    userCurrentAge
   } = input;
 
   const currentYear = new Date().getFullYear();
@@ -210,14 +233,17 @@ export function getKoreanPensionAmounts(
   const resolvedPartnerBirthYear = partnerBirthYear ?? currentYear - partnerAge;
 
   const isCouple = relationshipStatus === 'couple';
-  const financialAssets = savings + superannuation + (isCouple ? partnerSuperBalance : 0) - mortgageBalance;
+  const adjustedProperty = Math.max(0, (input.propertyAssets ?? 0) - BASIC_PENSION_PROPERTY_DEDUCTION);
+  const financialAssets = savings + superannuation + (isCouple ? partnerSuperBalance : 0) - mortgageBalance + adjustedProperty;
 
   const userBValue = userPreRetirementSalary ?? userSalary;
   const partnerBValue = partnerPreRetirementSalary ?? partnerSalary;
 
-  const userNps = estimateNpsComponents(userBValue, userAge, resolvedUserBirthYear);
+  const userNps = estimateNpsComponents(userBValue, userAge, resolvedUserBirthYear,
+    userNpsContributionYearsToDate);
   const partnerNps = isCouple
-    ? estimateNpsComponents(partnerBValue, partnerAge, resolvedPartnerBirthYear)
+    ? estimateNpsComponents(partnerBValue, partnerAge, resolvedPartnerBirthYear,
+        partnerNpsContributionYearsToDate)
     : { totalAnnual: 0, aComponentMonthly: 0 };
 
   const userNpsMonthly = userNps.totalAnnual / 12;

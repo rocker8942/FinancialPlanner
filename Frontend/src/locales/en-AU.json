@@ -131,7 +131,11 @@
       "super_rate_help": "Expected annual return on superannuation (default: 7%)",
       "cpi_label": "Consumer Price Index (CPI) Growth Rate",
       "cpi_help": "Consumer Price Index growth rate for expense escalation (default: 3%)",
-      "reset_button": "Reset to Defaults"
+      "reset_button": "Reset to Defaults",
+      "nps_years_label": "NPS Contribution Years (You)",
+      "nps_years_help": "Years contributed to National Pension so far. Under 10 years = no pension.",
+      "partner_nps_years_label": "NPS Contribution Years (Partner)",
+      "partner_nps_years_help": "Partner's years contributed to National Pension so far"
     },
     "house": {
       "toggle": "I plan to buy a house",
@@ -173,7 +177,7 @@
     "currency_value": "AUD",
     "table_title": "Financial Projection Data",
     "age": "Age",
-    "income": "Total Income",
+    "income": "Total Income (except interest)",
     "expenses": "Expenses",
     "mortgage": "Mortgage",
     "super": "Superannuation",

@@ -411,3 +411,8 @@ Shared/dist/utils/taxCalculation.d.ts.map
 Shared/dist/utils/taxCalculation.js
 Shared/dist/utils/taxCalculation.js.map
 .claude/settings.local.json
+Shared/dist/countryConfig.d.ts
+Shared/dist/countryConfig.d.ts.map
+Shared/dist/countries/kr/pensionService.d.ts.map
+Shared/dist/countries/kr/pensionService.js
+Shared/dist/countries/kr/pensionService.js.map

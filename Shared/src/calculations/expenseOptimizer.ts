@@ -135,8 +135,9 @@ function performBinarySearchOptimization(
       : 0;
 
     // Check cash flow sustainability during working years using actual simulation results.
-    // Deficit-proxy checks ignore investment returns and incorrectly reject asset-funded plans.
-    // Instead, check whether liquid assets went significantly negative in the simulation.
+    // For house purchase scenarios, raw savings can go deeply negative after the down payment
+    // but the person holds the home as an asset. Use total net wealth (savings + super + property equity)
+    // to assess sustainability — not raw savings alone.
     const workingYears = plan.projection.filter(y => y.age <= profile.retireAge);
     const currentLiquidAssets = Math.max(0, profile.savings - profile.mortgageBalance + profile.superannuationBalance);
     // Guard each field against NaN individually — superannuationBalance can be NaN in edge cases
@@ -146,10 +147,13 @@ function performBinarySearchOptimization(
       ? Math.min(...workingYears.map(y => {
           const raw = isFinite(y.rawSavings) ? y.rawSavings : 0;
           const sup = isFinite(y.superannuationBalance) ? y.superannuationBalance : 0;
-          return raw + sup;
+          const propEquity = isFinite(y.propertyAssets) && isFinite(y.mortgageBalance)
+            ? Math.max(0, y.propertyAssets - y.mortgageBalance)
+            : 0;
+          return raw + sup + propEquity;
         }))
       : 0;
-    const overdraftTolerance = currentLiquidAssets * 0.02;
+    const overdraftTolerance = Math.max(currentLiquidAssets * 0.02, 1000);
     const isCashFlowSustainable = minWorkingAssets >= -overdraftTolerance;
 
     // Track the result closest to zero net worth, but only if cash flow is sustainable
@@ -180,9 +184,13 @@ function performBinarySearchOptimization(
     }
   }
 
-  // If we couldn't find a sustainable solution, use the best compromise
+  // If we couldn't find a sustainable solution, fall back to a conservative
+  // estimate based on actual disposable income rather than the upper bound
+  // (which may be inflated when starting assets are near zero).
   if (optimalExpense === 0) {
-    optimalExpense = initialHigh * 0.8;
+    // Use the low end of the search — it's the last value that didn't make
+    // things worse, so it's a safer starting point than the upper bound.
+    optimalExpense = low > 0 ? low : initialHigh * 0.1;
     optimalFinalWealth = calculateFinancialPlanModular({ ...profile, expenses: optimalExpense }, countryConfig).finalNetSavings;
   }
 
