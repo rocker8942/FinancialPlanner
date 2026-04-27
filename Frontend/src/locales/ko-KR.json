@@ -133,7 +133,11 @@
       "super_rate_help": "연금에 대한 예상 연간 수익률 (기본값: 7%)",
       "cpi_label": "소비자물가지수 (CPI) 상승률",
       "cpi_help": "지출 증가를 위한 소비자물가지수 상승률 (기본값: 3%)",
-      "reset_button": "기본값으로 초기화"
+      "reset_button": "기본값으로 초기화",
+      "nps_years_label": "국민연금 가입기간 (본인)",
+      "nps_years_help": "현재까지 국민연금에 납부한 기간 (년). 10년 미만이면 연금 없음.",
+      "partner_nps_years_label": "국민연금 가입기간 (배우자)",
+      "partner_nps_years_help": "배우자의 현재까지 국민연금 납부 기간 (년)"
     },
     "house": {
       "toggle": "주택 구입 계획이 있습니다",

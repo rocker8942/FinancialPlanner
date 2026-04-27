@@ -131,7 +131,10 @@ function calculateLifetimePensionIncome(
       partnerAge: currentPartnerAge,
       userBirthYear: currentYear - profile.currentAge,
       partnerBirthYear: currentYear - profile.partnerAge,
-      cpiAdjustmentFactor
+      cpiAdjustmentFactor,
+      userNpsContributionYearsToDate: profile.userNpsContributionYears,
+      partnerNpsContributionYearsToDate: profile.partnerNpsContributionYears,
+      userCurrentAge: profile.currentAge
     });
 
     // Apply CPI growth to pension amounts
@@ -154,7 +157,13 @@ export function calculateTotalAvailableResources(
   const currentAssets = profile.savings - profile.mortgageBalance + profile.superannuationBalance;
   const lifetimeIncome = calculateLifetimeIncome(profile, countryConfig);
 
-  return Math.max(0, currentAssets + lifetimeIncome.totalLifetimeIncome);
+  // Deduct planned house purchase down payment — it is a committed cash outflow
+  // that reduces the money available for ongoing expenses.
+  const housePurchaseCost = profile.housePurchasePlan?.enabled
+    ? profile.housePurchasePlan.purchasePrice * (profile.housePurchasePlan.downPaymentPercent / 100)
+    : 0;
+
+  return Math.max(0, currentAssets + lifetimeIncome.totalLifetimeIncome - housePurchaseCost);
 }
 
 /**

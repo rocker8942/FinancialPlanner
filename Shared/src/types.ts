@@ -53,6 +53,8 @@ export interface FinancialProfile {
 
   lifeEvents?: LifeEvent[];
   housePurchasePlan?: HousePurchasePlan;
+  userNpsContributionYears?: number;
+  partnerNpsContributionYears?: number;
 }
 
 // Yearly wealth projection data
