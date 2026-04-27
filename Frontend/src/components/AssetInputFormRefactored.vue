@@ -432,7 +432,9 @@ const handleResetDefaults = () => {
     mortgageRate: defaults.mortgageRate,
     superannuationRate: defaults.superannuationRate,
     cpiGrowthRate: defaults.cpiGrowthRate,
-    retireAge: personalProfile.value.retireAge
+    retireAge: personalProfile.value.retireAge,
+    userNpsContributionYears: undefined,
+    partnerNpsContributionYears: undefined
   };
   autoSaveToStorage();
 };
