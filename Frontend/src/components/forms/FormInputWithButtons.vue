@@ -87,7 +87,7 @@ const emit = defineEmits<{
   'adjust': [fieldId: string, adjustment: number];
 }>();
 
-const continuousAdjustmentTimer = ref<NodeJS.Timeout | null>(null);
+const continuousAdjustmentTimer = ref<ReturnType<typeof setTimeout> | null>(null);
 const isAdjusting = ref(false);
 const isFocused = ref(false);
 // Raw text the user is typing — only used while the input is focused
