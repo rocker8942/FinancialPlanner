@@ -72,5 +72,5 @@ export default defineConfig({
     // Increase chunk size warning limit (we're optimizing chunks now)
     chunkSizeWarningLimit: 1000,
   },
-  base: './' // Use relative paths for assets
+  base: '/' // Absolute paths so assets resolve at root regardless of route depth (e.g. /kr/retirementplanner)
 })
